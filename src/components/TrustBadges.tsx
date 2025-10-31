@@ -1,4 +1,4 @@
-import { Award, CheckCircle, Shield, Trophy, Lock } from "lucide-react";
+import { Award, Shield, Trophy, Lock, ShieldCheck } from "lucide-react";
 
 const TrustBadges = () => {
   const badges = [
@@ -13,7 +13,7 @@ const TrustBadges = () => {
       description: "Reconhecimento internacional que gera confiança. Como Parceiro Oficial da Google e OpenAI, temos acesso a ferramentas exclusivas, validação global de nossas práticas e respaldo das instituições mais respeitadas do mundo.",
     },
     {
-      icon: CheckCircle,
+      icon: ShieldCheck,
       title: "Garantia de Satisfação",
       description: "Compromisso total com sua satisfação. Teste sem riscos: se o resultado não superar suas expectativas, garantimos a devolução do seu dinheiro. Simples assim.",
     },
