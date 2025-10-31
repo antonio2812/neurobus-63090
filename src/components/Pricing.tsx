@@ -145,7 +145,7 @@ const Pricing = () => {
             "grid grid-cols-1 md:grid-cols-3 gap-8 transition-all duration-500",
             showComingSoon && 'opacity-30 blur-sm pointer-events-none'
           )}>
-            {sortedPlans.map((plan, index) => (
+            {Array.isArray(sortedPlans) && sortedPlans.map((plan, index) => (
               <Card
                 key={index}
                 className={`p-8 relative flex flex-col ${
