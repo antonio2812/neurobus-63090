@@ -41,7 +41,7 @@ const FAQ = () => {
     },
     {
       question: "Qual a diferença entre os planos?",
-      answer: "O Free oferece recursos básicos. O Premium adiciona IA completa, todos os marketplaces e suporte prioritário. O Pro inclui API, análise avançada e consultor dedicado.",
+      answer: "O Free oferece recursos básicos. O Premium adiciona IA completa, todos os marketplaces e suporte prioritário.", // Updated answer
     },
     {
       question: "Tem suporte?",

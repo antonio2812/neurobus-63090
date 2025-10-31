@@ -29,7 +29,8 @@ const Hero = () => {
       }`}>
         <div className="max-w-5xl mx-auto space-y-12">
           <div className="space-y-8">
-            <button className="inline-block px-6 py-2 rounded-full bg-black/70 backdrop-blur-sm border border-white/10 mb-4 hover:border-accent/30 transition-all duration-300">
+            {/* Repositioned slightly lower (mt-8 added) and cursor changed */}
+            <button className="inline-block px-6 py-2 rounded-full bg-black/70 backdrop-blur-sm border border-white/10 mt-8 hover:border-accent/30 transition-all duration-300 cursor-default">
               <span className="text-white text-sm font-medium tracking-wide">
                 Plataforma Completa de Precificação
               </span>
@@ -47,7 +48,8 @@ const Hero = () => {
             </p>
           </div>
           
-          <div className="flex justify-center items-center gap-8 pt-8">
+          {/* Repositioned slightly higher (pt-4 instead of pt-8) */}
+          <div className="flex justify-center items-center gap-8 pt-4">
             <Button 
               variant="default" 
               size="xl" 

@@ -1,4 +1,4 @@
-import { Zap, Shield, TrendingUp, CheckCircle } from "lucide-react";
+import { Zap, Shield, TrendingUp, CheckCircle, DollarSign } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 const WhyChoose = () => {
@@ -14,7 +14,7 @@ const WhyChoose = () => {
       description: "Regulamentado pela CVM, parceiro de grandes corretoras brasileiras.",
     },
     {
-      icon: TrendingUp,
+      icon: DollarSign, // Changed icon to DollarSign
       title: "Resultados a Longo Prazo",
       description: "Usuários ativos há menos de 3 meses tiveram rentabilidade média de 280% superior ao ano passado.",
     },

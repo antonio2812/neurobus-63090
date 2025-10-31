@@ -26,24 +26,36 @@ const Footer = () => {
     { icon: Linkedin, href: "#", label: "LinkedIn" },
   ];
 
+  // Reorganized Solutions links as requested
+  const solutionsLinks = [
+    { label: "Ferramentas", href: "#ferramentas" },
+    { label: "Diferenciais", href: "#diferenciais" },
+    { label: "Planos", href: "#planos" },
+    { label: "Depoimentos", href: "#depoimentos" },
+    { label: "Suporte", href: "https://wa.link/adnlkj", external: true },
+    { label: "FAQ", href: "#faq" },
+  ];
+
   return (
     <footer className="bg-black border-t border-border py-16">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           <div className="space-y-6">
-            <button onClick={scrollToTop} className="text-left">
+            <button onClick={scrollToTop} className="text-left flex justify-start md:justify-center">
+              {/* Updated Logo Styling and Positioning */}
               <img 
-                src="/lovable-uploads/lucraia-logo-new.png" 
+                src="/lovable-uploads/logo-lucraai-fox.png" 
                 alt="LucraAI Logo" 
-                className="h-12 w-auto rounded-lg"
+                className="h-14 w-auto transition-transform duration-300 hover:scale-105 rounded-lg"
               />
             </button>
-            <p className="text-muted-foreground leading-relaxed max-w-sm">
+            {/* Updated Text Positioning */}
+            <p className="text-muted-foreground leading-relaxed max-w-sm text-left md:text-center">
               O primeiro App brasileiro que combina IA avançada com Automação inteligente 
               para transformar a precificação do seu negócio em minutos.
             </p>
             
-            <div className="flex gap-4">
+            <div className="flex gap-4 justify-start md:justify-center">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
@@ -62,26 +74,27 @@ const Footer = () => {
           <div>
           <h3 className="text-foreground font-semibold mb-6">Soluções</h3>
           <ul className="space-y-3">
-            {navigationLinks.map((link) => (
+            {solutionsLinks.map((link) => (
               <li key={link.label}>
-                <a 
-                  href={link.href}
-                  className="text-muted-foreground hover:text-accent transition-colors duration-300"
-                >
-                  {link.label}
-                </a>
+                {link.external ? (
+                  <a 
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-accent transition-colors duration-300"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <a 
+                    href={link.href}
+                    className="text-muted-foreground hover:text-accent transition-colors duration-300"
+                  >
+                    {link.label}
+                  </a>
+                )}
               </li>
             ))}
-            <li>
-              <a 
-                href="https://wa.link/adnlkj"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-accent transition-colors duration-300"
-              >
-                Suporte
-              </a>
-            </li>
           </ul>
         </div>
 
@@ -98,16 +111,6 @@ const Footer = () => {
                 </Link>
               </li>
             ))}
-            <li>
-              <a 
-                href="https://wa.link/adnlkj"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-accent transition-colors duration-300"
-              >
-                Suporte
-              </a>
-            </li>
           </ul>
         </div>
         </div>

@@ -19,16 +19,24 @@ const Navigation = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleSignupClick = () => {
+    // Redirect to auth page and ensure the signup tab is active
+    window.location.href = '/auth#signup';
+  };
+
   return (
     <nav className="fixed top-0 w-full z-50 bg-black backdrop-blur-xl border-b border-border">
       <div className="container mx-auto px-6 h-20 flex items-center justify-between">
         <button onClick={scrollToTop} className="flex items-center space-x-3 z-50 group">
+          {/* Updated Logo Styling */}
           <img 
-            src="/lovable-uploads/lucraia-logo-new.png" 
+            src="/lovable-uploads/logo-lucraai-fox.png" 
             alt="LucraAI Logo" 
-            className="h-12 w-auto hover:scale-105 transition-transform duration-300 rounded-lg"
+            className="h-14 w-auto transition-all duration-300 rounded-lg group-hover:bg-[hsl(48_100%_13%)] p-1"
+            style={{ backgroundColor: 'transparent' }}
           />
-          <span className="text-xl font-bold text-foreground group-hover:brightness-110 transition-all duration-300">
+          {/* Updated Name Hover Effect */}
+          <span className="text-xl font-bold text-foreground transition-all duration-300 group-hover:text-gray-700">
             Lucra<span style={{ color: '#ffc800' }}>AI</span>
           </span>
         </button>
@@ -75,11 +83,7 @@ const Navigation = () => {
             variant="default" 
             size="sm"
             className="bg-accent text-accent-foreground hover:bg-accent/90 font-semibold px-6"
-            onClick={() => {
-              const signupTab = document.querySelector('[value="signup"]');
-              if (signupTab) (signupTab as HTMLElement).click();
-              window.location.href = '/auth';
-            }}
+            onClick={handleSignupClick} // Updated action
           >
             Usar Grátis
           </Button>
@@ -148,9 +152,7 @@ const Navigation = () => {
                 onClick={() => {
                   setIsOpen(false);
                   setTimeout(() => {
-                    const signupTab = document.querySelector('[value="signup"]');
-                    if (signupTab) (signupTab as HTMLElement).click();
-                    window.location.href = '/auth';
+                    handleSignupClick();
                   }, 300);
                 }}
               >

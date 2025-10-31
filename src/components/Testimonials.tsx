@@ -7,7 +7,7 @@ const Testimonials = () => {
       name: "Ana Paula",
       role: "Vendedora no Mercado Livre",
       image: "/lovable-uploads/testimonial-ana.jpeg",
-      imagePosition: "object-[center_20%]",
+      imagePosition: "object-center", // Adjusted to object-center to show full face
       rating: 5,
       text: "Aumentei meu lucro em 40% no primeiro mês! A LucraAI me mostrou que eu estava vendendo abaixo do preço ideal. Recomendo muito!",
     },
@@ -29,7 +29,7 @@ const Testimonials = () => {
       name: "Roberto Santos",
       role: "E-commerce Amazon",
       image: "/lovable-uploads/testimonial-roberto.jpeg",
-      rating: 5,
+      rating: 4.5, // Changed from 5 to 4.5
       text: "ROI incrível! Paguei o plano Premium e recuperei o investimento em menos de uma semana com o aumento das margens de lucro.",
     },
     {
@@ -42,7 +42,7 @@ const Testimonials = () => {
     },
     {
       name: "Felipe Santos",
-      role: "Vendedor Marketplace",
+      role: "Vendedor Shopee", // Changed role
       image: "/lovable-uploads/testimonial-felipe.jpeg",
       rating: 4,
       text: "A IA de precificação realmente funciona! Em 3 semanas consegui identificar produtos que estava vendendo muito abaixo do mercado. Minha margem de lucro aumentou 35% desde que comecei a usar.",

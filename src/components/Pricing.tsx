@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Check } from "lucide-react";
+import { cn } from "@/lib/utils"; // Import cn for conditional styling
 
 const scrollToSection = (id: string) => {
   const element = document.getElementById(id);
@@ -14,10 +15,22 @@ const Pricing = () => {
   const [period, setPeriod] = useState<"mensal" | "anual" | "trimestral" | "semestral">("mensal");
   const [showComingSoon, setShowComingSoon] = useState(false);
 
+  const premiumFeatures = [
+    "Tudo do Plano PRO",
+    "IA de Precificação de Produtos (Produtos ilimitados)",
+    "Gerador de Títulos e Descrições com IA",
+    "Espião de Tendências de Produtos",
+    "Espião de Concorrência com Automação",
+    "Gerador Inteligente de Kits",
+    "Detector de Palavras Proibidas e Reprovação de Anúncios",
+    "Alertas de Datas Especiais + Produtos Minerados",
+    "Relatórios Mensais de Lucro e Crescimento de Faturamento",
+  ];
+
   const plans = [
     {
       name: "Free",
-      prices: { mensal: 0, anual: 0 },
+      prices: { mensal: 0, anual: 0, trimestral: 0, semestral: 0 },
       features: [
         "IA de Precificação de Produtos (até 100 produtos)",
         "Alertas de Datas Especiais + Produtos Minerados",
@@ -27,7 +40,7 @@ const Pricing = () => {
     },
     {
       name: "Pro",
-      prices: { mensal: 14.90, anual: 14.90 },
+      prices: { mensal: 14.90, anual: 14.90, trimestral: 14.90, semestral: 14.90 },
       features: [
         "IA de Precificação (até 1000 produtos)",
         "Gerador de Títulos e Descrições com IA",
@@ -40,15 +53,8 @@ const Pricing = () => {
     },
     {
       name: "Premium",
-      prices: { mensal: 24.90, anual: 24.90 },
-      features: [
-        "Tudo do Pro +",
-        "IA de Precificação (produtos ilimitados)",
-        "Espião de Concorrência com Automação",
-        "Gerador Inteligente de Kits",
-        "Detector de Palavras Proibidas e Reprovação",
-        "Relatórios Avançados de Lucro e Crescimento",
-      ],
+      prices: { mensal: 24.90, anual: 24.90, trimestral: 24.90, semestral: 24.90 },
+      features: premiumFeatures, // Updated features
       highlighted: true,
       badge: "Mais Vendido",
       available: true,
@@ -56,13 +62,13 @@ const Pricing = () => {
   ];
 
   const handlePeriodClick = (newPeriod: typeof period) => {
-    if (newPeriod === "trimestral" || newPeriod === "semestral") {
-      setShowComingSoon(true);
-    } else {
-      setShowComingSoon(false);
-    }
+    const isComingSoon = newPeriod === "trimestral" || newPeriod === "semestral";
+    setShowComingSoon(isComingSoon);
     setPeriod(newPeriod);
   };
+
+  // Custom class for dark yellow hover effect
+  const darkYellowHoverClass = "hover:bg-[hsl(48_100%_40%)]";
 
   return (
     <section id="planos" className="py-24 bg-black relative overflow-hidden">
@@ -81,99 +87,107 @@ const Pricing = () => {
           <Button
             variant={period === "mensal" ? "default" : "outline"}
             onClick={() => handlePeriodClick("mensal")}
-            className={`${period === "mensal" ? "bg-accent text-accent-foreground" : ""} hover:border-accent transition-all duration-300`}
+            className={cn(period === "mensal" ? "bg-accent text-accent-foreground" : "", "hover:border-accent transition-all duration-300", darkYellowHoverClass)}
           >
             Mensal
           </Button>
           <Button
             variant={period === "anual" ? "default" : "outline"}
             onClick={() => handlePeriodClick("anual")}
-            className={`${period === "anual" ? "bg-accent text-accent-foreground" : ""} hover:border-accent transition-all duration-300`}
+            className={cn(period === "anual" ? "bg-accent text-accent-foreground" : "", "hover:border-accent transition-all duration-300", darkYellowHoverClass)}
           >
             Anual
           </Button>
           <Button
             variant={period === "trimestral" ? "default" : "outline"}
             onClick={() => handlePeriodClick("trimestral")}
-            className={`${period === "trimestral" ? "bg-accent text-accent-foreground" : ""} hover:border-accent transition-all duration-300`}
+            className={cn(period === "trimestral" ? "bg-accent text-accent-foreground" : "", "hover:border-accent transition-all duration-300", darkYellowHoverClass)}
           >
             Trimestral
           </Button>
           <Button
             variant={period === "semestral" ? "default" : "outline"}
             onClick={() => handlePeriodClick("semestral")}
-            className={`${period === "semestral" ? "bg-accent text-accent-foreground" : ""} hover:border-accent transition-all duration-300`}
+            className={cn(period === "semestral" ? "bg-accent text-accent-foreground" : "", "hover:border-accent transition-all duration-300", darkYellowHoverClass)}
           >
             Semestral
           </Button>
         </div>
 
-        {showComingSoon && (
-          <div className="text-center mb-8">
-            <div className="inline-block px-8 py-4 bg-accent/10 border border-accent rounded-lg">
-              <p className="text-accent font-bold text-xl">Muito em breve! Novos Planos Chegando.</p>
+        {/* Plans Grid Container */}
+        <div className="relative max-w-6xl mx-auto">
+          {/* Coming Soon Alert Box */}
+          {showComingSoon && (
+            <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
+              <div className="inline-block px-10 py-6 bg-card/90 border-2 border-accent rounded-xl shadow-2xl text-center">
+                <p className="text-accent font-bold text-2xl">MUITO EM BREVE</p>
+                <p className="text-foreground text-xl mt-2">Novos planos chegando!</p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Plans Grid */}
-        <div className={`grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto transition-all duration-300 ${showComingSoon ? 'opacity-30 blur-sm' : ''}`}>
-          {plans.map((plan, index) => (
-            <Card
-              key={index}
-              className={`p-8 relative flex flex-col ${
-                plan.highlighted
-                  ? "border-accent shadow-glow-accent scale-105"
-                  : "border-border"
-              } transition-all duration-300 hover-lift cursor-pointer`}
-            >
-              {plan.badge && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <div className="flex items-center gap-1 bg-accent text-accent-foreground px-4 py-1 rounded-full text-sm font-semibold">
-                    {plan.badge}
+          {/* Plans Grid */}
+          <div className={cn(
+            "grid grid-cols-1 md:grid-cols-3 gap-8 transition-all duration-500",
+            showComingSoon && 'opacity-30 blur-sm pointer-events-none'
+          )}>
+            {plans.map((plan, index) => (
+              <Card
+                key={index}
+                className={`p-8 relative flex flex-col ${
+                  plan.highlighted
+                    ? "border-accent shadow-glow-accent scale-105"
+                    : "border-border"
+                } transition-all duration-300 hover-lift cursor-pointer`}
+              >
+                {plan.badge && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                    <div className="flex items-center gap-1 bg-accent text-accent-foreground px-4 py-1 rounded-full text-sm font-semibold">
+                      {plan.badge}
+                    </div>
+                  </div>
+                )}
+
+                <div className="text-center mb-6">
+                  <h3 className="text-2xl font-bold text-foreground mb-2">
+                    {plan.name}
+                  </h3>
+                  <div className="flex items-baseline justify-center gap-1">
+                    <span className="text-4xl font-bold text-accent">
+                      R$ {plan.prices[period].toFixed(2).replace('.', ',')}
+                    </span>
+                    <span className="text-muted-foreground">
+                      /mês
+                    </span>
                   </div>
                 </div>
-              )}
 
-              <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold text-foreground mb-2">
-                  {plan.name}
-                </h3>
-                <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-4xl font-bold text-accent">
-                    R$ {plan.prices[period === "trimestral" || period === "semestral" ? "mensal" : period].toFixed(2).replace('.', ',')}
-                  </span>
-                  <span className="text-muted-foreground">
-                    /mês
-                  </span>
-                </div>
-              </div>
+                <ul className="space-y-3 mb-8 flex-grow">
+                  {plan.features.map((feature, i) => (
+                    <li key={i} className="flex items-start gap-2">
+                      <Check className="h-5 w-5 text-accent shrink-0 mt-0.5" />
+                      <span className="text-muted-foreground">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
 
-              <ul className="space-y-3 mb-8 flex-grow">
-                {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <Check className="h-5 w-5 text-accent shrink-0 mt-0.5" />
-                    <span className="text-muted-foreground">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Button
-                variant={plan.highlighted ? "default" : "outline"}
-                className={`w-full mt-auto ${
-                  plan.highlighted ? "bg-accent text-accent-foreground hover:bg-accent/90" : ""
-                }`}
-                size="lg"
-                onClick={() => {
-                  if (showComingSoon) return;
-                  window.location.href = '/auth';
-                }}
-                disabled={showComingSoon}
-              >
-                {showComingSoon ? "Em Breve" : "Começar Agora"}
-              </Button>
-            </Card>
-          ))}
+                <Button
+                  variant={plan.highlighted ? "default" : "outline"}
+                  className={`w-full mt-auto ${
+                    plan.highlighted ? "bg-accent text-accent-foreground hover:bg-accent/90" : ""
+                  }`}
+                  size="lg"
+                  onClick={() => {
+                    if (showComingSoon) return;
+                    window.location.href = '/auth';
+                  }}
+                  disabled={showComingSoon}
+                >
+                  {showComingSoon ? "Em Breve" : "Começar Agora"}
+                </Button>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     </section>
