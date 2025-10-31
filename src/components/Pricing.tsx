@@ -37,6 +37,16 @@ const Pricing = () => {
       ],
       highlighted: false,
       available: true,
+      order: 1,
+    },
+    {
+      name: "Premium",
+      prices: { mensal: 24.90, anual: 24.90, trimestral: 24.90, semestral: 24.90 },
+      features: premiumFeatures, // Updated features
+      highlighted: true,
+      badge: "Mais Vendido",
+      available: true,
+      order: 2,
     },
     {
       name: "Pro",
@@ -50,16 +60,13 @@ const Pricing = () => {
       ],
       highlighted: false,
       available: true,
-    },
-    {
-      name: "Premium",
-      prices: { mensal: 24.90, anual: 24.90, trimestral: 24.90, semestral: 24.90 },
-      features: premiumFeatures, // Updated features
-      highlighted: true,
-      badge: "Mais Vendido",
-      available: true,
+      order: 3,
     },
   ];
+  
+  // Sort plans by the new 'order' property: Free (1), Premium (2), Pro (3)
+  const sortedPlans = plans.sort((a, b) => a.order - b.order);
+
 
   const handlePeriodClick = (newPeriod: typeof period) => {
     const isComingSoon = newPeriod === "trimestral" || newPeriod === "semestral";
@@ -131,7 +138,7 @@ const Pricing = () => {
             "grid grid-cols-1 md:grid-cols-3 gap-8 transition-all duration-500",
             showComingSoon && 'opacity-30 blur-sm pointer-events-none'
           )}>
-            {plans.map((plan, index) => (
+            {sortedPlans.map((plan, index) => (
               <Card
                 key={index}
                 className={`p-8 relative flex flex-col ${

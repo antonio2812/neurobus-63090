@@ -50,7 +50,7 @@ const Footer = () => {
               />
             </button>
             {/* Updated Text Positioning */}
-            <p className="text-muted-foreground leading-relaxed max-w-sm text-left md:text-center">
+            <p className="text-muted-foreground leading-relaxed max-w-sm text-left md:text-center mx-auto md:mx-0">
               O primeiro App brasileiro que combina IA avançada com Automação inteligente 
               para transformar a precificação do seu negócio em minutos.
             </p>
