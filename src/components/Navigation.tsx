@@ -28,12 +28,14 @@ const Navigation = () => {
     <nav className="fixed top-0 w-full z-50 bg-black backdrop-blur-xl border-b border-border">
       <div className="container mx-auto px-6 h-20 flex items-center justify-between">
         <button onClick={scrollToTop} className="flex items-center space-x-3 z-50 group">
-          {/* Updated Logo Styling */}
+          {/* Updated Logo Styling and path */}
           <img 
-            src="/lovable-uploads/logo-lucraai-fox.png" 
+            src="/lovable-uploads/logo-lucraai-fox-new.png" 
             alt="LucraAI Logo" 
-            className="h-14 w-auto transition-all duration-300 rounded-lg group-hover:bg-[hsl(48_100%_13%)] p-1"
-            style={{ backgroundColor: 'transparent' }}
+            className="h-14 w-auto transition-all duration-300 rounded-lg p-1"
+            style={{ backgroundColor: 'transparent', transition: 'background-color 0.3s' }}
+            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3A320A'}
+            onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           />
           {/* Updated Name Hover Effect */}
           <span className="text-xl font-bold text-foreground transition-all duration-300 group-hover:text-gray-700">

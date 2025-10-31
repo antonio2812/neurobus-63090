@@ -6,7 +6,7 @@ const Testimonials = () => {
     {
       name: "Ana Paula",
       role: "Vendedora no Mercado Livre",
-      image: "/lovable-uploads/testimonial-ana.jpeg",
+      image: "/lovable-uploads/testimonial-ana-new.jpg", // Updated path
       imagePosition: "object-center", // Adjusted to object-center to show full face
       rating: 5,
       text: "Aumentei meu lucro em 40% no primeiro mês! A LucraAI me mostrou que eu estava vendendo abaixo do preço ideal. Recomendo muito!",

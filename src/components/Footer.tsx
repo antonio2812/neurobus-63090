@@ -44,7 +44,7 @@ const Footer = () => {
             <button onClick={scrollToTop} className="text-left flex justify-start md:justify-center">
               {/* Updated Logo Styling and Positioning */}
               <img 
-                src="/lovable-uploads/logo-lucraai-fox.png" 
+                src="/lovable-uploads/logo-lucraai-fox-new.png" // Updated path
                 alt="LucraAI Logo" 
                 className="h-14 w-auto transition-transform duration-300 hover:scale-105 rounded-lg"
               />
