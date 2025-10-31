@@ -43,7 +43,7 @@ const Pricing = () => {
       name: "Premium",
       prices: { 
         mensal: 29.90, 
-        anual: 289.88, // R$24.15/mês (289.88 / 12) -> Economia de 33% (29.90 * 12 = 358.80. 289.88 / 358.80 = 0.807)
+        anual: 289.88, 
         trimestral: 289.88, 
         semestral: 289.88 
       },
@@ -57,7 +57,7 @@ const Pricing = () => {
       name: "Pro",
       prices: { 
         mensal: 19.90, 
-        anual: 173.88, // R$14.49/mês (173.88 / 12) -> Economia de 20% (19.90 * 12 = 238.80. 173.88 / 238.80 = 0.728)
+        anual: 173.88, 
         trimestral: 173.88, 
         semestral: 173.88 
       },
@@ -69,7 +69,7 @@ const Pricing = () => {
   ];
   
   // Sort plans by the new 'order' property: Free (1), Premium (2), Pro (3)
-  const sortedPlans = plans.sort((a, b) => a.order - b.order);
+  const sortedPlans = [...plans].sort((a, b) => a.order - b.order);
 
 
   const handlePeriodClick = (newPeriod: typeof period) => {
