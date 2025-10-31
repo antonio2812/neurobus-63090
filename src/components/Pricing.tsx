@@ -11,66 +11,67 @@ const scrollToSection = (id: string) => {
   }
 };
 
+const premiumFeatures = [
+  "Tudo do Plano PRO",
+  "IA de Precificação de Produtos (Produtos ilimitados)",
+  "Gerador de Títulos e Descrições com IA",
+  "Espião de Tendências de Produtos",
+  "Espião de Concorrência com Automação",
+  "Gerador Inteligente de Kits",
+  "Detector de Palavras Proibidas e Reprovação de Anúncios",
+  "Alertas de Datas Especiais + Produtos Minerados",
+  "Relatórios Mensais de Lucro e Crescimento de Faturamento",
+];
+
+const rawPlans = [
+  {
+    name: "Free",
+    prices: { mensal: 0, anual: 0, trimestral: 0, semestral: 0 },
+    features: [
+      "IA de Precificação de Produtos (até 100 produtos)",
+      "Alertas de Datas Especiais + Produtos Minerados",
+    ],
+    highlighted: false,
+    available: true,
+    order: 1,
+    savings: undefined,
+  },
+  {
+    name: "Premium",
+    prices: { 
+      mensal: 29.90, 
+      anual: 289.88, 
+      trimestral: 289.88, 
+      semestral: 289.88 
+    },
+    savings: "Economize 33%",
+    highlighted: true,
+    badge: "Mais Vendido",
+    available: true,
+    order: 2,
+  },
+  {
+    name: "Pro",
+    prices: { 
+      mensal: 19.90, 
+      anual: 173.88, 
+      trimestral: 173.88, 
+      semestral: 173.88 
+    },
+    savings: "Economize 20%",
+    highlighted: false,
+    available: true,
+    order: 3,
+  },
+];
+
+// Sort plans once outside the component render cycle if possible, or ensure it's done robustly inside.
+const sortedPlans = rawPlans.sort((a, b) => a.order - b.order);
+
+
 const Pricing = () => {
   const [period, setPeriod] = useState<"mensal" | "anual" | "trimestral" | "semestral">("mensal");
   const [showComingSoon, setShowComingSoon] = useState(false);
-
-  const premiumFeatures = [
-    "Tudo do Plano PRO",
-    "IA de Precificação de Produtos (Produtos ilimitados)",
-    "Gerador de Títulos e Descrições com IA",
-    "Espião de Tendências de Produtos",
-    "Espião de Concorrência com Automação",
-    "Gerador Inteligente de Kits",
-    "Detector de Palavras Proibidas e Reprovação de Anúncios",
-    "Alertas de Datas Especiais + Produtos Minerados",
-    "Relatórios Mensais de Lucro e Crescimento de Faturamento",
-  ];
-
-  const plans = [
-    {
-      name: "Free",
-      prices: { mensal: 0, anual: 0, trimestral: 0, semestral: 0 },
-      features: [
-        "IA de Precificação de Produtos (até 100 produtos)",
-        "Alertas de Datas Especiais + Produtos Minerados",
-      ],
-      highlighted: false,
-      available: true,
-      order: 1,
-    },
-    {
-      name: "Premium",
-      prices: { 
-        mensal: 29.90, 
-        anual: 289.88, 
-        trimestral: 289.88, 
-        semestral: 289.88 
-      },
-      savings: "Economize 33%",
-      highlighted: true,
-      badge: "Mais Vendido",
-      available: true,
-      order: 2,
-    },
-    {
-      name: "Pro",
-      prices: { 
-        mensal: 19.90, 
-        anual: 173.88, 
-        trimestral: 173.88, 
-        semestral: 173.88 
-      },
-      savings: "Economize 20%",
-      highlighted: false,
-      available: true,
-      order: 3,
-    },
-  ];
-  
-  // Sort plans by the new 'order' property: Free (1), Premium (2), Pro (3)
-  const sortedPlans = [...plans].sort((a, b) => a.order - b.order);
-
 
   const handlePeriodClick = (newPeriod: typeof period) => {
     const isComingSoon = newPeriod === "trimestral" || newPeriod === "semestral";
