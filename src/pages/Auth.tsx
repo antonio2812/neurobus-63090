@@ -150,7 +150,7 @@ const Auth = () => {
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="login">Entrar</TabsTrigger>
-              <TabsTrigger value="signup">Criar conta</TabsTrigger>
+              <TabsTrigger value="signup">Cadastro</TabsTrigger> {/* Título alterado */}
             </TabsList>
 
             <TabsContent value="login">

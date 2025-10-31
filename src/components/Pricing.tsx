@@ -11,8 +11,8 @@ const scrollToSection = (id: string) => {
   }
 };
 
+// Definindo os recursos conforme solicitado
 const premiumFeatures = [
-  "Tudo do Plano PRO",
   "IA de Precificação de Produtos (Produtos ilimitados)",
   "Gerador de Títulos e Descrições com IA",
   "Espião de Tendências de Produtos",
@@ -22,6 +22,15 @@ const premiumFeatures = [
   "Alertas de Datas Especiais + Produtos Minerados",
   "Relatórios Mensais de Lucro e Crescimento de Faturamento",
 ];
+
+const proFeatures = [
+  "IA de Precificação de Produtos (Até 1000 produtos)",
+  "Gerador de Títulos e Descrições com IA",
+  "Espião de Tendências de Produtos",
+  "Alertas de Datas Especiais + Produtos Minerados",
+  "Relatórios Mensais de Lucro e Crescimento de Faturamento",
+];
+
 
 const rawPlans = [
   {
@@ -49,6 +58,7 @@ const rawPlans = [
     badge: "Mais Vendido",
     available: true,
     order: 2,
+    features: premiumFeatures, // Usando a lista atualizada
   },
   {
     name: "Pro",
@@ -62,6 +72,7 @@ const rawPlans = [
     highlighted: false,
     available: true,
     order: 3,
+    features: proFeatures, // Usando a lista atualizada
   },
 ];
 
@@ -96,8 +107,8 @@ const Pricing = () => {
           </p>
         </div>
 
-        {/* Period Selector - Repositioned higher (mb-8 instead of mb-12) */}
-        <div className="flex justify-center gap-4 mb-12 flex-wrap"> {/* Alterado mb-8 para mb-12 para reposicionar mais para cima */}
+        {/* Period Selector - Repositioned higher (mb-12) */}
+        <div className="flex justify-center gap-4 mb-12 flex-wrap">
           <Button
             variant={period === "mensal" ? "default" : "outline"}
             onClick={() => handlePeriodClick("mensal")}
@@ -143,7 +154,8 @@ const Pricing = () => {
           {/* Plans Grid */}
           <div className={cn(
             "grid grid-cols-1 md:grid-cols-3 gap-8 transition-all duration-500",
-            showComingSoon && 'opacity-30 blur-sm pointer-events-none'
+            // Efeito de desfoque completo e opacidade reduzida
+            showComingSoon && 'opacity-10 blur-lg pointer-events-none' 
           )}>
             {Array.isArray(sortedPlans) && sortedPlans.map((plan, index) => (
               <Card

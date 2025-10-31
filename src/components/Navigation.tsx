@@ -28,7 +28,7 @@ const Navigation = () => {
     <nav className="fixed top-0 w-full z-50 bg-black backdrop-blur-xl border-b border-border">
       <div className="container mx-auto px-6 h-20 flex items-center justify-between">
         <button onClick={scrollToTop} className="flex items-center space-x-3 z-50 group">
-          {/* Updated Logo Styling and path */}
+          {/* Efeito hover: cor #3A320A atrás do ícone com bordas arredondadas */}
           <img 
             src="/lovable-uploads/logo-lucraai-fox-new.png" 
             alt="LucraAI Logo" 
@@ -37,7 +37,7 @@ const Navigation = () => {
             onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3A320A'}
             onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           />
-          {/* Updated Name Hover Effect: applying opacity-30 on hover */}
+          {/* Texto transparente no hover */}
           <span className="text-xl font-bold text-foreground transition-all duration-300 group-hover:opacity-30">
             Lucra<span style={{ color: '#ffc800' }}>AI</span>
           </span>
@@ -85,7 +85,7 @@ const Navigation = () => {
             variant="default" 
             size="sm"
             className="bg-accent text-accent-foreground hover:bg-accent/90 font-semibold px-6"
-            onClick={handleSignupClick} // Updated action
+            onClick={handleSignupClick} // Direciona para /auth#signup
           >
             Usar Grátis
           </Button>
