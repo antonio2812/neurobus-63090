@@ -41,8 +41,13 @@ const Pricing = () => {
     },
     {
       name: "Premium",
-      prices: { mensal: 24.90, anual: 24.90, trimestral: 24.90, semestral: 24.90 },
-      features: premiumFeatures, // Updated features
+      prices: { 
+        mensal: 29.90, 
+        anual: 289.88, // R$24.15/mês (289.88 / 12) -> Economia de 33% (29.90 * 12 = 358.80. 289.88 / 358.80 = 0.807)
+        trimestral: 289.88, 
+        semestral: 289.88 
+      },
+      savings: "Economize 33%",
       highlighted: true,
       badge: "Mais Vendido",
       available: true,
@@ -50,14 +55,13 @@ const Pricing = () => {
     },
     {
       name: "Pro",
-      prices: { mensal: 14.90, anual: 14.90, trimestral: 14.90, semestral: 14.90 },
-      features: [
-        "IA de Precificação (até 1000 produtos)",
-        "Gerador de Títulos e Descrições com IA",
-        "Espião de Tendências de Produtos",
-        "Alertas de Datas Especiais + Produtos Minerados",
-        "Relatórios Mensais de Lucro e Crescimento de Faturamento",
-      ],
+      prices: { 
+        mensal: 19.90, 
+        anual: 173.88, // R$14.49/mês (173.88 / 12) -> Economia de 20% (19.90 * 12 = 238.80. 173.88 / 238.80 = 0.728)
+        trimestral: 173.88, 
+        semestral: 173.88 
+      },
+      savings: "Economize 20%",
       highlighted: false,
       available: true,
       order: 3,
@@ -77,6 +81,8 @@ const Pricing = () => {
   // Custom class for dark yellow hover effect
   const darkYellowHoverClass = "hover:bg-[hsl(48_100%_40%)]";
 
+  const isAnnualOrComingSoon = period === "anual" || period === "trimestral" || period === "semestral";
+
   return (
     <section id="planos" className="py-24 bg-black relative overflow-hidden">
       <div className="container mx-auto px-6 relative z-10">
@@ -89,8 +95,8 @@ const Pricing = () => {
           </p>
         </div>
 
-        {/* Period Selector */}
-        <div className="flex justify-center gap-4 mb-12 flex-wrap">
+        {/* Period Selector - Repositioned higher (mb-8 instead of mb-12) */}
+        <div className="flex justify-center gap-4 mb-8 flex-wrap">
           <Button
             variant={period === "mensal" ? "default" : "outline"}
             onClick={() => handlePeriodClick("mensal")}
@@ -160,13 +166,19 @@ const Pricing = () => {
                     {plan.name}
                   </h3>
                   <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-4xl font-bold text-accent">
+                    <span className="text-4xl font-bold text-white">
                       R$ {plan.prices[period].toFixed(2).replace('.', ',')}
                     </span>
                     <span className="text-muted-foreground">
-                      /mês
+                      /{isAnnualOrComingSoon ? "ano" : "mês"}
                     </span>
                   </div>
+                  
+                  {isAnnualOrComingSoon && plan.savings && (
+                    <p className="text-sm font-semibold mt-1" style={{ color: '#ffc800' }}>
+                      {plan.savings}
+                    </p>
+                  )}
                 </div>
 
                 <ul className="space-y-3 mb-8 flex-grow">

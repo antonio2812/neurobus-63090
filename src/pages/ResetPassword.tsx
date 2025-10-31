@@ -104,31 +104,33 @@ const ResetPassword = () => {
       <Card className="w-full max-w-md border-border">
         <CardHeader className="text-center">
           <img 
-            src="/lovable-uploads/logo-lucraai-fox.png" 
+            src="/lovable-uploads/LogoMarca LucraAI 01.png" 
             alt="LucraAI Logo" 
             className="h-20 w-auto mx-auto mb-4 rounded-2xl"
           />
           <CardTitle className="text-2xl">
-            {isUpdateMode ? "Alterar Senha" : "Recuperar Senha"}
+            Alterar Senha
           </CardTitle>
           <CardDescription>
-            {isUpdateMode ? "Crie sua nova senha" : "Digite seu email para receber instruções"}
+            {isUpdateMode ? "Crie sua nova senha." : "Digite seu email para receber instruções de alteração."}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleResetPassword} className="space-y-4">
-            {!isUpdateMode && (
-              <div className="space-y-2">
-                <Label htmlFor="reset-email">Email</Label>
-                <Input 
-                  id="reset-email"
-                  name="email"
-                  type="email" 
-                  placeholder="seu@email.com"
-                  required
-                />
-              </div>
-            )}
+            {/* Email field is always shown for consistency, but only used for reset request if not in update mode */}
+            <div className="space-y-2">
+              <Label htmlFor="reset-email">Email</Label>
+              <Input 
+                id="reset-email"
+                name="email"
+                type="email" 
+                placeholder="seu@email.com"
+                required
+                // Disable email input if we are in the update flow (token already present)
+                disabled={isUpdateMode}
+              />
+            </div>
+            
             {isUpdateMode && (
               <>
                 <div className="space-y-2">
@@ -138,7 +140,7 @@ const ResetPassword = () => {
                       id="reset-password"
                       name="password"
                       type={showPassword ? "text" : "password"}
-                      placeholder="••••••••"
+                      placeholder="Digite sua nova senha"
                       required
                       className="pr-10"
                     />
@@ -158,7 +160,7 @@ const ResetPassword = () => {
                       id="reset-confirm"
                       name="confirm-password"
                       type={showConfirmPassword ? "text" : "password"}
-                      placeholder="••••••••"
+                      placeholder="Confirme sua nova senha"
                       required
                       className="pr-10"
                     />
@@ -180,7 +182,7 @@ const ResetPassword = () => {
             >
               {isLoading 
                 ? (isUpdateMode ? "Alterando senha..." : "Enviando email...") 
-                : (isUpdateMode ? "Alterar Senha" : "Enviar Email")
+                : (isUpdateMode ? "Alterar Senha" : "Enviar Email de Alteração")
               }
             </Button>
             <div className="text-center">

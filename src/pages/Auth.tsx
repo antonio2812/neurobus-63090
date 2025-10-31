@@ -141,7 +141,7 @@ const Auth = () => {
       <Card className="w-full max-w-md border-border">
         <CardHeader className="text-center pb-4">
           <img 
-            src="/lovable-uploads/logo-lucraai-fox.png" 
+            src="/lovable-uploads/LogoMarca LucraAI 01.png" 
             alt="LucraAI Logo" 
             className="h-20 w-auto mx-auto rounded-2xl"
           />
@@ -150,7 +150,7 @@ const Auth = () => {
           <Tabs defaultValue="login" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="login">Entrar</TabsTrigger>
-              <TabsTrigger value="signup">Cadastro</TabsTrigger>
+              <TabsTrigger value="signup">Criar conta</TabsTrigger>
             </TabsList>
 
             <TabsContent value="login">
@@ -270,7 +270,7 @@ const Auth = () => {
                   className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Criando conta..." : "Cadastro"}
+                  {isLoading ? "Criando conta..." : "Criar conta"}
                 </Button>
               </form>
             </TabsContent>

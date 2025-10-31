@@ -1,4 +1,4 @@
-import { Brain, Sparkles, TrendingUp, Eye, Box, AlertTriangle, Bell, BarChart, Radar } from "lucide-react";
+import { Brain, Sparkles, TrendingUp, Eye, Box, AlertTriangle, Bell, BarChart, UserSearch } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 const ResourcesTools = () => {
@@ -14,7 +14,7 @@ const ResourcesTools = () => {
       description: "Conquiste mais cliques com textos prontos, persuasivos e otimizados para marketplaces.",
     },
     {
-      icon: Radar, // Changed icon to Radar
+      icon: UserSearch, // Changed icon to UserSearch (Detective/Analysis)
       title: "Espião de Tendências de Produtos",
       description: "Descubra o que vai bombar antes dos seus concorrentes.",
     },

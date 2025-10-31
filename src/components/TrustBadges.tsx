@@ -1,4 +1,4 @@
-import { Award, Shield, Trophy, Lock, ShieldCheck, CircleCheck, Handshake } from "lucide-react";
+import { Award, Shield, Trophy, Lock, ShieldCheck, BadgeCheck, Handshake } from "lucide-react";
 
 const TrustBadges = () => {
   const badges = [
@@ -18,7 +18,7 @@ const TrustBadges = () => {
       description: "Compromisso total com sua satisfação. Teste sem riscos: se o resultado não superar suas expectativas, garantimos a devolução do seu dinheiro. Simples assim.",
     },
     {
-      icon: CircleCheck, // Changed from Shield to CircleCheck
+      icon: BadgeCheck, // Changed from CircleCheck to BadgeCheck
       title: "Verificado por Terceiros",
       description: "A LucraAI é validada com base nos padrões mais altos do mercado. Reconhecimento de líderes como Google e OpenAI. Processos auditados de forma independente, garantindo transparência e segurança.",
     },

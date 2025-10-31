@@ -13,6 +13,7 @@ const Footer = () => {
   const legalLinks = [
     { label: "Termos de Uso", href: "/terms" },
     { label: "Política de Privacidade", href: "/privacy" },
+    { label: "Suporte", href: "https://wa.link/adnlkj", external: true },
   ];
 
   const scrollToTop = () => {
@@ -42,14 +43,14 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           <div className="space-y-6">
             <button onClick={scrollToTop} className="text-left flex justify-start md:justify-center">
-              {/* Updated Logo Styling and Positioning */}
+              {/* Logo centralizado em relação ao texto abaixo */}
               <img 
                 src="/lovable-uploads/logo-lucraai-fox-new.png" // Updated path
                 alt="LucraAI Logo" 
                 className="h-14 w-auto transition-transform duration-300 hover:scale-105 rounded-lg"
               />
             </button>
-            {/* Updated Text Positioning */}
+            {/* Texto centralizado no desktop */}
             <p className="text-muted-foreground leading-relaxed max-w-sm text-left md:text-center mx-auto md:mx-0">
               O primeiro App brasileiro que combina IA avançada com Automação inteligente 
               para transformar a precificação do seu negócio em minutos.
@@ -103,12 +104,23 @@ const Footer = () => {
           <ul className="space-y-3">
             {legalLinks.map((link) => (
               <li key={link.label}>
-                <Link 
-                  to={link.href}
-                  className="text-muted-foreground hover:text-accent transition-colors duration-300"
-                >
-                  {link.label}
-                </Link>
+                {link.external ? (
+                  <a 
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-accent transition-colors duration-300"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link 
+                    to={link.href}
+                    className="text-muted-foreground hover:text-accent transition-colors duration-300"
+                  >
+                    {link.label}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>
