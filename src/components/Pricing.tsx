@@ -183,7 +183,7 @@ const Pricing = () => {
                 </div>
 
                 <ul className="space-y-3 mb-8 flex-grow">
-                  {plan.features.map((feature, i) => (
+                  {Array.isArray(plan.features) && plan.features.map((feature, i) => (
                     <li key={i} className="flex items-start gap-2">
                       <Check className="h-5 w-5 text-accent shrink-0 mt-0.5" />
                       <span className="text-muted-foreground">{feature}</span>
