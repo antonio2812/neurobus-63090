@@ -118,7 +118,7 @@ const ResetPassword = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleResetPassword} className="space-y-4">
-            {/* Email field is always shown for consistency */}
+            {/* Email field */}
             <div className="space-y-2">
               <Label htmlFor="reset-email">Email</Label>
               <Input 
@@ -127,7 +127,7 @@ const ResetPassword = () => {
                 type="email" 
                 placeholder="seu@email.com"
                 required
-                // Only disable email input if we are in the update flow (token already present)
+                // Disable email input if we are in the update flow (token already present)
                 disabled={isUpdateMode}
               />
             </div>
