@@ -97,7 +97,7 @@ const Pricing = () => {
         </div>
 
         {/* Period Selector - Repositioned higher (mb-8 instead of mb-12) */}
-        <div className="flex justify-center gap-4 mb-8 flex-wrap">
+        <div className="flex justify-center gap-4 mb-12 flex-wrap"> {/* Alterado mb-8 para mb-12 para reposicionar mais para cima */}
           <Button
             variant={period === "mensal" ? "default" : "outline"}
             onClick={() => handlePeriodClick("mensal")}

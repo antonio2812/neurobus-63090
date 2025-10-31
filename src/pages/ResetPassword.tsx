@@ -18,6 +18,7 @@ const ResetPassword = () => {
 
   useEffect(() => {
     // Check if user is coming from password reset email
+    // If the user is redirected here via the email link, Supabase sets the session state to PASSWORD_RECOVERY
     supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") {
         setIsUpdateMode(true);
@@ -35,7 +36,7 @@ const ResetPassword = () => {
     const confirmPassword = formData.get("confirm-password") as string;
 
     if (isUpdateMode) {
-      // User is updating password after clicking reset link
+      // --- FLUXO 2: Usuário clicou no link do email e está alterando a senha ---
       if (password !== confirmPassword) {
         setIsLoading(false);
         toast({
@@ -67,7 +68,7 @@ const ResetPassword = () => {
       });
       navigate("/auth");
     } else {
-      // User is requesting password reset email
+      // --- FLUXO 1: Usuário solicitando o email de recuperação ---
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
@@ -117,7 +118,7 @@ const ResetPassword = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleResetPassword} className="space-y-4">
-            {/* Email field is always shown for consistency, but only used for reset request if not in update mode */}
+            {/* Email field is always shown for consistency */}
             <div className="space-y-2">
               <Label htmlFor="reset-email">Email</Label>
               <Input 
@@ -126,11 +127,12 @@ const ResetPassword = () => {
                 type="email" 
                 placeholder="seu@email.com"
                 required
-                // Disable email input if we are in the update flow (token already present)
+                // Only disable email input if we are in the update flow (token already present)
                 disabled={isUpdateMode}
               />
             </div>
             
+            {/* Password fields are shown only in update mode */}
             {isUpdateMode && (
               <>
                 <div className="space-y-2">

@@ -41,8 +41,8 @@ const Footer = () => {
     <footer className="bg-black border-t border-border py-16">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
-          <div className="space-y-6">
-            <button onClick={scrollToTop} className="text-left flex justify-start md:justify-center">
+          <div className="space-y-6 flex flex-col items-start md:items-center"> {/* Adicionado flex-col e items-center para centralizar no desktop */}
+            <button onClick={scrollToTop} className="text-left flex justify-start">
               {/* Logo centralizado em relação ao texto abaixo */}
               <img 
                 src="/lovable-uploads/logo-lucraai-fox-new.png" // Updated path
@@ -51,12 +51,12 @@ const Footer = () => {
               />
             </button>
             {/* Texto centralizado no desktop */}
-            <p className="text-muted-foreground leading-relaxed max-w-sm text-left md:text-center mx-auto md:mx-0">
+            <p className="text-muted-foreground leading-relaxed max-w-sm text-left md:text-center"> {/* Removido mx-auto e md:mx-0, mantido max-w-sm */}
               O primeiro App brasileiro que combina IA avançada com Automação inteligente 
               para transformar a precificação do seu negócio em minutos.
             </p>
             
-            <div className="flex gap-4 justify-start md:justify-center">
+            <div className="flex gap-4 justify-start md:justify-center w-full"> {/* Adicionado w-full e justify-center para centralizar ícones */}
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
