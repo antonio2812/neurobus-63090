@@ -102,10 +102,10 @@ const Terms = () => {
               <p>
                 Para dúvidas sobre estes Termos de Uso, entre em contato conosco em:{" "}
                 <a 
-                  href="mailto:lucraai.oficial@gmail.com" 
+                  href="mailto:suporte.lucra.ai@gmail.com" 
                   className="text-blue-600 hover:text-blue-700 hover:underline"
                 >
-                  lucraai.oficial@gmail.com
+                  suporte.lucra.ai@gmail.com
                 </a>
               </p>
             </section>

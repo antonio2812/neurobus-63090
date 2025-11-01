@@ -128,10 +128,10 @@ const Privacy = () => {
               <p>
                 Para questões sobre privacidade ou para exercer seus direitos, entre em contato:{" "}
                 <a 
-                  href="mailto:lucraai.oficial@gmail.com" 
+                  href="mailto:suporte.lucra.ai@gmail.com" 
                   className="text-blue-600 hover:text-blue-700 hover:underline"
                 >
-                  lucraai.oficial@gmail.com
+                  suporte.lucra.ai@gmail.com
                 </a>
               </p>
             </section>
