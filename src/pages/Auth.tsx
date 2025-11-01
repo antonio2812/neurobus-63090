@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
@@ -25,6 +25,11 @@ const Auth = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const location = useLocation();
+
+  // Determine initial tab based on URL hash
+  const initialTab = location.hash === '#signup' ? 'signup' : 'login';
+  const [activeTab, setActiveTab] = useState<'login' | 'signup'>(initialTab);
 
   // Initialize forms
   const loginForm = useForm<LoginFormValues>({
@@ -36,6 +41,12 @@ const Auth = () => {
     resolver: zodResolver(signupSchema),
     defaultValues: { name: "", email: "", password: "", confirmPassword: "" },
   });
+
+  useEffect(() => {
+    // Update active tab if hash changes (e.g., user navigates back/forward)
+    const newTab = location.hash === '#signup' ? 'signup' : 'login';
+    setActiveTab(newTab);
+  }, [location.hash]);
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -136,7 +147,7 @@ const Auth = () => {
           />
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="login" className="w-full">
+          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'login' | 'signup')} className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6">
               <TabsTrigger value="login">Entrar</TabsTrigger>
               <TabsTrigger value="signup">Cadastro</TabsTrigger>
