@@ -14,7 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, signupSchema } from "@/lib/validation";
 import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useSound } from "@/hooks/useSound"; // Importando useSound
+import useSound from "@/hooks/useSound"; // Importação padrão
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 type SignupFormValues = z.infer<typeof signupSchema>;

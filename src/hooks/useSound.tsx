@@ -4,7 +4,7 @@ import { useCallback } from 'react';
  * Hook customizado para reproduzir efeitos sonoros.
  * @param volume Volume do áudio (0.0 a 1.0). Padrão: 0.6.
  */
-export const useSound = (volume: number = 0.6) => {
+const useSound = (volume: number = 0.6) => {
   const playSound = useCallback((filePath: string) => {
     try {
       const audio = new Audio(filePath);
@@ -20,3 +20,5 @@ export const useSound = (volume: number = 0.6) => {
 
   return { playSound };
 };
+
+export default useSound;
