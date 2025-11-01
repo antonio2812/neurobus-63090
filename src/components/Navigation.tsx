@@ -127,14 +127,14 @@ const Navigation = ({ isOpen, setIsOpen }: NavigationProps) => {
 
         {/* Mobile Menu Drawer and Overlay */}
         
-        {/* 1. Overlay (Fundo Desfocado e Escurecido) - Mantido para escurecer o fundo */}
+        {/* 1. Overlay (Fundo Desfocado e Escurecido) - Agora apenas um clique-catcher para fechar o menu */}
         {isOpen && (
           <div 
             className="lg:hidden fixed inset-0 z-40 transition-opacity duration-500"
             onClick={() => setIsOpen(false)}
+            // Removendo o fundo semi-transparente, mas mantendo o z-index para capturar cliques
             style={{
-              // Fundo preto semi-transparente
-              backgroundColor: 'rgba(0, 0, 0, 0.8)', 
+              backgroundColor: 'transparent', 
             }}
           />
         )}
@@ -144,7 +144,7 @@ const Navigation = ({ isOpen, setIsOpen }: NavigationProps) => {
           className={`lg:hidden fixed top-0 right-0 w-[70%] max-w-xs h-full border-l border-border shadow-2xl z-50 transform transition-transform duration-500 ease-in-out ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
-          // Fundo preto puro (#000000)
+          // Fundo preto puro (#000000) conforme solicitado
           style={{ backgroundColor: '#000000' }}
         >
           <div className="p-6 pt-24 flex flex-col h-full">
