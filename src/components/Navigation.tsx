@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLogoHovered, setIsLogoHovered] = useState(false); // State to manage logo background hover
 
   const navigationItems = [
     { href: "#ferramentas", label: "Ferramentas" },
@@ -27,15 +28,21 @@ const Navigation = () => {
   return (
     <nav className="fixed top-0 w-full z-50 bg-black backdrop-blur-xl border-b border-border">
       <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-        <button onClick={scrollToTop} className="flex items-center space-x-3 z-50 group">
+        <button 
+          onClick={scrollToTop} 
+          className="flex items-center space-x-3 z-50 group"
+          onMouseEnter={() => setIsLogoHovered(true)} // Set hover state on button entry
+          onMouseLeave={() => setIsLogoHovered(false)} // Clear hover state on button exit
+        >
           {/* Efeito hover: cor #3A320A atrás do ícone com bordas arredondadas */}
           <img 
             src="/lovable-uploads/logo-lucraai-fox-new.png" 
             alt="LucraAI Logo" 
             className="h-14 w-auto transition-all duration-300 rounded-lg p-1"
-            style={{ backgroundColor: 'transparent', transition: 'background-color 0.3s' }}
-            onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3A320A'}
-            onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+            style={{ 
+              backgroundColor: isLogoHovered ? '#3A320A' : 'transparent', 
+              transition: 'background-color 0.3s' 
+            }}
           />
           {/* Texto com transparência suave no hover (opacity-30) */}
           <span className="text-xl font-bold text-foreground transition-all duration-300 group-hover:opacity-30">
