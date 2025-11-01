@@ -127,7 +127,7 @@ const ResetPassword = () => {
                 type="email" 
                 placeholder="seu@email.com"
                 required
-                // Disable email input if we are in the update flow (token already present)
+                // Email is only disabled if we are in update mode, otherwise it's required for step 1
                 disabled={isUpdateMode}
               />
             </div>
@@ -179,6 +179,7 @@ const ResetPassword = () => {
             )}
             <Button 
               type="submit" 
+              // Using accent color for the button
               className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
               disabled={isLoading}
             >
