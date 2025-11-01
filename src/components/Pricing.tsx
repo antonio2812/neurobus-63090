@@ -142,9 +142,9 @@ const Pricing = () => {
 
         {/* Plans Grid Container */}
         <div className="relative max-w-6xl mx-auto">
-          {/* Coming Soon Alert Box - Z-index aumentado para garantir visibilidade */}
+          {/* Coming Soon Alert Box */}
           {showComingSoon && (
-            <div className="absolute inset-0 z-50 flex items-center justify-center">
+            <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
               <div className="inline-block px-10 py-6 bg-card/90 border-2 border-accent rounded-xl shadow-2xl text-center">
                 <p className="text-accent font-bold text-2xl">MUITO EM BREVE</p>
                 <p className="text-foreground text-xl mt-2">Novos planos chegando!</p>
@@ -155,8 +155,8 @@ const Pricing = () => {
           {/* Plans Grid */}
           <div className={cn(
             "grid grid-cols-1 md:grid-cols-3 gap-8 transition-all duration-500",
-            // Efeito de desfoque completo e opacidade reduzida
-            showComingSoon && 'opacity-5 blur-lg pointer-events-none' // Opacidade reduzida para 5% e desativa cliques
+            // Aumentado o blur para 3xl para máxima ilegibilidade
+            showComingSoon && 'opacity-5 blur-3xl pointer-events-none' 
           )}>
             {Array.isArray(sortedPlans) && sortedPlans.map((plan, index) => (
               <Card
