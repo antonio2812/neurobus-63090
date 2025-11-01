@@ -103,7 +103,8 @@ const Navigation = () => {
         <Button
           variant="ghost"
           size="sm"
-          className="lg:hidden text-foreground hover:bg-accent/10 p-2 z-[60] transition-opacity duration-300 hover:opacity-80" 
+          // Ajustado para hover:opacity-90 para não desaparecer
+          className="lg:hidden text-foreground hover:bg-accent/10 p-2 z-[60] transition-opacity duration-300 hover:opacity-90" 
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -117,9 +118,9 @@ const Navigation = () => {
             className="lg:hidden fixed inset-0 z-40 transition-opacity duration-500"
             onClick={() => setIsOpen(false)}
             style={{
-              // Usando classes Tailwind para opacidade e cor, e style para backdropFilter
-              backgroundColor: 'rgba(0, 0, 0, 0.5)', 
-              backdropFilter: 'blur(8px)',
+              // Aumentando a opacidade do fundo e o desfoque para cobrir completamente
+              backgroundColor: 'rgba(0, 0, 0, 0.8)', 
+              backdropFilter: 'blur(12px)', // Aumentando o desfoque
             }}
           />
         )}
