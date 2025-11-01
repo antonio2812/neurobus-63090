@@ -37,8 +37,8 @@ const Navigation = () => {
             onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3A320A'}
             onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           />
-          {/* Texto transparente no hover (opacity-0) */}
-          <span className="text-xl font-bold text-foreground transition-all duration-300 group-hover:opacity-0">
+          {/* Texto com transparência suave no hover (opacity-30) */}
+          <span className="text-xl font-bold text-foreground transition-all duration-300 group-hover:opacity-30">
             Lucra<span style={{ color: '#ffc800' }}>AI</span>
           </span>
         </button>
