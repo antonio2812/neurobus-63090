@@ -16,8 +16,8 @@ const Footer = () => {
     { label: "Suporte", href: "https://wa.link/adnlkj", external: true },
   ];
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleReloadPage = () => {
+    window.location.reload();
   };
 
   const socialLinks = [
@@ -42,7 +42,7 @@ const Footer = () => {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           <div className="space-y-6 flex flex-col items-start md:items-center"> {/* Adicionado flex-col e items-center para centralizar no desktop */}
-            <button onClick={scrollToTop} className="text-left flex justify-start">
+            <button onClick={handleReloadPage} className="text-left flex justify-start">
               {/* Logo centralizado em relação ao texto abaixo */}
               <img 
                 src="/lovable-uploads/logo-lucraai-fox-new.png" // Updated path

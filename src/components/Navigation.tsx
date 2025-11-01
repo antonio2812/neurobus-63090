@@ -16,8 +16,8 @@ const Navigation = () => {
     { href: "#faq", label: "FAQ" },
   ];
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleReloadPage = () => {
+    window.location.reload();
   };
 
   const handleSignupClick = () => {
@@ -29,7 +29,7 @@ const Navigation = () => {
     <nav className="fixed top-0 w-full z-50 bg-black backdrop-blur-xl border-b border-border">
       <div className="container mx-auto px-6 h-20 flex items-center justify-between">
         <button 
-          onClick={scrollToTop} 
+          onClick={handleReloadPage} 
           className="flex items-center space-x-3 z-50 group"
           onMouseEnter={() => setIsLogoHovered(true)} // Set hover state on button entry
           onMouseLeave={() => setIsLogoHovered(false)} // Clear hover state on button exit
