@@ -6,6 +6,7 @@ const BackgroundEffects = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [nextImageIndex, setNextImageIndex] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const backgroundImages = [
     "/lovable-uploads/4aa271d3-a6a3-48c9-b9a8-9924e55da6a2.png", // Satellite in orbit
@@ -16,6 +17,12 @@ const BackgroundEffects = () => {
   ];
 
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 640);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
     const handleScroll = () => {
       setScrollOffset(window.pageYOffset);
     };
@@ -33,6 +40,7 @@ const BackgroundEffects = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('resize', checkMobile);
     };
   }, []);
 
@@ -54,32 +62,40 @@ const BackgroundEffects = () => {
     return () => clearInterval(interval);
   }, [currentImageIndex, backgroundImages.length]);
 
+  // Determine dynamic styles based on mobile state
+  const baseBackgroundStyle = (index: number) => {
+    const parallaxTransform = isMobile 
+      ? 'translateY(0px) scale(1)' 
+      : `translateY(${scrollOffset * 0.5}px) scale(1.05)`;
+    
+    const mousePositionStyle = isMobile 
+      ? '50% 50%' 
+      : `${50 + mousePosition.x * 0.02}% ${50 + mousePosition.y * 0.02}%`;
+
+    return {
+      backgroundImage: `url(${backgroundImages[index]})`,
+      backgroundSize: isMobile ? 'cover' : '110%',
+      backgroundPosition: mousePositionStyle,
+      backgroundRepeat: 'no-repeat',
+      transform: parallaxTransform,
+      opacity: index === currentImageIndex 
+        ? (isTransitioning ? 0 : 1) 
+        : (index === nextImageIndex ? (isTransitioning ? 1 : 0) : 0),
+    };
+  };
+
   return (
     <>
       {/* Current background image */}
       <div 
         className="absolute inset-0 z-0 transition-opacity duration-[5000ms] ease-in-out"
-        style={{
-          backgroundImage: `url(${backgroundImages[currentImageIndex]})`,
-          backgroundSize: '110%',
-          backgroundPosition: `${50 + mousePosition.x * 0.02}% ${50 + mousePosition.y * 0.02}%`,
-          backgroundRepeat: 'no-repeat',
-          transform: `translateY(${scrollOffset * 0.5}px) scale(1.05)`,
-          opacity: isTransitioning ? 0 : 1,
-        }}
+        style={baseBackgroundStyle(currentImageIndex)}
       />
       
       {/* Next background image for very smooth transition */}
       <div 
         className="absolute inset-0 z-0 transition-opacity duration-[5000ms] ease-in-out"
-        style={{
-          backgroundImage: `url(${backgroundImages[nextImageIndex]})`,
-          backgroundSize: '110%',
-          backgroundPosition: `${50 + mousePosition.x * 0.02}% ${50 + mousePosition.y * 0.02}%`,
-          backgroundRepeat: 'no-repeat',
-          transform: `translateY(${scrollOffset * 0.5}px) scale(1.05)`,
-          opacity: isTransitioning ? 1 : 0,
-        }}
+        style={baseBackgroundStyle(nextImageIndex)}
       />
       
       {/* Lighter animated gradient overlay for better visibility */}
@@ -107,7 +123,7 @@ const BackgroundEffects = () => {
             linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)
           `,
           backgroundSize: '50px 50px',
-          transform: `translate(${mousePosition.x * 0.1}px, ${mousePosition.y * 0.1}px)`,
+          transform: isMobile ? 'none' : `translate(${mousePosition.x * 0.1}px, ${mousePosition.y * 0.1}px)`,
           transition: 'transform 0.3s ease-out',
         }}
       />

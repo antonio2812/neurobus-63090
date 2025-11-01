@@ -209,7 +209,7 @@ All colors MUST be HSL.
     }
   }
   
-  @keyframes quantumFloat {
+  @keyframes quantum-float {
     0%, 100% { 
       transform: translateY(0px) rotate(0deg);
       opacity: 0.6;
@@ -224,7 +224,7 @@ All colors MUST be HSL.
     }
   }
   
-  @keyframes neuralPulse {
+  @keyframes neural-pulse {
     0%, 100% { 
       opacity: 0.4;
       transform: scale(1);
@@ -235,7 +235,7 @@ All colors MUST be HSL.
     }
   }
   
-  @keyframes pulseGlow {
+  @keyframes pulse-glow {
     0%, 100% { 
       box-shadow: 0 0 20px hsl(220 100% 60% / 0.3);
     }
@@ -244,7 +244,7 @@ All colors MUST be HSL.
     }
   }
   
-  @keyframes gradientShift {
+  @keyframes gradient-shift {
     0%, 100% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
   }
@@ -255,6 +255,6 @@ All colors MUST be HSL.
   }
   
   .animate-scroll {
-    animation: scroll 10s linear infinite; /* Alterado de 15s para 10s */
+    animation: scroll 8s linear infinite; /* Alterado de 10s para 8s */
   }
 }
