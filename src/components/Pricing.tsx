@@ -18,7 +18,7 @@ const premiumFeatures = [
   "Gerador de Títulos e Descrições com IA",
   "Espião de Tendências de Produtos",
   "Espião de Concorrência com Automação",
-  "Gerador Inteligente de Kits",
+  "Gerador Inteligente de Kits (NOVO)", // Adicionando (NOVO) para diferenciar
   "Detector de Palavras Proibidas e Reprovação de Anúncios",
   "Alertas de Datas Especiais + Produtos Minerados",
   "Relatórios Mensais de Lucro e Crescimento de Faturamento",
@@ -142,9 +142,9 @@ const Pricing = () => {
 
         {/* Plans Grid Container */}
         <div className="relative max-w-6xl mx-auto">
-          {/* Coming Soon Alert Box */}
+          {/* Coming Soon Alert Box - Z-index ajustado para z-40 */}
           {showComingSoon && (
-            <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
+            <div className="absolute inset-0 z-40 flex items-center justify-center">
               <div className="inline-block px-10 py-6 bg-card/90 border-2 border-accent rounded-xl shadow-2xl text-center">
                 <p className="text-accent font-bold text-2xl">MUITO EM BREVE</p>
                 <p className="text-foreground text-xl mt-2">Novos planos chegando!</p>
@@ -152,10 +152,10 @@ const Pricing = () => {
             </div>
           )}
 
-          {/* Plans Grid */}
+          {/* Plans Grid - Z-index ajustado para z-10 e pointer-events-none mantido para desabilitar cliques */}
           <div className={cn(
-            "grid grid-cols-1 md:grid-cols-3 gap-8 transition-all duration-500",
-            // Aumentado o blur para 3xl para máxima ilegibilidade
+            "grid grid-cols-1 md:grid-cols-3 gap-8 transition-all duration-500 relative z-10",
+            // Opacidade e desfoque máximo para ilegibilidade
             showComingSoon && 'opacity-5 blur-3xl pointer-events-none' 
           )}>
             {Array.isArray(sortedPlans) && sortedPlans.map((plan, index) => (
