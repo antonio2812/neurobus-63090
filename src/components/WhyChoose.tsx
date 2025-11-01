@@ -58,11 +58,12 @@ const WhyChoose = () => {
         </div>
 
         <Card className="p-8 bg-gradient-card border-accent/30 max-w-3xl mx-auto">
-          <div className="flex items-start gap-4">
-            <div className="p-3 rounded-full bg-accent/10">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left"> {/* Ajustado para flex-col no mobile */}
+            {/* Ícone centralizado acima do texto no mobile */}
+            <div className="p-3 rounded-full bg-accent/10 mb-4 sm:mb-0">
               <CheckCircle className="h-8 w-8 text-accent" />
             </div>
-            <div>
+            <div className="sm:ml-4"> {/* Removido o flex items-start e ajustado o espaçamento */}
               <h3 className="text-2xl font-bold text-foreground mb-3">
                 Garantia de Satisfação
               </h3>

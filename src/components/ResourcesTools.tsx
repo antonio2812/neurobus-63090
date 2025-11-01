@@ -63,10 +63,10 @@ const ResourcesTools = () => {
           {features.map((feature, index) => (
             <Card 
               key={index}
-              className="p-8 bg-card border-border hover:border-accent/50 transition-all duration-300 hover-lift group cursor-pointer"
+              className="p-8 bg-card border-border hover:border-accent/50 transition-all duration-300 hover-lift group cursor-pointer text-center sm:text-left" // Centraliza texto no mobile
             >
               <div className="space-y-4">
-                <div className="p-4 rounded-lg bg-accent/10 w-fit group-hover:bg-accent/20 transition-all duration-300">
+                <div className="p-4 rounded-lg bg-accent/10 w-fit group-hover:bg-accent/20 transition-all duration-300 mx-auto sm:mx-0"> {/* Centraliza o ícone no mobile */}
                   <feature.icon className="h-10 w-10 text-accent" />
                 </div>
                 <h3 className="text-xl font-semibold text-foreground">

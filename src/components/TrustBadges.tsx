@@ -37,7 +37,7 @@ const TrustBadges = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent" />
       
       <div className="relative z-10 overflow-hidden">
-        <div className="flex animate-scroll hover:pause">
+        <div className="flex animate-scroll"> {/* Removida a classe hover:pause */}
           {allBadges.map((badge, index) => (
             <div 
               key={index}

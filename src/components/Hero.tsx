@@ -28,7 +28,7 @@ const Hero = () => {
         isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
       }`}>
         <div className="max-w-5xl mx-auto space-y-12">
-          <div className="space-y-8">
+          <div className="space-y-8 pt-16 sm:pt-0"> {/* Adicionado pt-16 para empurrar o conteúdo para baixo no mobile */}
             {/* Repositioned slightly lower (mt-8 added) and cursor changed */}
             <button className="inline-block px-6 py-2 rounded-full bg-black/70 backdrop-blur-sm border border-white/10 mt-8 hover:border-accent/30 transition-all duration-300 cursor-default">
               <span className="text-white text-sm font-medium tracking-wide">

@@ -42,20 +42,20 @@ const Footer = () => {
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           {/* Coluna 1: Logo e Social */}
-          <div className="space-y-6 flex flex-col items-start md:items-center">
-            <button onClick={handleReloadPage} className="text-left flex justify-start">
+          <div className="space-y-6 flex flex-col items-center text-center"> {/* Centralizado no mobile */}
+            <button onClick={handleReloadPage} className="flex justify-center"> {/* Centralizado o botão do logo */}
               <img 
                 src="/lovable-uploads/logo-lucraai-fox-new.png"
                 alt="LucraAI Logo" 
                 className="h-14 w-auto transition-transform duration-300 hover:scale-105 rounded-lg"
               />
             </button>
-            <p className="text-muted-foreground leading-relaxed max-w-sm text-left md:text-center">
+            <p className="text-muted-foreground leading-relaxed max-w-sm text-center"> {/* Centralizado o texto */}
               O primeiro App brasileiro que combina IA avançada com Automação inteligente 
               para transformar a precificação do seu negócio em minutos.
             </p>
             
-            <div className="flex gap-4 justify-start md:justify-center w-full">
+            <div className="flex gap-4 justify-center w-full"> {/* Centralizado os ícones sociais */}
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
@@ -72,7 +72,7 @@ const Footer = () => {
           </div>
 
           {/* Coluna 2: Soluções (Centralizada no desktop) */}
-          <div className="md:flex md:justify-center">
+          <div className="md:flex md:justify-center text-center md:text-left"> {/* Centralizado no mobile */}
             <div>
               <h3 className="text-foreground font-semibold mb-6">Soluções</h3>
               <ul className="space-y-3">
@@ -102,7 +102,7 @@ const Footer = () => {
           </div>
 
           {/* Coluna 3: Legal (Alinhada à direita no desktop) */}
-          <div className="md:flex md:justify-end">
+          <div className="md:flex md:justify-end text-center md:text-left"> {/* Centralizado no mobile */}
             <div>
               <h3 className="text-foreground font-semibold mb-6">Legal</h3>
               <ul className="space-y-3">
