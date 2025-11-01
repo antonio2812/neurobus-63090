@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isLogoHovered, setIsLogoHovered] = useState(false); // State to manage logo background hover
+  const [isLogoHovered, setIsLogoHovered] = useState(false);
 
   const navigationItems = [
     { href: "#ferramentas", label: "Ferramentas" },
@@ -21,7 +21,6 @@ const Navigation = () => {
   };
 
   const handleSignupClick = () => {
-    // Redirect to auth page and ensure the signup tab is active
     window.location.href = '/auth#signup';
   };
   
@@ -35,10 +34,9 @@ const Navigation = () => {
         <button 
           onClick={handleReloadPage} 
           className="flex items-center space-x-3 z-50 group"
-          onMouseEnter={() => setIsLogoHovered(true)} // Set hover state on button entry
-          onMouseLeave={() => setIsLogoHovered(false)} // Clear hover state on button exit
+          onMouseEnter={() => setIsLogoHovered(true)}
+          onMouseLeave={() => setIsLogoHovered(false)}
         >
-          {/* Efeito hover: cor #3A320A atrás do ícone com bordas arredondadas */}
           <img 
             src="/lovable-uploads/logo-lucraai-fox-new.png" 
             alt="LucraAI Logo" 
@@ -48,7 +46,6 @@ const Navigation = () => {
               transition: 'background-color 0.3s' 
             }}
           />
-          {/* Texto com transparência suave no hover (opacity-30) */}
           <span className="text-xl font-bold text-foreground transition-all duration-300 group-hover:opacity-30">
             Lucra<span style={{ color: '#ffc800' }}>AI</span>
           </span>
@@ -96,7 +93,7 @@ const Navigation = () => {
             variant="default" 
             size="sm"
             className="bg-accent text-accent-foreground hover:bg-accent/90 font-semibold px-6"
-            onClick={handleSignupClick} // Direciona para /auth#signup
+            onClick={handleSignupClick}
           >
             Usar Grátis
           </Button>
@@ -106,7 +103,6 @@ const Navigation = () => {
         <Button
           variant="ghost"
           size="sm"
-          // Aplicando hover:opacity-80 para transparência suave
           className="lg:hidden text-foreground hover:bg-accent/10 p-2 z-[60] transition-opacity duration-300 hover:opacity-80" 
           onClick={() => setIsOpen(!isOpen)}
         >
@@ -119,12 +115,12 @@ const Navigation = () => {
         {isOpen && (
           <div 
             className="lg:hidden fixed inset-0 z-40 transition-opacity duration-500"
+            onClick={() => setIsOpen(false)}
             style={{
-              // Aplicando desfoque e escurecimento conforme solicitado
+              // Usando classes Tailwind para opacidade e cor, e style para backdropFilter
+              backgroundColor: 'rgba(0, 0, 0, 0.5)', 
               backdropFilter: 'blur(8px)',
-              backgroundColor: 'rgba(0, 0, 0, 0.5)', // Escurecimento suave
             }}
-            onClick={() => setIsOpen(false)} // Fecha ao clicar fora
           />
         )}
 
@@ -138,7 +134,7 @@ const Navigation = () => {
             
             {/* Links do Cabeçalho */}
             <div className="flex flex-col space-y-6 border-b border-border pb-6 mb-6">
-              {navigationItems.map((item, index) => (
+              {navigationItems.map((item) => (
                 item.external ? (
                   <a 
                     key={item.href}
