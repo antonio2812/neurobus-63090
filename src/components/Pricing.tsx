@@ -13,6 +13,7 @@ const scrollToSection = (id: string) => {
 
 // Definindo os recursos conforme solicitado
 const premiumFeatures = [
+  "Tudo do Plano PRO", // NOVO RECURSO ADICIONADO AQUI
   "IA de Precificação de Produtos (Produtos ilimitados)",
   "Gerador de Títulos e Descrições com IA",
   "Espião de Tendências de Produtos",
