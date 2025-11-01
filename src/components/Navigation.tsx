@@ -24,6 +24,10 @@ const Navigation = () => {
     // Redirect to auth page and ensure the signup tab is active
     window.location.href = '/auth#signup';
   };
+  
+  const handleLinkClick = () => {
+    setIsOpen(false);
+  };
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-black backdrop-blur-xl border-b border-border">
@@ -98,58 +102,73 @@ const Navigation = () => {
           </Button>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Button (Hamburger) */}
         <Button
           variant="ghost"
           size="sm"
-          className="lg:hidden text-foreground hover:bg-accent/10 p-2 z-50"
+          className="lg:hidden text-foreground hover:bg-accent/10 p-2 z-[60] transition-opacity duration-300 hover:opacity-70" // Adicionado hover:opacity-70
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </Button>
 
-        {/* Mobile Menu */}
-        <div className={`lg:hidden fixed inset-0 bg-black/98 backdrop-blur-xl transition-all duration-500 ${
-          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-        }`}>
-          <div className="flex flex-col items-center justify-center h-full space-y-6">
-            {navigationItems.map((item, index) => (
-              item.external ? (
-                <a 
-                  key={item.href}
-                  href={item.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`text-foreground text-2xl hover:text-accent transition-all duration-300 ${
-                    isOpen ? 'animate-fade-in' : ''
-                  }`}
-                  style={{ animationDelay: `${index * 100}ms` }}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.label}
-                </a>
-              ) : (
-                <a 
-                  key={item.href}
-                  href={item.href} 
-                  className={`text-foreground text-2xl hover:text-accent transition-all duration-300 ${
-                    isOpen ? 'animate-fade-in' : ''
-                  }`}
-                  style={{ animationDelay: `${index * 100}ms` }}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {item.label}
-                </a>
-              )
-            ))}
+        {/* Mobile Menu Drawer and Overlay */}
+        
+        {/* 1. Overlay (Fundo Desfocado) */}
+        {isOpen && (
+          <div 
+            className="lg:hidden fixed inset-0 z-40 transition-opacity duration-500"
+            style={{
+              backdropFilter: 'blur(8px)',
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            }}
+            onClick={() => setIsOpen(false)} // Fecha ao clicar fora
+          />
+        )}
+
+        {/* 2. Side Panel (Painel Lateral) */}
+        <div 
+          className={`lg:hidden fixed top-0 right-0 w-[70%] max-w-xs h-full bg-card border-l border-border shadow-2xl z-50 transform transition-transform duration-500 ease-in-out ${
+            isOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+        >
+          <div className="p-6 pt-24 flex flex-col h-full">
             
-            <div className="flex flex-col items-center space-y-4 pt-8">
+            {/* Links do Cabeçalho */}
+            <div className="flex flex-col space-y-6 border-b border-border pb-6 mb-6">
+              {navigationItems.map((item, index) => (
+                item.external ? (
+                  <a 
+                    key={item.href}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground text-lg hover:text-accent transition-all duration-300 font-medium"
+                    onClick={handleLinkClick}
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <a 
+                    key={item.href}
+                    href={item.href} 
+                    className="text-foreground text-lg hover:text-accent transition-all duration-300 font-medium"
+                    onClick={handleLinkClick}
+                  >
+                    {item.label}
+                  </a>
+                )
+              ))}
+            </div>
+            
+            {/* Botões */}
+            <div className="flex flex-col space-y-4 pt-6">
               <Button
                 variant="ghost" 
                 size="lg"
                 className="text-foreground hover:text-accent hover:bg-accent/10 transition-all duration-300"
                 asChild
-                onClick={() => setIsOpen(false)}
+                onClick={handleLinkClick}
               >
                 <Link to="/auth">Entrar</Link>
               </Button>
@@ -159,7 +178,7 @@ const Navigation = () => {
                 size="lg"
                 className="bg-accent text-accent-foreground hover:bg-accent/90 font-semibold px-8"
                 onClick={() => {
-                  setIsOpen(false);
+                  handleLinkClick();
                   setTimeout(() => {
                     handleSignupClick();
                   }, 300);
