@@ -51,8 +51,8 @@ const rawPlans = [
     prices: { 
       mensal: 29.90, 
       anual: 289.88, 
-      trimestral: 149.90, // Definindo um preço trimestral fictício
-      semestral: 289.88 // Mantendo o preço semestral como anual por enquanto
+      trimestral: 149.90, 
+      semestral: 289.88 
     },
     savings: "Economize 33%",
     highlighted: true,
@@ -66,8 +66,8 @@ const rawPlans = [
     prices: { 
       mensal: 19.90, 
       anual: 173.88, 
-      trimestral: 99.90, // Definindo um preço trimestral fictício
-      semestral: 173.88 // Mantendo o preço semestral como anual por enquanto
+      trimestral: 99.90, 
+      semestral: 173.88 
     },
     savings: "Economize 20%",
     highlighted: false,
@@ -91,6 +91,13 @@ const periodDisplay: Record<keyof typeof rawPlans[0]['prices'], string> = {
 
 const Pricing = () => {
   const [period, setPeriod] = useState<"mensal" | "anual" | "trimestral" | "semestral">("mensal");
+  const [showComingSoon, setShowComingSoon] = useState(false);
+
+  const handlePeriodClick = (newPeriod: typeof period) => {
+    const isComingSoon = newPeriod === "trimestral" || newPeriod === "semestral";
+    setShowComingSoon(isComingSoon);
+    setPeriod(newPeriod);
+  };
 
   // Custom class for dark yellow hover effect
   const darkYellowHoverClass = "hover:bg-[hsl(48_100%_40%)]";
@@ -113,28 +120,28 @@ const Pricing = () => {
         <div className="flex justify-center gap-4 mb-16 flex-wrap">
           <Button
             variant={period === "mensal" ? "default" : "outline"}
-            onClick={() => setPeriod("mensal")}
+            onClick={() => handlePeriodClick("mensal")}
             className={cn(period === "mensal" ? "bg-accent text-accent-foreground" : "", "hover:border-accent transition-all duration-300", darkYellowHoverClass)}
           >
             Mensal
           </Button>
           <Button
             variant={period === "anual" ? "default" : "outline"}
-            onClick={() => setPeriod("anual")}
+            onClick={() => handlePeriodClick("anual")}
             className={cn(period === "anual" ? "bg-accent text-accent-foreground" : "", "hover:border-accent transition-all duration-300", darkYellowHoverClass)}
           >
             Anual
           </Button>
           <Button
             variant={period === "trimestral" ? "default" : "outline"}
-            onClick={() => setPeriod("trimestral")}
+            onClick={() => handlePeriodClick("trimestral")}
             className={cn(period === "trimestral" ? "bg-accent text-accent-foreground" : "", "hover:border-accent transition-all duration-300", darkYellowHoverClass)}
           >
             Trimestral
           </Button>
           <Button
             variant={period === "semestral" ? "default" : "outline"}
-            onClick={() => setPeriod("semestral")}
+            onClick={() => handlePeriodClick("semestral")}
             className={cn(period === "semestral" ? "bg-accent text-accent-foreground" : "", "hover:border-accent transition-all duration-300", darkYellowHoverClass)}
           >
             Semestral
@@ -143,8 +150,21 @@ const Pricing = () => {
 
         {/* Plans Grid Container */}
         <div className="relative max-w-6xl mx-auto">
-          {/* Plans Grid - Removidas classes de desfoque e opacidade */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 transition-all duration-500 relative z-10">
+          {/* Coming Soon Alert Box - Z-index ajustado para z-40 */}
+          {showComingSoon && (
+            <div className="absolute inset-0 z-40 flex items-center justify-center">
+              <div className="inline-block px-10 py-6 bg-card/90 border-2 border-accent rounded-xl shadow-2xl text-center backdrop-blur-sm">
+                <p className="text-accent font-bold text-2xl">MUITO EM BREVE</p>
+                <p className="text-foreground text-xl mt-2">Novos planos chegando!</p>
+              </div>
+            </div>
+          )}
+
+          {/* Plans Grid - Aplicando desfoque e opacidade máxima para ilegibilidade */}
+          <div className={cn(
+            "grid grid-cols-1 md:grid-cols-3 gap-8 transition-all duration-500 relative z-10",
+            showComingSoon && 'opacity-5 blur-3xl pointer-events-none' 
+          )}>
             {Array.isArray(sortedPlans) && sortedPlans.map((plan, index) => (
               <Card
                 key={index}
@@ -198,10 +218,12 @@ const Pricing = () => {
                   }`}
                   size="lg"
                   onClick={() => {
+                    if (showComingSoon) return;
                     window.location.href = '/auth';
                   }}
+                  disabled={showComingSoon}
                 >
-                  Começar Agora
+                  {showComingSoon ? "Em Breve" : "Começar Agora"}
                 </Button>
               </Card>
             ))}
