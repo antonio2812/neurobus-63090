@@ -1,10 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-const Navigation = () => {
-  const [isOpen, setIsOpen] = useState(false);
+interface NavigationProps {
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+}
+
+const Navigation = ({ isOpen, setIsOpen }: NavigationProps) => {
   const [isLogoHovered, setIsLogoHovered] = useState(false);
 
   const navigationItems = [
@@ -27,6 +31,18 @@ const Navigation = () => {
   const handleLinkClick = () => {
     setIsOpen(false);
   };
+
+  // Efeito para desabilitar o scroll do corpo quando o menu estiver aberto
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-black backdrop-blur-xl border-b border-border">
@@ -103,7 +119,6 @@ const Navigation = () => {
         <Button
           variant="ghost"
           size="sm"
-          // Hover ajustado para 90% de opacidade
           className="lg:hidden text-foreground p-2 z-[60] transition-opacity duration-300 hover:opacity-90" 
           onClick={() => setIsOpen(!isOpen)}
         >
@@ -112,16 +127,14 @@ const Navigation = () => {
 
         {/* Mobile Menu Drawer and Overlay */}
         
-        {/* 1. Overlay (Fundo Desfocado e Escurecido) */}
+        {/* 1. Overlay (Fundo Desfocado e Escurecido) - Mantido para escurecer o fundo */}
         {isOpen && (
           <div 
             className="lg:hidden fixed inset-0 z-40 transition-opacity duration-500"
             onClick={() => setIsOpen(false)}
             style={{
-              // Fundo preto semi-transparente e desfoque aplicado a TUDO atrás do overlay
+              // Fundo preto semi-transparente
               backgroundColor: 'rgba(0, 0, 0, 0.8)', 
-              backdropFilter: 'blur(15px)', // Ajustado para 15px para um desfoque suave
-              WebkitBackdropFilter: 'blur(15px)', 
             }}
           />
         )}
