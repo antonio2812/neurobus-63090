@@ -1,4 +1,4 @@
-import { Brain, Target, TrendingUp, Zap, Search, Medal } from "lucide-react";
+import { Brain, Target, TrendingUp, Zap, Search, Medal, Award } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 const Differentials = () => {
@@ -19,7 +19,7 @@ const Differentials = () => {
       subtitle: "Antecipe o futuro das suas vendas com IA que prevê produtos em alta nas próximas semanas.",
     },
     {
-      icon: Medal, // Changed icon to Medal
+      icon: Award, // Alterado para Award
       title: "Vantagem Competitiva Invisível",
       subtitle: "Saiba o que vender, quanto cobrar e quando agir — enquanto os concorrentes ainda testam.",
     },
