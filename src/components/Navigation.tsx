@@ -118,9 +118,10 @@ const Navigation = () => {
             className="lg:hidden fixed inset-0 z-40 transition-opacity duration-500"
             onClick={() => setIsOpen(false)}
             style={{
-              // Desfoque e escurecimento aplicados
+              // Fundo preto semi-transparente e desfoque aplicado a TUDO atrás do overlay
               backgroundColor: 'rgba(0, 0, 0, 0.8)', 
               backdropFilter: 'blur(12px)', 
+              WebkitBackdropFilter: 'blur(12px)', // Adicionando prefixo para compatibilidade
             }}
           />
         )}
