@@ -116,36 +116,61 @@ const Pricing = () => {
           </p>
         </div>
 
-        {/* Period Selector - Reorganizado para duas linhas no mobile */}
-        <div className="flex justify-center gap-4 mb-16 flex-wrap max-w-md mx-auto">
-          {/* Linha 1: Mensal e Anual */}
+        {/* Period Selector - Refatorado para uma linha no desktop (md:flex-nowrap) e duas linhas no mobile (flex-wrap) */}
+        <div className="flex justify-center gap-4 mb-16 flex-wrap md:flex-nowrap max-w-md md:max-w-none mx-auto">
+          
+          {/* Mensal */}
           <Button
             variant={period === "mensal" ? "default" : "outline"}
             onClick={() => handlePeriodClick("mensal")}
-            className={cn(period === "mensal" ? "bg-accent text-accent-foreground" : "", "hover:border-accent transition-all duration-300 w-[calc(50%-8px)]", darkYellowHoverClass)}
+            className={cn(
+              period === "mensal" ? "bg-accent text-accent-foreground" : "", 
+              "hover:border-accent transition-all duration-300", 
+              "w-[calc(50%-8px)] md:w-auto", // 50% width on mobile
+              darkYellowHoverClass
+            )}
           >
             Mensal
           </Button>
+          
+          {/* Anual */}
           <Button
             variant={period === "anual" ? "default" : "outline"}
             onClick={() => handlePeriodClick("anual")}
-            className={cn(period === "anual" ? "bg-accent text-accent-foreground" : "", "hover:border-accent transition-all duration-300 w-[calc(50%-8px)]", darkYellowHoverClass)}
+            className={cn(
+              period === "anual" ? "bg-accent text-accent-foreground" : "", 
+              "hover:border-accent transition-all duration-300", 
+              "w-[calc(50%-8px)] md:w-auto", // 50% width on mobile
+              darkYellowHoverClass
+            )}
           >
             Anual
           </Button>
           
-          {/* Linha 2: Trimestral e Semestral */}
+          {/* Trimestral */}
           <Button
             variant={period === "trimestral" ? "default" : "outline"}
             onClick={() => handlePeriodClick("trimestral")}
-            className={cn(period === "trimestral" ? "bg-accent text-accent-foreground" : "", "hover:border-accent transition-all duration-300 w-[calc(50%-8px)] mt-4", darkYellowHoverClass)}
+            className={cn(
+              period === "trimestral" ? "bg-accent text-accent-foreground" : "", 
+              "hover:border-accent transition-all duration-300", 
+              "w-[calc(50%-8px)] mt-4 md:mt-0 md:w-auto", // 50% width and mt-4 on mobile, reset on desktop
+              darkYellowHoverClass
+            )}
           >
             Trimestral
           </Button>
+          
+          {/* Semestral */}
           <Button
             variant={period === "semestral" ? "default" : "outline"}
             onClick={() => handlePeriodClick("semestral")}
-            className={cn(period === "semestral" ? "bg-accent text-accent-foreground" : "", "hover:border-accent transition-all duration-300 w-[calc(50%-8px)] mt-4", darkYellowHoverClass)}
+            className={cn(
+              period === "semestral" ? "bg-accent text-accent-foreground" : "", 
+              "hover:border-accent transition-all duration-300", 
+              "w-[calc(50%-8px)] mt-4 md:mt-0 md:w-auto", // 50% width and mt-4 on mobile, reset on desktop
+              darkYellowHoverClass
+            )}
           >
             Semestral
           </Button>
