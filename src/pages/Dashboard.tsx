@@ -9,22 +9,38 @@ import type { User } from "@supabase/supabase-js";
 const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null); // Novo estado de erro
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check authentication
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        navigate("/auth");
-      } else {
-        setUser(session.user);
+    const checkAuth = async () => {
+      try {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) throw sessionError;
+
+        if (!session) {
+          console.log("Dashboard: Usuário não autenticado, redirecionando para /auth");
+          navigate("/auth");
+        } else {
+          console.log("Dashboard: Sessão ativa encontrada.");
+          setUser(session.user);
+        }
+      } catch (e) {
+        console.error("Dashboard: Erro ao verificar sessão:", e);
+        setError(`Erro de autenticação: ${e instanceof Error ? e.message : String(e)}`);
+        navigate("/auth"); // Redireciona em caso de erro grave
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    });
+    };
+
+    checkAuth();
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!session) {
+        console.log("Dashboard: Estado de autenticação mudou para SAÍDA, redirecionando.");
         navigate("/auth");
       } else {
         setUser(session.user);
@@ -46,6 +62,33 @@ const Dashboard = () => {
       </div>
     );
   }
+  
+  // Exibir erro se houver
+  if (error) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center p-6">
+        <Card className="p-8 border-destructive border-2 max-w-md text-center">
+          <h1 className="text-2xl font-bold text-destructive mb-4">Erro Crítico</h1>
+          <p className="text-muted-foreground mb-6">{error}</p>
+          <Button onClick={() => navigate("/auth")}>Tentar Login Novamente</Button>
+        </Card>
+      </div>
+    );
+  }
+
+  // Se não estiver carregando e não houver erro, mas o usuário for nulo (o que não deveria acontecer se o redirecionamento funcionou), mostramos um fallback.
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center p-6">
+        <Card className="p-8 border-border max-w-md text-center">
+          <h1 className="text-2xl font-bold text-foreground mb-4">Acesso Negado</h1>
+          <p className="text-muted-foreground mb-6">Sua sessão expirou ou não foi encontrada.</p>
+          <Button onClick={() => navigate("/auth")}>Ir para Login</Button>
+        </Card>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
