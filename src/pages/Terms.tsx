@@ -7,14 +7,7 @@ const Terms = () => {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.hash) {
-      const element = document.getElementById(location.hash.substring(1));
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-        return;
-      }
-    }
-    // Fallback to top if no hash or element found
+    // Always scroll to the top when the component mounts or location changes
     window.scrollTo(0, 0);
   }, [location]);
 
