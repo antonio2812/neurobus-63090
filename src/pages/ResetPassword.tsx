@@ -185,7 +185,7 @@ const ResetPassword = () => {
             >
               {isLoading 
                 ? (isUpdateMode ? "Alterando senha..." : "Enviando email...") 
-                : (isUpdateMode ? "Alterar Senha" : "Enviar Email de Alteração")
+                : (isUpdateMode ? "Alterar Senha" : "Enviar Email") // Texto alterado aqui
               }
             </Button>
             <div className="text-center">

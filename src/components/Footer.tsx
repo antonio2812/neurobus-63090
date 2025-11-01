@@ -11,8 +11,8 @@ const Footer = () => {
   ];
 
   const legalLinks = [
-    { label: "Termos de Uso", href: "/terms" },
-    { label: "Política de Privacidade", href: "/privacy" },
+    { label: "Termos de Uso", href: "/terms#aceitacao-termos" }, // Link atualizado
+    { label: "Política de Privacidade", href: "/privacy#informacoes-coletadas" }, // Link atualizado
     { label: "Suporte", href: "https://wa.link/adnlkj", external: true },
   ];
 

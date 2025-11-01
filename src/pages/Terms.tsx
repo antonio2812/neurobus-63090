@@ -22,7 +22,7 @@ const Terms = () => {
           </div>
 
           <div className="space-y-6 text-muted-foreground leading-relaxed">
-            <section>
+            <section id="aceitacao-termos">
               <h2 className="text-2xl font-semibold text-foreground mb-4">1. Aceitação dos Termos</h2>
               <p>
                 Ao acessar e usar a plataforma LucraAI, você concorda com estes Termos de Uso. 

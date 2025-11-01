@@ -22,7 +22,7 @@ const Privacy = () => {
           </div>
 
           <div className="space-y-6 text-muted-foreground leading-relaxed">
-            <section>
+            <section id="informacoes-coletadas">
               <h2 className="text-2xl font-semibold text-foreground mb-4">1. Informações que Coletamos</h2>
               <p>
                 Coletamos informações que você nos fornece diretamente ao criar uma conta, usar nossos 
