@@ -98,7 +98,7 @@ const ResetPassword = () => {
 
       // IMPORTANT: Use a generic message to prevent user enumeration (security best practice).
       toast({
-        title: "Instruções enviadas!",
+        title: "Email Enviado!", // ALTERADO AQUI
         description: "Se o email estiver cadastrado, você receberá um link para redefinir sua senha.",
       });
     }
