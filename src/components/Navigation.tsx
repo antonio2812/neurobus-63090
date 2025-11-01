@@ -103,7 +103,7 @@ const Navigation = () => {
         <Button
           variant="ghost"
           size="sm"
-          // Ajustado para hover:opacity-90 para não desaparecer
+          // Hover ajustado para 90% de opacidade
           className="lg:hidden text-foreground hover:bg-accent/10 p-2 z-[60] transition-opacity duration-300 hover:opacity-90" 
           onClick={() => setIsOpen(!isOpen)}
         >
@@ -118,9 +118,9 @@ const Navigation = () => {
             className="lg:hidden fixed inset-0 z-40 transition-opacity duration-500"
             onClick={() => setIsOpen(false)}
             style={{
-              // Aumentando a opacidade do fundo e o desfoque para cobrir completamente
+              // Desfoque e escurecimento aplicados
               backgroundColor: 'rgba(0, 0, 0, 0.8)', 
-              backdropFilter: 'blur(12px)', // Aumentando o desfoque
+              backdropFilter: 'blur(12px)', 
             }}
           />
         )}
