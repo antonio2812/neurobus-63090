@@ -120,8 +120,8 @@ const Navigation = () => {
             style={{
               // Fundo preto semi-transparente e desfoque aplicado a TUDO atrás do overlay
               backgroundColor: 'rgba(0, 0, 0, 0.8)', 
-              backdropFilter: 'blur(20px)', // Aumentado para 20px para maior visibilidade
-              WebkitBackdropFilter: 'blur(20px)', 
+              backdropFilter: 'blur(15px)', // Ajustado para 15px para um desfoque suave
+              WebkitBackdropFilter: 'blur(15px)', 
             }}
           />
         )}
