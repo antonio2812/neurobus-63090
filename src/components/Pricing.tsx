@@ -156,7 +156,7 @@ const Pricing = () => {
           <div className={cn(
             "grid grid-cols-1 md:grid-cols-3 gap-8 transition-all duration-500",
             // Efeito de desfoque completo e opacidade reduzida
-            showComingSoon && 'opacity-10 blur-lg pointer-events-none' 
+            showComingSoon && 'opacity-5 blur-lg pointer-events-none' // Opacidade reduzida para 5%
           )}>
             {Array.isArray(sortedPlans) && sortedPlans.map((plan, index) => (
               <Card
