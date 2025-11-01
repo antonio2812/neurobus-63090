@@ -52,6 +52,7 @@ const Dashboard = () => {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    console.log("Logout bem-sucedido. Redirecionando para /auth.");
     navigate("/auth");
   };
 
