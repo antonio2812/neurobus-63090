@@ -19,12 +19,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 type LoginFormValues = z.infer<typeof loginSchema>;
 type SignupFormValues = z.infer<typeof signupSchema>;
 
-// Função para tocar o som de login
-const playLoginSound = () => {
-  const audio = new Audio('/Funcionalidades.mp3');
-  audio.volume = 0.6;
-  audio.play().catch((err) => console.warn('Falha ao reproduzir som:', err));
-};
+// Função playLoginSound removida daqui.
 
 const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -99,8 +94,7 @@ const Auth = () => {
       return;
     }
 
-    // --- EFEITO SONORO DE SUCESSO ---
-    playLoginSound();
+    // O som será tocado na página de destino (Dashboard) para evitar interrupção.
 
     toast({
       title: "Login realizado com sucesso!",

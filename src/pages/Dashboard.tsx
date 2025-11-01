@@ -11,6 +11,22 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Efeito sonoro de sucesso ao entrar no Dashboard
+  useEffect(() => {
+    const playLoginSound = () => {
+      try {
+        const audio = new Audio('/Funcionalidades.mp3');
+        audio.volume = 0.6;
+        audio.play().catch((err) => console.warn('Som bloqueado pelo navegador:', err));
+      } catch (error) {
+        console.error('Erro ao tentar reproduzir áudio:', error);
+      }
+    };
+
+    // Toca o som imediatamente após o componente montar
+    playLoginSound();
+  }, []);
+
   useEffect(() => {
     // Check authentication
     supabase.auth.getSession().then(({ data: { session } }) => {
