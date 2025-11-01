@@ -103,7 +103,7 @@ const Navigation = () => {
         <Button
           variant="ghost"
           size="sm"
-          // Removendo hover:bg-accent/10 e mantendo apenas hover:opacity-90
+          // Hover ajustado para 90% de opacidade
           className="lg:hidden text-foreground p-2 z-[60] transition-opacity duration-300 hover:opacity-90" 
           onClick={() => setIsOpen(!isOpen)}
         >
