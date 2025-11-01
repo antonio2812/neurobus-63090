@@ -48,8 +48,8 @@ const Hero = () => {
             </p>
           </div>
           
-          {/* Repositioned slightly lower (pt-8 instead of pt-4) */}
-          <div className="flex justify-center items-center gap-8 pt-8">
+          {/* Ajuste aqui: pt-4 no mobile, pt-8 no sm: e acima */}
+          <div className="flex justify-center items-center gap-8 pt-4 sm:pt-8">
             <Button 
               variant="default" 
               size="xl" 

@@ -153,10 +153,10 @@ const Pricing = () => {
 
         {/* Plans Grid Container */}
         <div className="relative max-w-6xl mx-auto">
-          {/* Plans Grid - Aplicando desfoque e opacidade para visualização borrada */}
+          {/* Plans Grid - Aumentando o gap para gap-12 no mobile */}
           <div className={cn(
-            "grid grid-cols-1 md:grid-cols-3 gap-8 transition-all duration-500 relative z-10",
-            showComingSoon ? 'opacity-30 blur-lg pointer-events-none' : '' // Ajustado para opacity-30 e blur-lg
+            "grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 transition-all duration-500 relative z-10",
+            showComingSoon ? 'opacity-30 blur-lg pointer-events-none' : ''
           )}>
             {Array.isArray(sortedPlans) && sortedPlans.map((plan, index) => (
               <Card
