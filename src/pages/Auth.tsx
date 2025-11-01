@@ -14,7 +14,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, signupSchema } from "@/lib/validation";
 import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import playSound from "@/hooks/useSound"; // Importando o utilitário de som
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 type SignupFormValues = z.infer<typeof signupSchema>;
@@ -90,9 +89,6 @@ const Auth = () => {
       });
       return;
     }
-
-    // Executa o som de sucesso após a validação do backend
-    playSound('/EfeitosSonoros/login-sucesso.mp3');
 
     toast({
       title: "Login realizado com sucesso!",
