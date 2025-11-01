@@ -119,7 +119,8 @@ const Navigation = ({ isOpen, setIsOpen }: NavigationProps) => {
         <Button
           variant="ghost"
           size="sm"
-          className="lg:hidden text-foreground p-2 z-[60] transition-opacity duration-300 hover:opacity-90" 
+          // Alterando text-foreground para text-accent para dar destaque e visibilidade
+          className="lg:hidden text-accent p-2 z-[60] transition-opacity duration-300 hover:opacity-90" 
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
