@@ -14,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, signupSchema } from "@/lib/validation";
 import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useSound } from "@/hooks/useSound"; // Importando useSound
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 type SignupFormValues = z.infer<typeof signupSchema>;
@@ -26,6 +27,7 @@ const Auth = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
+  const { playSound } = useSound(0.6); // Inicializando o hook com volume 0.6
 
   // Determine initial tab based on URL hash
   const initialTab = location.hash === '#signup' ? 'signup' : 'login';
@@ -89,6 +91,9 @@ const Auth = () => {
       });
       return;
     }
+
+    // --- EFEITO SONORO DE SUCESSO ---
+    playSound('/EfeitosSonoros/login-sucesso.mp3');
 
     toast({
       title: "Login realizado com sucesso!",
