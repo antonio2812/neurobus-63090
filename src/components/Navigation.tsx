@@ -106,14 +106,25 @@ const Navigation = () => {
         <Button
           variant="ghost"
           size="sm"
-          className="lg:hidden text-foreground hover:bg-accent/10 p-2 z-[60] transition-opacity duration-300 hover:opacity-80" // Efeito hover: opacity 0.8
+          className="lg:hidden text-foreground hover:bg-accent/10 p-2 z-[60] transition-opacity duration-300 hover:opacity-80" // Garantindo hover:opacity-80
           onClick={() => setIsOpen(!isOpen)}
         >
           {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </Button>
 
-        {/* Mobile Menu Drawer (Painel Lateral) */}
-        {/* Nota: Removido o overlay de fundo para que o restante da página permaneça visível e sem desfoque. */}
+        {/* 1. Overlay (Fundo Desfocado e Escurecido) */}
+        {isOpen && (
+          <div 
+            className="lg:hidden fixed inset-0 z-40 transition-opacity duration-500"
+            style={{
+              backdropFilter: 'blur(8px)', // Desfoque
+              backgroundColor: 'rgba(0, 0, 0, 0.5)', // Escurecimento
+            }}
+            onClick={() => setIsOpen(false)} // Fecha ao clicar fora
+          />
+        )}
+
+        {/* 2. Side Panel (Painel Lateral) */}
         <div 
           className={`lg:hidden fixed top-0 right-0 w-[70%] max-w-xs h-full bg-black border-l border-border shadow-2xl z-50 transform transition-transform duration-500 ease-in-out ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
