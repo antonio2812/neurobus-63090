@@ -127,12 +127,12 @@ const Navigation = ({ isOpen, setIsOpen }: NavigationProps) => {
 
         {/* Mobile Menu Drawer and Overlay */}
         
-        {/* 1. Overlay (Clique-catcher transparente) */}
+        {/* 1. Overlay (Fundo Desfocado e Escurecido) - Agora apenas um clique-catcher para fechar o menu */}
         {isOpen && (
           <div 
             className="lg:hidden fixed inset-0 z-40 transition-opacity duration-500"
             onClick={() => setIsOpen(false)}
-            // Fundo totalmente transparente para que o desfoque do Index.tsx seja visível
+            // Removendo o fundo semi-transparente, mas mantendo o z-index para capturar cliques
             style={{
               backgroundColor: 'transparent', 
             }}
@@ -141,10 +141,11 @@ const Navigation = ({ isOpen, setIsOpen }: NavigationProps) => {
 
         {/* 2. Side Panel (Painel Lateral) */}
         <div 
-          className={`lg:hidden fixed top-0 right-0 w-[70%] max-w-xs h-full border-l border-border shadow-2xl z-50 transform transition-transform duration-500 ease-in-out bg-black ${ // Adicionado bg-black
+          className={`lg:hidden fixed top-0 right-0 w-[70%] max-w-xs h-full border-l border-border shadow-2xl z-50 transform transition-transform duration-500 ease-in-out ${
             isOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
-          // Removendo o estilo inline para usar a classe Tailwind bg-black
+          // Fundo preto puro (#000000) conforme solicitado
+          style={{ backgroundColor: '#000000' }}
         >
           <div className="p-6 pt-24 flex flex-col h-full">
             
