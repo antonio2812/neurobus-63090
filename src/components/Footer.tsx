@@ -41,22 +41,21 @@ const Footer = () => {
     <footer className="bg-black border-t border-border py-16">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
-          <div className="space-y-6 flex flex-col items-start md:items-center"> {/* Adicionado flex-col e items-center para centralizar no desktop */}
+          {/* Coluna 1: Logo e Social */}
+          <div className="space-y-6 flex flex-col items-start md:items-center">
             <button onClick={handleReloadPage} className="text-left flex justify-start">
-              {/* Logo centralizado em relação ao texto abaixo */}
               <img 
-                src="/lovable-uploads/logo-lucraai-fox-new.png" // Updated path
+                src="/lovable-uploads/logo-lucraai-fox-new.png"
                 alt="LucraAI Logo" 
                 className="h-14 w-auto transition-transform duration-300 hover:scale-105 rounded-lg"
               />
             </button>
-            {/* Texto centralizado no desktop */}
-            <p className="text-muted-foreground leading-relaxed max-w-sm text-left md:text-center"> {/* Removido mx-auto e md:mx-0, mantido max-w-sm */}
+            <p className="text-muted-foreground leading-relaxed max-w-sm text-left md:text-center">
               O primeiro App brasileiro que combina IA avançada com Automação inteligente 
               para transformar a precificação do seu negócio em minutos.
             </p>
             
-            <div className="flex gap-4 justify-start md:justify-center w-full"> {/* Adicionado w-full e justify-center para centralizar ícones */}
+            <div className="flex gap-4 justify-start md:justify-center w-full">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
@@ -72,59 +71,65 @@ const Footer = () => {
             </div>
           </div>
 
-          <div>
-          <h3 className="text-foreground font-semibold mb-6">Soluções</h3>
-          <ul className="space-y-3">
-            {solutionsLinks.map((link) => (
-              <li key={link.label}>
-                {link.external ? (
-                  <a 
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-accent transition-colors duration-300"
-                  >
-                    {link.label}
-                  </a>
-                ) : (
-                  <a 
-                    href={link.href}
-                    className="text-muted-foreground hover:text-accent transition-colors duration-300"
-                  >
-                    {link.label}
-                  </a>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
+          {/* Coluna 2: Soluções (Centralizada no desktop) */}
+          <div className="md:flex md:justify-center">
+            <div>
+              <h3 className="text-foreground font-semibold mb-6">Soluções</h3>
+              <ul className="space-y-3">
+                {solutionsLinks.map((link) => (
+                  <li key={link.label}>
+                    {link.external ? (
+                      <a 
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-muted-foreground hover:text-accent transition-colors duration-300"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <a 
+                        href={link.href}
+                        className="text-muted-foreground hover:text-accent transition-colors duration-300"
+                      >
+                        {link.label}
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
 
-        <div>
-          <h3 className="text-foreground font-semibold mb-6">Legal</h3>
-          <ul className="space-y-3">
-            {legalLinks.map((link) => (
-              <li key={link.label}>
-                {link.external ? (
-                  <a 
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-accent transition-colors duration-300"
-                  >
-                    {link.label}
-                  </a>
-                ) : (
-                  <Link 
-                    to={link.href}
-                    className="text-muted-foreground hover:text-accent transition-colors duration-300"
-                  >
-                    {link.label}
-                  </Link>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
+          {/* Coluna 3: Legal (Alinhada à direita no desktop) */}
+          <div className="md:flex md:justify-end">
+            <div>
+              <h3 className="text-foreground font-semibold mb-6">Legal</h3>
+              <ul className="space-y-3">
+                {legalLinks.map((link) => (
+                  <li key={link.label}>
+                    {link.external ? (
+                      <a 
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-muted-foreground hover:text-accent transition-colors duration-300"
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link 
+                        to={link.href}
+                        className="text-muted-foreground hover:text-accent transition-colors duration-300"
+                      >
+                        {link.label}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
 
         <div className="pt-8 border-t border-border text-center">
