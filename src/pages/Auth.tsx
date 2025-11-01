@@ -167,6 +167,7 @@ const Auth = () => {
                             id="login-email"
                             type="email" 
                             placeholder="seu@email.com"
+                            autoComplete="email"
                             {...field}
                           />
                         </FormControl>
@@ -187,6 +188,7 @@ const Auth = () => {
                               type={showLoginPassword ? "text" : "password"}
                               placeholder="••••••••"
                               className="pr-10"
+                              autoComplete="current-password"
                               {...field}
                             />
                           </FormControl>
@@ -236,6 +238,7 @@ const Auth = () => {
                             id="signup-name"
                             type="text" 
                             placeholder="Seu nome"
+                            autoComplete="name"
                             {...field}
                           />
                         </FormControl>
@@ -254,6 +257,7 @@ const Auth = () => {
                             id="signup-email"
                             type="email" 
                             placeholder="seu@email.com"
+                            autoComplete="email"
                             {...field}
                           />
                         </FormControl>
@@ -274,6 +278,7 @@ const Auth = () => {
                               type={showSignupPassword ? "text" : "password"}
                               placeholder="••••••••"
                               className="pr-10"
+                              autoComplete="new-password"
                               {...field}
                             />
                           </FormControl>
@@ -302,6 +307,7 @@ const Auth = () => {
                               type={showConfirmPassword ? "text" : "password"}
                               placeholder="••••••••"
                               className="pr-10"
+                              autoComplete="new-password"
                               {...field}
                             />
                           </FormControl>

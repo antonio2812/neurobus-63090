@@ -54,8 +54,6 @@ const ResetPassword = () => {
       // --- FLUXO 2: Usuário clicou no link do email e está alterando a senha ---
       const updateData = data as UpdateFormValues;
       
-      // Zod already validated password match and length
-      
       const { error } = await supabase.auth.updateUser({
         password: updateData.password,
       });
@@ -80,6 +78,8 @@ const ResetPassword = () => {
       // --- FLUXO 1: Usuário solicitando o email de recuperação ---
       const resetData = data as ResetFormValues;
       
+      // Supabase handles the check internally: if the email doesn't exist, 
+      // no email is sent, but no error is returned to prevent user enumeration.
       const { error } = await supabase.auth.resetPasswordForEmail(resetData.email, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
@@ -87,17 +87,19 @@ const ResetPassword = () => {
       setIsLoading(false);
 
       if (error) {
+        // This error usually only happens if the request itself fails (e.g., network, rate limit)
         toast({
-          title: "Erro ao enviar email",
+          title: "Erro ao enviar solicitação",
           description: error.message,
           variant: "destructive",
         });
         return;
       }
 
+      // IMPORTANT: Use a generic message to prevent user enumeration (security best practice).
       toast({
-        title: "Email enviado!",
-        description: "Verifique sua caixa de entrada para redefinir sua senha",
+        title: "Instruções enviadas!",
+        description: "Se o email estiver cadastrado, você receberá um link para redefinir sua senha.",
       });
     }
   };
@@ -158,6 +160,7 @@ const ResetPassword = () => {
                             type={showPassword ? "text" : "password"}
                             placeholder="Digite sua nova senha"
                             className="pr-10"
+                            autoComplete="new-password"
                             {...field}
                           />
                         </FormControl>
@@ -186,6 +189,7 @@ const ResetPassword = () => {
                             type={showConfirmPassword ? "text" : "password"}
                             placeholder="Confirme sua nova senha"
                             className="pr-10"
+                            autoComplete="new-password"
                             {...field}
                           />
                         </FormControl>
@@ -226,6 +230,7 @@ const ResetPassword = () => {
                           id="reset-email"
                           type="email" 
                           placeholder="seu@email.com"
+                          autoComplete="email"
                           {...field}
                         />
                       </FormControl>
