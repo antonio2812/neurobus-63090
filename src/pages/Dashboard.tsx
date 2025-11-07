@@ -25,17 +25,20 @@ import { useAuthRedirect } from "@/hooks/useAuthRedirect"; // NOVO IMPORT
 
 // Definição das funcionalidades para os cards (TÍTULOS ATUALIZADOS)
 const features = [
-  { icon: ImagePlus, title: "Gerador de Imagens com IA", description: "Crie fotos de alta qualidade e conversão para os seus produtos em segundos.", action: "imagens", isModal: true }, // TEXTO ATUALIZADO
-  { icon: Brain, title: "Precificação de Produtos", description: "Descubra o preço ideal automaticamente e maximize seus ganhos.", action: "precificacao", isModal: true }, // isModal: true
-  { icon: Sparkles, title: "Gerador de Títulos e Descrições", description: "Conquiste mais cliques com textos prontos, persuasivos e otimizados.", action: "titulos", isModal: true }, // isModal: true
-  { icon: Eye, title: "Espião de Tendências de Produtos", description: "Descubra o que vai bombar antes dos seus concorrentes.", action: "tendencias", isModal: true }, // isModal: true
-  { icon: UserSearch, title: "Espião de Concorrência", description: "Monitore produtos, preços e estratégias dos concorrentes em tempo real.", action: "concorrencia", isModal: true }, // ÍCONE ATUALIZADO: UserSearch
-  { icon: Box, title: "Gerador Inteligente de Kits", description: "Crie combinações automáticas de produtos que aumentam o ticket médio.", action: "kits", isModal: true }, // isModal: true
-  { icon: AlertTriangle, title: "Detector de Palavras Proibidas", description: "Evite bloqueios e reprovações antes que prejudiquem suas vendas.", action: "proibidas", isModal: true }, // isModal: true
-  // TÍTULO ATUALIZADO AQUI
-  { icon: Truck, title: "Buscador de Fornecedores Nacionais e Importadoras", description: "Encontre Parceiros Comerciais com facilidade, confiáveis e com os melhores preços.", action: "fornecedores", isModal: true },
-  { icon: Bell, title: "Datas Especiais + Produtos Minerados", description: "Receba alertas inteligentes sobre oportunidades sazonais e produtos lucrativos.", action: "alertas", isModal: true },
-  // { icon: BarChart, title: "Relatórios Mensais de Lucro", description: "Visualize seus resultados e veja seus lucros crescerem mês a mês.", action: "relatorios" }, // REMOVIDO
+  // Linha 1
+  { icon: Brain, title: "Precificação de Produtos", description: "Descubra o preço ideal automaticamente e maximize seus ganhos.", action: "precificacao", isModal: true }, // 1
+  { icon: Sparkles, title: "Gerador de Títulos e Descrições", description: "Conquiste mais cliques com textos prontos, persuasivos e otimizados.", action: "titulos", isModal: true }, // 2
+  { icon: Eye, title: "Espião de Tendências de Produtos", description: "Descubra o que vai bombar antes dos seus concorrentes.", action: "tendencias", isModal: true }, // 3
+  
+  // Linha 2
+  { icon: UserSearch, title: "Espião de Concorrência", description: "Monitore produtos, preços e estratégias dos concorrentes em tempo real.", action: "concorrencia", isModal: true }, // 4
+  { icon: Box, title: "Gerador Inteligente de Kits", description: "Crie combinações automáticas de produtos que aumentam o ticket médio.", action: "kits", isModal: true }, // 5
+  { icon: ImagePlus, title: "Gerador de Imagens com IA", description: "Crie fotos de alta qualidade e conversão para os seus produtos em segundos.", action: "imagens", isModal: true }, // 6 (Movido para o lado direito de Kits)
+  
+  // Linha 3
+  { icon: Truck, title: "Buscador de Fornecedores Nacionais e Importadoras", description: "Encontre Parceiros Comerciais com facilidade, confiáveis e com os melhores preços.", action: "fornecedores", isModal: true }, // 7
+  { icon: AlertTriangle, title: "Detector de Palavras Proibidas", description: "Evite bloqueios e reprovações antes que prejudiquem suas vendas.", action: "proibidas", isModal: true }, // 8 (Movido para o lado direito de Fornecedores)
+  { icon: Bell, title: "Datas Especiais + Produtos Minerados", description: "Receba alertas inteligentes sobre oportunidades sazonais e produtos lucrativos.", action: "alertas", isModal: true }, // 9
 ];
 
 const Dashboard = () => {
