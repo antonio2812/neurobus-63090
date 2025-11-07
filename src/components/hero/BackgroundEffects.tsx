@@ -9,7 +9,7 @@ const BackgroundEffects = () => {
   const [isMobile, setIsMobile] = useState(false);
 
   const backgroundImages = [
-    "/lovable-uploads/4aa271d3-a6a3-48c9-b9a8-9924e55da6a2.png", // Satellite in orbit
+    "/lovable-uploads/4aa271d3-a6a3-4aab-9924e55da6a2.png", // Satellite in orbit
     "/lovable-uploads/60313361-6a48-42c0-9120-d272f5a0ceb8.png", // Drone with packages
     "/lovable-uploads/c25f1b5a-4d9a-4822-abdc-67ac48caf73c.png", // Autonomous vehicles highway
     "/lovable-uploads/68956595-e42e-48f3-abc1-04ad7cd530e9.png", // Military autonomous drone
@@ -64,17 +64,18 @@ const BackgroundEffects = () => {
 
   // Determine dynamic styles based on mobile state
   const baseBackgroundStyle = (index: number) => {
+    // No mobile, usamos transform: none e background-size: cover, background-position: center
     const parallaxTransform = isMobile 
       ? 'translateY(0px) scale(1)' 
       : `translateY(${scrollOffset * 0.5}px) scale(1.05)`;
     
     const mousePositionStyle = isMobile 
-      ? '50% 50%' 
+      ? 'center' // Fixo no centro para mobile
       : `${50 + mousePosition.x * 0.02}% ${50 + mousePosition.y * 0.02}%`;
 
     return {
       backgroundImage: `url(${backgroundImages[index]})`,
-      backgroundSize: isMobile ? 'cover' : '110%',
+      backgroundSize: 'cover', // Sempre cover
       backgroundPosition: mousePositionStyle,
       backgroundRepeat: 'no-repeat',
       transform: parallaxTransform,
