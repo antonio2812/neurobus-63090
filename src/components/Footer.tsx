@@ -125,7 +125,7 @@ const Footer = () => {
                 <img 
                   src="/lovable-uploads/Google Play - Rodapé.png"
                   alt="Disponível no Google Play"
-                  className="w-40 h-auto rounded-lg" 
+                  className="w-36 h-auto rounded-lg" 
                 />
               </a>
               
@@ -139,7 +139,7 @@ const Footer = () => {
                 <img 
                   src="/lovable-uploads/Apple Store - Rodapé.png"
                   alt="Baixar na App Store"
-                  className="w-40 h-auto rounded-lg" 
+                  className="w-36 h-auto rounded-lg" 
                 />
               </a>
             </div>
