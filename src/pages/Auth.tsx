@@ -121,7 +121,7 @@ const Auth = () => {
   if (isSessionLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-2xl font-bold text-foreground">
+        <p className="text-xl font-bold text-foreground">
           Carregando...
         </p>
       </div>

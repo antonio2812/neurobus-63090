@@ -77,7 +77,7 @@ const Dashboard = () => {
   if (isAuthLoading || loadingProfile) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <p className="text-2xl font-bold text-foreground">
+        <p className="text-xl font-bold text-foreground">
           Carregando...
         </p>
       </div>
