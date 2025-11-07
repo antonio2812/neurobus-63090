@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react'; // Mantemos o import, mas não o usamos no loader principal
 
 interface SessionContextType {
   session: Session | null;
@@ -52,11 +52,13 @@ const SessionContextProvider = ({ children }: SessionContextProviderProps) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Exibe um loader enquanto a sessão inicial está sendo carregada
+  // Exibe o texto "Carregando..." enquanto a sessão inicial está sendo carregada
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-accent" />
+        <p className="text-2xl font-bold text-accent">
+          Carregando...
+        </p>
       </div>
     );
   }

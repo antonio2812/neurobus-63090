@@ -121,7 +121,9 @@ const Auth = () => {
   if (isSessionLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-accent" />
+        <p className="text-2xl font-bold text-accent">
+          Carregando...
+        </p>
       </div>
     );
   }

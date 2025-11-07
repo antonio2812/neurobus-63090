@@ -184,7 +184,9 @@ const Profile = () => {
   if (isAuthLoading || loadingProfile || !isAuthenticated) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-accent" />
+        <p className="text-2xl font-bold text-accent">
+          Carregando...
+        </p>
       </div>
     );
   }
