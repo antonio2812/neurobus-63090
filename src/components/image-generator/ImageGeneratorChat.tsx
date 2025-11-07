@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Loader2, Send, ImagePlus, Download, ThumbsUp, ThumbsDown, Share2, Plus } from "lucide-react";
+import { ArrowLeft, Loader2, Send, Image, Download, ThumbsUp, ThumbsDown, Share2, Plus } from "lucide-react"; // Alterado ImagePlus para Image
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -67,7 +67,7 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
     return (
       <div className="mt-4 space-y-4">
         <h3 className="text-xl font-bold text-accent font-space-mono flex items-center gap-2">
-          <ImagePlus className="h-6 w-6" /> Imagem Gerada
+          <Image className="h-6 w-6" /> Imagem Gerada
         </h3>
         
         <Card className="p-2 bg-background border-accent/30 shadow-inner space-y-2">
@@ -283,14 +283,17 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
         </div>
         
         {/* Ícone e Prompt Mais Usado */}
-        <div className="flex flex-col items-center space-y-2 pt-2">
+        <div className="flex flex-col items-center space-y-2 pt-4"> {/* Adicionado pt-4 para espaçamento */}
             <div 
-                className="h-16 w-16 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: accentColor }}
+                className={cn(
+                    "h-16 w-16 rounded-full flex items-center justify-center border border-accent/50",
+                    "shadow-glow-accent/50" // Efeito neon simulado
+                )}
+                style={{ boxShadow: `0 0 15px ${accentColor}80` }} // Efeito neon mais forte
             >
-                <ImagePlus className="h-8 w-8 text-black" />
+                <Image className="h-8 w-8 text-accent" /> {/* Ícone Image e cor accent */}
             </div>
-            <p className="text-sm text-muted-foreground text-center max-w-xs">
+            <p className="text-sm text-muted-foreground text-center max-w-xs pt-2"> {/* Adicionado pt-2 para espaçamento */}
                 <span className="text-white font-bold">Prompt mais usado:</span> {mostUsedPrompt}
             </p>
         </div>
@@ -346,7 +349,7 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
       <div className="p-4 border-t border-border">
         <div className="flex items-center w-full bg-card rounded-3xl border border-border/50 shadow-lg">
           
-          {/* Botão de Anexar Imagem (Plus) */}
+          {/* Botão de Anexar Imagem (Plus) - Círculo Perfeito no Hover */}
           <input
             type="file"
             ref={fileInputRef}
@@ -361,7 +364,8 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
             onClick={() => fileInputRef.current?.click()}
             disabled={isLoading || step === 'done'}
             className={cn(
-                "h-10 w-10 ml-2 rounded-full text-muted-foreground hover:bg-accent hover:text-black transition-all duration-300",
+                "h-10 w-10 ml-2 rounded-full text-muted-foreground transition-all duration-300",
+                "hover:bg-accent hover:text-black hover:rounded-full", // Garante o círculo perfeito no hover
                 (isLoading || step === 'done') && "opacity-50 cursor-not-allowed hover:bg-transparent hover:text-muted-foreground"
             )}
           >
