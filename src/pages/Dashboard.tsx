@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Calculator, Store, DollarSign, Brain, Sparkles, Box, AlertTriangle, Bell, BarChart, Trophy, Truck, Search, UserSearch, Eye, ImagePlus, Loader2 } from "lucide-react";
+import { Calculator, Store, DollarSign, Brain, Sparkles, Box, AlertTriangle, Bell, BarChart, Trophy, Truck, Search, UserSearch, Eye, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
@@ -20,12 +20,10 @@ import KitGeneratorModal from "@/components/KitGeneratorModal"; // NOVO IMPORT
 import ForbiddenWordsModal from "@/components/ForbiddenWordsModal"; // NOVO IMPORT
 import SupplierFinderModal from "@/components/SupplierFinderModal"; // NOVO IMPORT
 import DateMinerModal from "@/components/DateMinerModal"; // NOVO IMPORT
-import ImageGeneratorModal from "@/components/ImageGeneratorModal"; // NOVO IMPORT
 import { useAuthRedirect } from "@/hooks/useAuthRedirect"; // NOVO IMPORT
 
 // Definição das funcionalidades para os cards (TÍTULOS ATUALIZADOS)
 const features = [
-  { icon: ImagePlus, title: "Gerador de Imagens com IA", description: "Crie fotos de produtos profissionais e chamativas em segundos.", action: "imagens", isModal: true }, // NOVO CARD
   { icon: Brain, title: "Precificação de Produtos", description: "Descubra o preço ideal automaticamente e maximize seus ganhos.", action: "precificacao", isModal: true }, // isModal: true
   { icon: Sparkles, title: "Gerador de Títulos e Descrições", description: "Conquiste mais cliques com textos prontos, persuasivos e otimizados.", action: "titulos", isModal: true }, // isModal: true
   { icon: Eye, title: "Espião de Tendências de Produtos", description: "Descubra o que vai bombar antes dos seus concorrentes.", action: "tendencias", isModal: true }, // isModal: true
@@ -131,13 +129,7 @@ const Dashboard = () => {
       </Card>
     );
 
-    if (feature.action === 'imagens') {
-      return (
-        <ImageGeneratorModal key={index}>
-          {CardContent}
-        </ImageGeneratorModal>
-      );
-    }
+    // Removido o bloco 'imagens'
     
     if (feature.action === 'precificacao') {
       return (
