@@ -283,17 +283,21 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
         </div>
         
         {/* Ícone e Prompt Mais Usado */}
-        <div className="flex flex-col items-center space-y-2 pt-4"> {/* Adicionado pt-4 para espaçamento */}
+        <div className="flex flex-col items-center space-y-4 pt-4"> {/* Aumentado space-y para 4 */}
             <div 
                 className={cn(
                     "h-16 w-16 rounded-full flex items-center justify-center border border-accent/50",
-                    "shadow-glow-accent/50" // Efeito neon simulado
+                    "relative" // Adicionado relative para posicionar o neon
                 )}
-                style={{ boxShadow: `0 0 15px ${accentColor}80` }} // Efeito neon mais forte
             >
-                <Image className="h-8 w-8 text-accent" /> {/* Ícone Image e cor accent */}
+                {/* Efeito Neon no Fundo */}
+                <div 
+                    className="absolute inset-0 rounded-full opacity-50 blur-md transition-all duration-500"
+                    style={{ backgroundColor: accentColor, boxShadow: `0 0 20px ${accentColor}` }}
+                />
+                <Image className="h-8 w-8 text-black relative z-10" /> {/* Ícone preto sobre o neon */}
             </div>
-            <p className="text-sm text-muted-foreground text-center max-w-xs pt-2"> {/* Adicionado pt-2 para espaçamento */}
+            <p className="text-sm text-muted-foreground text-center max-w-xs">
                 <span className="text-white font-bold">Prompt mais usado:</span> {mostUsedPrompt}
             </p>
         </div>
@@ -365,7 +369,8 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
             disabled={isLoading || step === 'done'}
             className={cn(
                 "h-10 w-10 ml-2 rounded-full text-muted-foreground transition-all duration-300",
-                "hover:bg-accent hover:text-black hover:rounded-full", // Garante o círculo perfeito no hover
+                // Alterado: Removido hover:bg-accent e adicionado hover:text-accent
+                "hover:bg-transparent hover:text-accent hover:rounded-full", 
                 (isLoading || step === 'done') && "opacity-50 cursor-not-allowed hover:bg-transparent hover:text-muted-foreground"
             )}
           >
