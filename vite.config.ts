@@ -33,7 +33,8 @@ export default defineConfig(({ mode }) => ({
         description: 'IA que Multiplica seu Lucro',
         theme_color: '#000000',
         background_color: '#000000',
-        display: 'standalone',
+        display: 'standalone', // Mantém standalone
+        display_override: ['standalone', 'minimal-ui'], // Adiciona display_override
         scope: '/',
         start_url: '/',
         icons: [
