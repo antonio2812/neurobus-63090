@@ -282,25 +282,26 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
             <div className="w-10 h-10"></div>
         </div>
         
-        {/* Ícone e Prompt Mais Usado */}
-        <div className="flex flex-col items-center space-y-4 pt-4"> {/* Aumentado space-y para 4 */}
+        {/* Ícone e Prompt Mais Usado - ESTILO NEON ATUALIZADO */}
+        <div className="flex flex-col items-center space-y-4 pt-4">
             <div 
                 className={cn(
                     "h-16 w-16 rounded-full flex items-center justify-center border border-accent/50",
-                    "relative overflow-hidden" // Adicionado overflow-hidden para conter o neon
+                    "relative overflow-hidden bg-transparent" // Fundo transparente
                 )}
             >
-                {/* Efeito Neon no Fundo (Aumentando o blur e o spread do shadow) */}
+                {/* Efeito Neon no Fundo (Ajustado para ser mais forte e apenas o glow) */}
                 <div 
-                    className="absolute inset-0 rounded-full opacity-100 blur-lg transition-all duration-500" // Opacidade 100% e blur XL
+                    className="absolute inset-0 rounded-full opacity-100 transition-all duration-500"
                     style={{ 
-                        backgroundColor: accentColor, 
-                        boxShadow: `0 0 60px 15px ${accentColor}` // Aumentado o shadow para 60px e spread para 15px
+                        // Aumentando o glow e o spread para um efeito mais forte e chamativo
+                        boxShadow: `0 0 80px 20px ${accentColor}`, 
+                        backgroundColor: 'transparent' // Fundo transparente
                     }} 
                 />
-                <Image className="h-8 w-8 text-black relative z-10" /> {/* Ícone preto sobre o neon */}
+                <Image className="h-8 w-8 text-accent relative z-10" /> {/* Ícone na cor accent */}
             </div>
-            <p className="text-sm text-muted-foreground text-center max-w-xs pt-4"> {/* Aumentado pt-4 para espaçamento */}
+            <p className="text-sm text-muted-foreground text-center max-w-xs pt-4">
                 <span className="text-white font-bold">Prompt mais usado:</span> {mostUsedPrompt}
             </p>
         </div>

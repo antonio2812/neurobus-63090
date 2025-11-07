@@ -1,4 +1,4 @@
-import { Brain, Sparkles, Bell, BarChart, Search, UserSearch, Eye } from "lucide-react";
+import { Brain, Sparkles, Bell, BarChart, Search, UserSearch, Eye, AlertTriangle } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import ResourceModal from "./ResourceModal";
 
@@ -42,6 +42,14 @@ const ResourcesTools = () => {
       modalImages: [],
       modalDescription: "Funcionalidade de visualização de exemplos em desenvolvimento.",
     },
+    // NOVO CARD: Detector de Palavras Proibidas
+    {
+      icon: AlertTriangle, // Ícone de Alerta Profissional
+      title: "Detector de Palavras Proibidas", 
+      description: "Evite bloqueios e reprovações antes que prejudiquem suas vendas.",
+      modalImages: [],
+      modalDescription: "Funcionalidade de visualização de exemplos em desenvolvimento.",
+    },
     {
       icon: Bell, // Ícone de sino de alerta
       title: "Datas Especiais + Produtos Minerados", // Alterado
@@ -49,13 +57,7 @@ const ResourcesTools = () => {
       modalImages: [],
       modalDescription: "Funcionalidade de visualização de exemplos em desenvolvimento.",
     },
-    {
-      icon: BarChart, // Ícone de gráfico crescente
-      title: "Relatórios Mensais de Lucro", // Alterado
-      description: "Visualize seus resultados com clareza e veja seus lucros crescerem mês a mês.",
-      modalImages: [],
-      modalDescription: "Funcionalidade de visualização de exemplos em desenvolvimento.",
-    },
+    // O card "Relatórios Mensais de Lucro" foi removido.
   ];
 
   return (

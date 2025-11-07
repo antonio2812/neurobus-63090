@@ -11,8 +11,8 @@ const LatestReleases = () => {
       order: 1,
     },
     {
-      title: "Detector de Palavras Proibidas e Reprovação de Anúncios",
-      description: "Evite bloqueios e reprovações antes que prejudiquem suas vendas.",
+      title: "Gerador de Imagens com IA", // NOVO CARD
+      description: "Crie fotos de alta qualidade e conversão para os seus produtos em segundos.",
       image: "/lovable-uploads/Home.png", // Placeholder
       order: 2,
     },
@@ -24,10 +24,10 @@ const LatestReleases = () => {
     },
   ];
 
-  // Ordem solicitada: Kits (0), Palavras Proibidas (1), Fornecedores (2)
+  // Ordem solicitada: Kits (0), Imagens (1), Fornecedores (2)
   const releases = [
     rawReleases[0], // Gerador Inteligente de Kits
-    rawReleases[1], // Detector de Palavras Proibidas
+    rawReleases[1], // Gerador de Imagens com IA
     rawReleases[2], // Buscador de Fornecedores
   ];
 

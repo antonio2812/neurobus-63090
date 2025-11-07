@@ -19,10 +19,10 @@ const premiumFeatures = [
   "Espião de Tendências de Produtos",
   "Espião de Concorrência com Automação",
   "Gerador Inteligente de Kits (NOVO)",
-  "Gerador de Imagens de Alta Qualidade e Conversão ilimitadas (NOVO)", // TEXTO CORRIGIDO
+  "Gerador de Imagens de Alta Qualidade e Conversão ilimitadas (NOVO)",
   "Buscador dos Melhores Fornecedores Nacionais e Importadoras (NOVO)",
-  "Alertas de Datas Especiais + Produtos Minerados",
-  "Detector de Palavras Proibidas e Reprovação de Anúncios", // RENOMEADO E REORDENADO
+  "Detector de Palavras Proibidas e Reprovação de Anúncios", // POSIÇÃO 9
+  "Alertas de Datas Especiais + Produtos Minerados", // POSIÇÃO 10 (MOVIDO PARA BAIXO)
 ];
 
 const proFeatures = [
@@ -30,8 +30,8 @@ const proFeatures = [
   "Gerador de Títulos e Descrições com IA",
   "Espião de Tendências de Produtos",
   "Espião de Concorrência com Automação",
-  "Alertas de Datas Especiais + Produtos Minerados",
-  "Detector de Palavras Proibidas e Reprovação de Anúncios", // RENOMEADO
+  "Detector de Palavras Proibidas e Reprovação de Anúncios", // POSIÇÃO 5
+  "Alertas de Datas Especiais + Produtos Minerados", // POSIÇÃO 6 (MOVIDO PARA BAIXO)
 ];
 
 
