@@ -8,17 +8,7 @@ const corsHeaders = {
   'Content-Type': 'application/json',
 };
 
-// Inicializa a chave de API do Google Gemini para Imagens
-const GOOGLE_GEMINI_IMAGE_API_KEY = Deno.env.get('GOOGLE_GEMINI_IMAGE_API_KEY');
-
-// URL da API de Geração de Imagens do Gemini
-const GEMINI_IMAGE_URL = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:generateImages?key=${GOOGLE_GEMINI_IMAGE_API_KEY}`;
-
-// Formato de saída JSON esperado pela função
-interface GeneratedImage {
-  base64Image: string;
-  mimeType: string;
-}
+// Removendo a inicialização da chave GOOGLE_GEMINI_IMAGE_API_KEY e a URL da API.
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -27,94 +17,17 @@ serve(async (req) => {
   
   console.log("Edge Function 'image-generator' started execution.");
 
-  if (!GOOGLE_GEMINI_IMAGE_API_KEY) {
-    return new Response(
-      JSON.stringify({ error: 'Erro de Configuração: A chave GOOGLE_GEMINI_IMAGE_API_KEY não está definida nas variáveis de ambiente do Supabase.' }),
-      { status: 500, headers: corsHeaders }
-    );
-  }
-
-  try {
-    const body = await req.json();
-    const { prompt } = body;
-
-    if (!prompt) {
-      return new Response(JSON.stringify({ error: 'Prompt de imagem não fornecido.' }), { status: 400, headers: corsHeaders })
+  // Lógica de geração de imagem removida.
+  
+  // Retorna um erro 501 (Not Implemented) ou 503 (Service Unavailable)
+  return new Response(
+    JSON.stringify({ 
+      success: false,
+      error: 'O Gerador de Imagens com IA está temporariamente indisponível. Estamos atualizando a integração com uma nova API.',
+    }),
+    {
+      headers: corsHeaders,
+      status: 503,
     }
-    
-    console.log(`Generating image for prompt: ${prompt}`);
-
-    const geminiBody = {
-      config: {
-        numberOfImages: 1,
-        outputMimeType: "image/jpeg",
-        aspectRatio: "1:1",
-      },
-      prompt: {
-        text: prompt,
-      },
-    };
-
-    const response = await fetch(GEMINI_IMAGE_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(geminiBody),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Google Gemini Image API error:", response.status, errorText);
-      // Lança um erro mais detalhado
-      throw new Error(`Erro da API do Google Gemini (Status: ${response.status}): ${errorText}`);
-    }
-
-    const data = await response.json();
-    
-    const generatedImages: GeneratedImage[] = data.generatedImages || [];
-
-    if (generatedImages.length === 0) {
-        throw new Error("A IA não conseguiu gerar a imagem. Tente um prompt diferente.");
-    }
-    
-    return new Response(
-      JSON.stringify({
-        success: true,
-        generatedImage: generatedImages[0],
-      }),
-      {
-        headers: corsHeaders,
-        status: 200,
-      }
-    )
-
-  } catch (error) {
-    console.error("Erro na Edge Function:", error)
-    let errorMessage = "Erro interno do servidor."
-    
-    if (error instanceof Error) {
-        errorMessage = error.message;
-        
-        if (errorMessage.includes("Status: 400")) {
-            errorMessage = "Erro 400: Requisição inválida. O prompt pode ser muito longo ou o formato da requisição está incorreto.";
-        } else if (errorMessage.includes("Status: 401") || errorMessage.includes("API key")) {
-            errorMessage = "Erro 401: Chave API inválida. Verifique a configuração da chave GOOGLE_GEMINI_IMAGE_API_KEY.";
-        } else if (errorMessage.includes("Status: 429")) {
-            errorMessage = "Erro 429: Limite de taxa excedido. Tente novamente em breve.";
-        } else if (errorMessage.includes("Status: 500")) {
-            errorMessage = "Erro 500: Servidor da API do Google Gemini indisponível. Tente novamente mais tarde.";
-        } else if (errorMessage.includes("Erro da API do Google Gemini")) {
-            // Mantém a mensagem de erro da API se for detalhada
-        } else {
-            errorMessage = "Falha na comunicação com a IA. Verifique sua conexão ou tente novamente.";
-        }
-    }
-    
-    return new Response(
-      JSON.stringify({ error: errorMessage }),
-      {
-        headers: corsHeaders,
-        status: 500,
-      }
-    )
-  }
+  );
 });
