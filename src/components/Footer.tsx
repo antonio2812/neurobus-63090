@@ -125,7 +125,7 @@ const Footer = () => {
                 <img 
                   src="/lovable-uploads/Google Play - Rodapé.png"
                   alt="Disponível no Google Play"
-                  className="w-32 h-auto rounded-lg" 
+                  className="w-36 h-auto rounded-lg" 
                 />
               </a>
               
