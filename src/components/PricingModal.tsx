@@ -40,7 +40,7 @@ const PricingModal = ({ children }: PricingModalProps) => {
       </DialogTrigger>
       <DialogContent 
         className={cn(
-          "sm:max-w-[95vw] md:max-w-4xl p-0 bg-card border-border shadow-elevated max-h-[95vh] overflow-hidden",
+          "max-w-[95vw] md:max-w-4xl p-0 bg-card border-border shadow-elevated max-h-[95vh] overflow-hidden", // Alterado sm:max-w para max-w
           // Estilo do botão de fechar (X) ATUALIZADO:
           // 1. Borda transparente por padrão
           // 2. Borda amarela (accent) no hover
