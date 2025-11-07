@@ -237,7 +237,8 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
           size="icon" 
           onClick={onBack} 
           // ESTILO ATUALIZADO: Borda transparente, fundo transparente, hover:bg-accent, hover:text-black
-          className="text-muted-foreground hover:text-black transition-colors duration-300 border-transparent hover:bg-accent" 
+          // Adicionando 'bg-transparent' para ser explícito, embora 'ghost' já faça isso.
+          className="text-muted-foreground hover:text-black transition-colors duration-300 border-transparent bg-transparent hover:bg-accent" 
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
