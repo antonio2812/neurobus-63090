@@ -29,7 +29,7 @@ serve(async (req) => {
 
   if (!GOOGLE_GEMINI_IMAGE_API_KEY) {
     return new Response(
-      JSON.stringify({ error: 'Erro de Configuração: A chave GOOGLE_GEMINI_IMAGE_API_KEY não está definida.' }),
+      JSON.stringify({ error: 'Erro de Configuração: A chave GOOGLE_GEMINI_IMAGE_API_KEY não está definida nas variáveis de ambiente do Supabase.' }),
       { status: 500, headers: corsHeaders }
     );
   }
@@ -64,7 +64,8 @@ serve(async (req) => {
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Google Gemini Image API error:", response.status, errorText);
-      throw new Error(`Erro da API do Google Gemini: ${response.status} - ${errorText}`);
+      // Lança um erro mais detalhado
+      throw new Error(`Erro da API do Google Gemini (Status: ${response.status}): ${errorText}`);
     }
 
     const data = await response.json();
@@ -92,12 +93,17 @@ serve(async (req) => {
     
     if (error instanceof Error) {
         errorMessage = error.message;
-        if (errorMessage.includes("API key") || errorMessage.includes("401")) {
-            errorMessage = "Chave API inválida ou erro de comunicação com a IA. Por favor, verifique a configuração da chave GOOGLE_GEMINI_IMAGE_API_KEY.";
-        } else if (errorMessage.includes("quota") || errorMessage.includes("429")) {
-            errorMessage = "Limite de taxa excedido. Tente novamente em breve.";
+        
+        if (errorMessage.includes("Status: 400")) {
+            errorMessage = "Erro 400: Requisição inválida. O prompt pode ser muito longo ou o formato da requisição está incorreto.";
+        } else if (errorMessage.includes("Status: 401") || errorMessage.includes("API key")) {
+            errorMessage = "Erro 401: Chave API inválida. Verifique a configuração da chave GOOGLE_GEMINI_IMAGE_API_KEY.";
+        } else if (errorMessage.includes("Status: 429")) {
+            errorMessage = "Erro 429: Limite de taxa excedido. Tente novamente em breve.";
+        } else if (errorMessage.includes("Status: 500")) {
+            errorMessage = "Erro 500: Servidor da API do Google Gemini indisponível. Tente novamente mais tarde.";
         } else if (errorMessage.includes("Erro da API do Google Gemini")) {
-            // Mantém a mensagem de erro da API
+            // Mantém a mensagem de erro da API se for detalhada
         } else {
             errorMessage = "Falha na comunicação com a IA. Verifique sua conexão ou tente novamente.";
         }
