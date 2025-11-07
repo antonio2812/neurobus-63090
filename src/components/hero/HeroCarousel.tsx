@@ -30,7 +30,8 @@ const HeroCarousel = () => {
           }`}
         >
           <div 
-            className="absolute inset-0 bg-cover bg-center brightness-[0.3] blur-sm"
+            // Alterado bg-cover para bg-contain para evitar corte
+            className="absolute inset-0 bg-contain bg-center bg-no-repeat brightness-[0.3] blur-sm"
             style={{ backgroundImage: `url(${image})` }}
           />
         </div>
