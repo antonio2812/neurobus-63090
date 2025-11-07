@@ -1,6 +1,7 @@
 import { Instagram, Facebook, Youtube, Linkedin } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import AppStoreMaintenanceModal from "./AppStoreMaintenanceModal"; // Importando o novo modal
 
 const Footer = () => {
   const legalLinks = [
@@ -129,19 +130,19 @@ const Footer = () => {
                 />
               </a>
               
-              {/* App Store (NOVO) */}
-              <a 
-                href="https://wa.link/adnlkj"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block transition-transform duration-300 hover:scale-105"
-              >
-                <img 
-                  src="/lovable-uploads/Apple Store - Rodapé.png"
-                  alt="Baixar na App Store"
-                  className="w-32 h-auto rounded-lg" 
-                />
-              </a>
+              {/* App Store (NOVO) - Agora usa o Modal */}
+              <AppStoreMaintenanceModal>
+                <button
+                  className="inline-block transition-transform duration-300 hover:scale-105"
+                  aria-label="Baixar na App Store (Em Manutenção)"
+                >
+                  <img 
+                    src="/lovable-uploads/Apple Store - Rodapé.png"
+                    alt="Baixar na App Store"
+                    className="w-32 h-auto rounded-lg" 
+                  />
+                </button>
+              </AppStoreMaintenanceModal>
             </div>
           </div>
 
