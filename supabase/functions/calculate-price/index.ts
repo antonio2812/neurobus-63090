@@ -137,6 +137,7 @@ const calculatePrice = (
 
 // Função para chamar a IA (OpenRouter ou Gemini)
 const callAI = async (prompt: string, isJson: boolean = false) => {
+    // Prioriza OpenRouter se a chave estiver presente
     if (OPENROUTER_API_KEY) {
         const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
         const MODEL = 'openai/gpt-3.5-turbo'; 
