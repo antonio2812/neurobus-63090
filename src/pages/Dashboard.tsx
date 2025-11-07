@@ -35,7 +35,7 @@ const features = [
   // TÍTULO ATUALIZADO AQUI
   { icon: Truck, title: "Buscador de Fornecedores Nacionais e Importadoras", description: "Encontre Parceiros Comerciais com facilidade, confiáveis e com os melhores preços.", action: "fornecedores", isModal: true },
   { icon: Bell, title: "Datas Especiais + Produtos Minerados", description: "Receba alertas inteligentes sobre oportunidades sazonais e produtos lucrativos.", action: "alertas", isModal: true },
-  { icon: BarChart, title: "Relatórios Mensais de Lucro", description: "Visualize seus resultados e veja seus lucros crescerem mês a mês.", action: "relatorios" },
+  // { icon: BarChart, title: "Relatórios Mensais de Lucro", description: "Visualize seus resultados e veja seus lucros crescerem mês a mês.", action: "relatorios" }, // REMOVIDO
 ];
 
 const Dashboard = () => {
