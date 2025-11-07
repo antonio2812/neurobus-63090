@@ -39,57 +39,60 @@ const CalculationDetails = ({ calculation }: CalculationDetailsProps) => {
       <div className="space-y-2 text-sm">
         
         {/* Custo no Fornecedor */}
-        <div className="flex justify-between">
+        <div className="flex flex-col sm:flex-row sm:justify-between">
           <span className="text-muted-foreground">Custo no Fornecedor:</span>
-          <span className="font-semibold text-foreground">{formatCurrency(calculation.details.cost)}</span>
+          <span className="font-semibold text-foreground mt-1 sm:mt-0 sm:text-right">{formatCurrency(calculation.details.cost)}</span>
         </div>
         
         {/* Taxa de Comissão (com tipo de anúncio se for ML) */}
-        <div className="flex justify-between">
+        <div className="flex flex-col sm:flex-row sm:justify-between">
           <span className="text-muted-foreground">
             Taxa de Comissão ({formatPercentage(calculation.details.commissionRate)}
             {calculation.details.adType && calculation.details.marketplace === 'Mercado Livre' ? ` - Anúncio ${calculation.details.adType.split(' ')[0]}` : ''}):
           </span>
-          <span className="font-semibold text-foreground">{formatCurrency(calculation.details.commissionValue)}</span>
+          <span className="font-semibold text-foreground mt-1 sm:mt-0 sm:text-right">{formatCurrency(calculation.details.commissionValue)}</span>
         </div>
         
         {/* Custo Fixo */}
-        <div className="flex justify-between">
+        <div className="flex flex-col sm:flex-row sm:justify-between">
           <span className="text-muted-foreground">Custo Fixo ({calculation.details.marketplace}):</span>
-          <span className="font-semibold text-foreground">{formatCurrency(calculation.details.fixedFee)}</span>
+          <span className="font-semibold text-foreground mt-1 sm:mt-0 sm:text-right">{formatCurrency(calculation.details.fixedFee)}</span>
         </div>
         
         {/* Custo de Frete */}
-        <div className="flex justify-between">
+        <div className="flex flex-col sm:flex-row sm:justify-between">
           <span className="text-muted-foreground">Custo de Frete:</span>
-          <span className="font-semibold text-foreground">{formatCurrency(calculation.details.freightFee)}</span>
+          <span className="font-semibold text-foreground mt-1 sm:mt-0 sm:text-right">{formatCurrency(calculation.details.freightFee)}</span>
         </div>
         
-        {/* Custos Adicionais (Movido para baixo do Frete e texto alterado) */}
-        <div className="flex justify-between">
+        {/* Custos Adicionais */}
+        <div className="flex flex-col sm:flex-row sm:justify-between">
           <span className="text-muted-foreground">Custos Adicionais:</span>
-          <span className="font-semibold text-foreground">{formatCurrency(calculation.details.additionalCost)}</span>
+          <span className="font-semibold text-foreground mt-1 sm:mt-0 sm:text-right">{formatCurrency(calculation.details.additionalCost)}</span>
         </div>
         
         {/* Custo Total */}
-        <div className="border-t border-border/50 pt-2 mt-2 flex justify-between font-bold">
+        <div className="border-t border-border/50 pt-2 mt-2 flex flex-col sm:flex-row sm:justify-between font-bold">
           <span className="text-foreground">Custo Total:</span>
-          <span className="text-foreground">{formatCurrency(calculation.details.totalCosts)}</span>
+          <span className="text-foreground mt-1 sm:mt-0 sm:text-right">{formatCurrency(calculation.details.totalCosts)}</span>
         </div>
       </div>
       
       <div className="mt-4 p-3 bg-accent/10 rounded-lg space-y-2">
-        <div className="flex justify-between items-center">
+        {/* Preço de Venda Ideal */}
+        <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center">
           <span className="text-xl font-bold text-accent">Preço de Venda Ideal:</span>
-          <span className="text-2xl font-extrabold text-accent">{formatCurrency(calculation.idealSalePrice)}</span>
+          <span className="text-2xl font-extrabold text-accent mt-1 sm:mt-0">{formatCurrency(calculation.idealSalePrice)}</span>
         </div>
-        <div className="flex justify-between items-center">
+        {/* Lucro Líquido */}
+        <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center">
           <span className="text-lg font-semibold text-foreground">Lucro Líquido:</span>
-          <span className="text-xl font-bold text-foreground">{formatCurrency(calculation.netProfit)}</span>
+          <span className="text-xl font-bold text-foreground mt-1 sm:mt-0">{formatCurrency(calculation.netProfit)}</span>
         </div>
-        <div className="flex justify-between items-center">
+        {/* Margem de Lucro */}
+        <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center">
           <span className="text-lg font-semibold text-foreground">Margem de Lucro:</span>
-          <span className="text-xl font-bold text-foreground">{formatPercentage(calculation.netMargin * 100)}</span>
+          <span className="text-xl font-bold text-foreground mt-1 sm:mt-0">{formatPercentage(calculation.netMargin * 100)}</span>
         </div>
       </div>
       
