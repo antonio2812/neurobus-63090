@@ -7,7 +7,7 @@ const FoxGoCard = () => {
   const instagramLink = "https://instagram.com/lucraa.ai";
 
   return (
-    <Card className="p-6 md:p-10 bg-gradient-card border-accent/30 shadow-glow-accent/50 transition-all duration-500 hover-lift">
+    <Card className="p-6 md:p-10 bg-gradient-card border-accent/30 shadow-glow-accent/50 transition-all duration-500 hover-lift cursor-pointer">
       <div className="flex flex-col items-center text-center space-y-6">
         
         {/* Title - Removed Zap icon and changed 'Fox GO' color to text-foreground (white/light gray) */}

@@ -44,9 +44,9 @@ const PricingModal = ({ children }: PricingModalProps) => {
           // Estilo do botão de fechar (X) ATUALIZADO:
           // 1. Borda transparente por padrão
           // 2. Borda amarela (accent) no hover
-          // 3. Fundo transparente/card/50 no hover
+          // 3. Fundo transparente no hover (removido bg-card/50)
           // 4. Ícone foreground (branco/cinza) no hover
-          "[&>button]:border-transparent [&>button:hover]:border-accent [&>button:hover]:bg-card/50 [&>button:hover]:text-foreground"
+          "[&>button]:border-transparent [&>button:hover]:border-accent [&>button:hover]:bg-transparent [&>button:hover]:text-foreground"
         )}
       >
         

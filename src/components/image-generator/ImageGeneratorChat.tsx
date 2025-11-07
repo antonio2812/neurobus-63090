@@ -236,7 +236,8 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
           variant="ghost" 
           size="icon" 
           onClick={onBack} 
-          className="text-muted-foreground hover:text-black hover:bg-accent transition-colors duration-300 border-transparent" 
+          // ESTILO ATUALIZADO: Borda transparente, fundo transparente, hover:bg-accent, hover:text-black
+          className="text-muted-foreground hover:text-black transition-colors duration-300 border-transparent hover:bg-accent" 
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
