@@ -12,130 +12,27 @@ const corsHeaders = {
 const GOOGLE_GEMINI_API_KEY = Deno.env.get('GOOGLE_GEMINI_API_KEY');
 const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY');
 
-// Definições de taxas (Mockadas para simular a lógica de precificação)
-const MARKETPLACE_FEES: { [key: string]: { commission: number, fixedFee: number, freightFee: number } } = {
-  'Mercado Livre': { commission: 0.14, fixedFee: 6.99, freightFee: 10.00 }, // Clássico (14%)
-  'Shopee': { commission: 0.12, fixedFee: 3.00, freightFee: 8.00 },
-  'Amazon': { commission: 0.15, fixedFee: 5.00, freightFee: 12.00 },
-  'Magalu': { commission: 0.16, fixedFee: 0.00, freightFee: 10.00 },
-  'Shein': { commission: 0.10, fixedFee: 0.00, freightFee: 7.00 },
-  'Facebook': { commission: 0.00, fixedFee: 0.00, freightFee: 0.00 }, // Sem taxas
-};
-
-// Função principal de cálculo
-const calculatePrice = (
-  marketplace: string, 
-  cost: number, 
-  margin: number, 
-  adType: string | null, 
-  additionalCost: number
-) => {
-  let fees = MARKETPLACE_FEES[marketplace] || MARKETPLACE_FEES['Mercado Livre'];
-  let commissionRate = fees.commission;
-  
-  // Ajuste para Mercado Livre baseado no tipo de anúncio
-  if (marketplace === 'Mercado Livre' && adType === 'Premium') {
-    commissionRate = 0.18;
-  }
-
-  const desiredMarginRate = margin / 100;
-  
-  // Custo total do produto (fornecedor + adicionais)
-  const productCost = cost + additionalCost;
-  
-  // Taxas fixas e de frete
-  const fixedFee = fees.fixedFee;
-  const freightFee = fees.freightFee;
-  
-  const denominator = 1 - commissionRate - desiredMarginRate;
-  
-  if (denominator <= 0.05) { // Evita divisão por zero ou margem irrealista
-    const minMarginRate = 0.05;
-    const minDenominator = 1 - commissionRate - minMarginRate;
-    
-    if (minDenominator <= 0) {
-        const idealSalePrice = (productCost + fixedFee + freightFee) / (1 - commissionRate);
-        const commissionValue = idealSalePrice * commissionRate;
-        const totalCosts = productCost + fixedFee + freightFee + commissionValue;
-        const netProfit = idealSalePrice - totalCosts;
-        const netMargin = (netProfit / idealSalePrice) || 0;
-        
-        return {
-            idealSalePrice: parseFloat(idealSalePrice.toFixed(2)),
-            netProfit: parseFloat(netProfit.toFixed(2)),
-            netMargin: parseFloat(netMargin.toFixed(4)),
-            details: {
-                marketplace,
-                cost,
-                desiredMargin: margin,
-                fixedFee,
-                freightFee,
-                commissionRate: commissionRate * 100,
-                commissionValue: parseFloat(commissionValue.toFixed(2)),
-                totalCosts: parseFloat(totalCosts.toFixed(2)),
-                commissionLimit: true,
-                adType,
-                additionalCost,
-            }
-        };
-    }
-    
-    const idealSalePrice = (productCost + fixedFee + freightFee) / minDenominator;
-    const commissionValue = idealSalePrice * commissionRate;
-    const totalCosts = productCost + fixedFee + freightFee + commissionValue;
-    const netProfit = idealSalePrice - totalCosts;
-    const netMargin = (netProfit / idealSalePrice) || 0;
-    
-    return {
-        idealSalePrice: parseFloat(idealSalePrice.toFixed(2)),
-        netProfit: parseFloat(netProfit.toFixed(2)),
-        netMargin: parseFloat(netMargin.toFixed(4)),
-        details: {
-            marketplace,
-            cost,
-            desiredMargin: margin,
-            fixedFee,
-            freightFee,
-            commissionRate: commissionRate * 100,
-            commissionValue: parseFloat(commissionValue.toFixed(2)),
-            totalCosts: parseFloat(totalCosts.toFixed(2)),
-            commissionLimit: true,
-            adType,
-            additionalCost,
-        }
-    };
-  }
-  
-  // Cálculo normal
-  const idealSalePrice = (productCost + fixedFee + freightFee) / denominator;
-  
-  // Recalculando valores finais com o preço ideal
-  const commissionValue = idealSalePrice * commissionRate;
-  const totalCosts = productCost + fixedFee + freightFee + commissionValue;
-  const netProfit = idealSalePrice - totalCosts;
-  const netMargin = (netProfit / idealSalePrice) || 0;
-
-  return {
-    idealSalePrice: parseFloat(idealSalePrice.toFixed(2)),
-    netProfit: parseFloat(netProfit.toFixed(2)),
-    netMargin: parseFloat(netMargin.toFixed(4)),
-    details: {
-      marketplace,
-      cost,
-      desiredMargin: margin,
-      fixedFee,
-      freightFee,
-      commissionRate: commissionRate * 100,
-      commissionValue: parseFloat(commissionValue.toFixed(2)),
-      totalCosts: parseFloat(totalCosts.toFixed(2)),
-      commissionLimit: false,
-      adType,
-      additionalCost,
-    }
+// Tipos de dados
+interface CalculationResult {
+  idealSalePrice: number;
+  netProfit: number;
+  netMargin: number;
+  details: {
+    marketplace: string;
+    cost: number;
+    desiredMargin: number;
+    fixedFee: number;
+    freightFee: number;
+    commissionRate: number;
+    commissionValue: number;
+    totalCosts: number;
+    commissionLimit: boolean;
+    adType: string | null;
+    additionalCost: number;
   };
-};
+}
 
-// Função para chamar a IA (OpenRouter ou Gemini)
+// Função para chamar a IA (OpenRouter ou Gemini) - Mantida
 const callAI = async (prompt: string, isJson: boolean = false) => {
     // Prioriza OpenRouter se a chave estiver presente
     if (OPENROUTER_API_KEY) {
@@ -194,11 +91,220 @@ const callAI = async (prompt: string, isJson: boolean = false) => {
     }
 }
 
+// Função auxiliar para calcular o preço dado um conjunto de custos e taxas
+const solveForPrice = (
+  productCost: number, 
+  fixedFee: number, 
+  freightFee: number, 
+  commissionRate: number, 
+  desiredMarginRate: number
+) => {
+  const denominator = 1 - commissionRate - desiredMarginRate;
+  
+  if (denominator <= 0.0001) { 
+    // Se a margem desejada for muito alta, calculamos o preço que resulta em 0% de lucro
+    const priceForZeroProfit = (productCost + fixedFee + freightFee) / (1 - commissionRate);
+    return { idealSalePrice: priceForZeroProfit, commissionLimit: true };
+  }
+  
+  const idealSalePrice = (productCost + fixedFee + freightFee) / denominator;
+  return { idealSalePrice, commissionLimit: false };
+};
+
+// Função principal de cálculo refatorada
+const calculatePrice = (
+  marketplace: string, 
+  cost: number, 
+  margin: number, 
+  adType: string | null, 
+  additionalCost: number
+): CalculationResult => {
+  const desiredMarginRate = margin / 100;
+  const productCost = cost + additionalCost;
+  
+  let commissionRate = 0;
+  let fixedFee = 0;
+  let freightFee = 0;
+  let commissionLimit = false;
+  let finalIdealSalePrice = 0;
+  
+  // --- Lógica de Precificação por Marketplace ---
+
+  if (marketplace === 'Mercado Livre') {
+    // 1. Define a comissão baseada no adType
+    commissionRate = adType === 'Premium' ? 0.18 : 0.14;
+    
+    // 2. TIER 1: Preço < R$19.00
+    // Custo Fixo: R$6.50. Frete: R$10.00 (Subsidized cost assumed)
+    let currentFixedFee = 6.50;
+    let currentFreightFee = 10.00;
+    let { idealSalePrice: price1 } = solveForPrice(productCost, currentFixedFee, currentFreightFee, commissionRate, desiredMarginRate);
+    
+    if (price1 < 19.00) {
+      finalIdealSalePrice = price1;
+      fixedFee = currentFixedFee;
+      freightFee = currentFreightFee;
+    } else {
+      // TIER 2: Preço R$19.00 to R$78.99
+      // Fixed Fee: R$0.00. Frete: R$25.00 (Full subsidized cost assumed for "Frete Grátis")
+      currentFixedFee = 0.00;
+      currentFreightFee = 25.00;
+      let { idealSalePrice: price2 } = solveForPrice(productCost, currentFixedFee, currentFreightFee, commissionRate, desiredMarginRate);
+      
+      if (price2 >= 19.00 && price2 <= 78.99) {
+        finalIdealSalePrice = price2;
+        fixedFee = currentFixedFee;
+        freightFee = currentFreightFee;
+      } else {
+        // TIER 3: Preço > R$78.99
+        // Fixed Fee: R$0.00. Frete: R$0.00 (Assumindo "Frete Grátis para o Vendedor")
+        currentFixedFee = 0.00;
+        currentFreightFee = 0.00;
+        let { idealSalePrice: price3 } = solveForPrice(productCost, currentFixedFee, currentFreightFee, commissionRate, desiredMarginRate);
+        
+        finalIdealSalePrice = price3;
+        fixedFee = currentFixedFee;
+        freightFee = currentFreightFee;
+      }
+    }
+
+  } else if (marketplace === 'Shopee') {
+    // Comissão: 20% (incluindo frete/serviço)
+    commissionRate = 0.20;
+    // Custo Fixo: R$4.00 por item vendido
+    fixedFee = 4.00;
+    freightFee = 0.00; 
+    
+    let { idealSalePrice: initialPrice } = solveForPrice(productCost, fixedFee, freightFee, commissionRate, desiredMarginRate);
+    
+    // Lógica de Limite de Comissão (R$100.00)
+    const maxCommission = 100.00;
+    const commissionValue = initialPrice * commissionRate;
+    
+    if (commissionValue > maxCommission) {
+        // Recalcula o preço usando o valor fixo da comissão (R$100.00)
+        const denominator = 1 - desiredMarginRate;
+        if (denominator <= 0.0001) {
+            finalIdealSalePrice = initialPrice; 
+            commissionLimit = true;
+        } else {
+            finalIdealSalePrice = (productCost + fixedFee + freightFee + maxCommission) / denominator;
+            commissionRate = (maxCommission / finalIdealSalePrice) || 0; // Atualiza a taxa efetiva
+            commissionLimit = true;
+        }
+    } else {
+        finalIdealSalePrice = initialPrice;
+    }
+
+  } else if (marketplace === 'Amazon') {
+    // Comissão: 16% Geral
+    commissionRate = 0.16;
+    freightFee = 0.00; 
+    
+    // TIER 1: Preço < R$30.00
+    let currentFixedFee = 4.50;
+    let { idealSalePrice: price1 } = solveForPrice(productCost, currentFixedFee, freightFee, commissionRate, desiredMarginRate);
+    
+    if (price1 < 30.00) {
+      finalIdealSalePrice = price1;
+      fixedFee = currentFixedFee;
+    } else {
+      // TIER 2: Preço R$30.00 to R$78.99
+      currentFixedFee = 8.00;
+      let { idealSalePrice: price2 } = solveForPrice(productCost, currentFixedFee, freightFee, commissionRate, desiredMarginRate);
+      
+      if (price2 >= 30.00 && price2 <= 78.99) {
+        finalIdealSalePrice = price2;
+        fixedFee = currentFixedFee;
+      } else {
+        // TIER 3: Preço > R$79.00
+        // Custo fixo varia dependendo do peso. Usamos R$15.00 como placeholder.
+        currentFixedFee = 15.00; 
+        let { idealSalePrice: price3 } = solveForPrice(productCost, currentFixedFee, freightFee, commissionRate, desiredMarginRate);
+        
+        finalIdealSalePrice = price3;
+        fixedFee = currentFixedFee;
+      }
+    }
+
+  } else {
+    // Fallback para Magalu, Shein, Facebook (usando valores simplificados)
+    const fees = {
+      'Magalu': { commission: 0.16, fixedFee: 0.00, freightFee: 10.00 },
+      'Shein': { commission: 0.10, fixedFee: 0.00, freightFee: 7.00 },
+      'Facebook': { commission: 0.00, fixedFee: 0.00, freightFee: 0.00 },
+    };
+    
+    const selectedFees = fees[marketplace] || { commission: 0.14, fixedFee: 6.99, freightFee: 10.00 };
+    
+    commissionRate = selectedFees.commission;
+    fixedFee = selectedFees.fixedFee;
+    freightFee = selectedFees.freightFee;
+    
+    let { idealSalePrice: price } = solveForPrice(productCost, fixedFee, freightFee, commissionRate, desiredMarginRate);
+    finalIdealSalePrice = price;
+  }
+  
+  // --- Finalização do Cálculo ---
+  
+  // Recalculando valores finais com o preço ideal
+  const finalCommissionRate = commissionRate;
+  let commissionValue = finalIdealSalePrice * finalCommissionRate;
+  
+  // Se Shopee atingiu o limite, a comissão é R$100.00
+  const actualCommissionValue = commissionLimit && marketplace === 'Shopee' ? 100.00 : commissionValue;
+  
+  const totalCosts = productCost + fixedFee + freightFee + actualCommissionValue;
+  const netProfit = finalIdealSalePrice - totalCosts;
+  const netMargin = (netProfit / finalIdealSalePrice) || 0;
+
+  return {
+    idealSalePrice: parseFloat(finalIdealSalePrice.toFixed(2)),
+    netProfit: parseFloat(netProfit.toFixed(2)),
+    netMargin: parseFloat(netMargin.toFixed(4)),
+    details: {
+      marketplace,
+      cost,
+      desiredMargin: margin,
+      fixedFee: parseFloat(fixedFee.toFixed(2)),
+      freightFee: parseFloat(freightFee.toFixed(2)),
+      commissionRate: parseFloat((finalCommissionRate * 100).toFixed(2)),
+      commissionValue: parseFloat(actualCommissionValue.toFixed(2)),
+      totalCosts: parseFloat(totalCosts.toFixed(2)),
+      commissionLimit: commissionLimit,
+      adType,
+      additionalCost,
+    }
+  };
+};
 
 // Função para gerar a explicação da IA (usando callAI)
-const generateExplanation = async (calculation: ReturnType<typeof calculatePrice>) => {
+const generateExplanation = async (calculation: CalculationResult) => {
     const { idealSalePrice, netProfit, netMargin, details } = calculation;
     
+    let amazonNote = '';
+    if (details.marketplace === 'Amazon' && details.fixedFee === 15.00) {
+        amazonNote = ' (Nota: O custo fixo de R$15,00 foi usado como estimativa para produtos acima de R$79,00, pois o valor real depende do peso do produto).';
+    }
+    
+    let shopeeNote = '';
+    if (details.marketplace === 'Shopee' && details.commissionLimit) {
+        shopeeNote = ' (Nota: A comissão foi limitada ao teto de R$100,00, tornando a taxa efetiva menor que 20%).';
+    }
+    
+    let mlNote = '';
+    if (details.marketplace === 'Mercado Livre') {
+        let tier = '';
+        if (details.idealSalePrice < 19.00) {
+            tier = 'abaixo de R$19,00';
+        } else if (details.idealSalePrice >= 19.00 && details.idealSalePrice <= 78.99) {
+            tier = 'entre R$19,00 e R$78,99';
+        } else {
+            tier = 'acima de R$78,99';
+        }
+        mlNote = ` (Regra ML: O cálculo usou a faixa de preço ${tier} e o tipo de anúncio ${details.adType}).`;
+    }
+
     const prompt = `
         Você é a IA de Precificação da LucraAI. Sua tarefa é analisar o resultado do cálculo de preço de venda ideal e fornecer uma explicação amigável e estratégica para o usuário.
         
@@ -219,9 +325,12 @@ const generateExplanation = async (calculation: ReturnType<typeof calculatePrice
         **Instruções para a Resposta:**
         1. Comece com uma saudação e a conclusão principal.
         2. Explique de forma clara e concisa como o preço ideal foi calculado, mencionando os principais custos (comissão, frete, custo do produto).
-        3. Se o lucro for negativo (R$ ${netProfit.toFixed(2)} < 0), use um tom de alerta e sugira aumentar o preço ou reduzir custos.
-        4. Se a margem líquida for muito diferente da margem desejada, explique brevemente o porquê (geralmente devido a taxas fixas e frete).
-        5. Use negrito (**) para destacar valores importantes.
+        3. Mencione a regra específica do marketplace que foi aplicada (ex: qual faixa de preço do Mercado Livre ou Amazon foi usada). Inclua a nota do Mercado Livre: "${mlNote}".
+        4. Se o lucro for negativo (R$ ${netProfit.toFixed(2)} < 0), use um tom de alerta e sugira aumentar o preço ou reduzir custos.
+        5. Se a margem líquida for muito diferente da margem desejada, explique brevemente o porquê (geralmente devido a taxas fixas e frete).
+        6. Inclua a nota de Amazon se aplicável: "${amazonNote}".
+        7. Inclua a nota de Shopee se aplicável: "${shopeeNote}".
+        8. Use negrito (**) para destacar valores importantes.
         
         Formato de Saída: Retorne apenas o texto da explicação.
     `;
