@@ -29,14 +29,14 @@ const FoxGoCard = () => {
             <img 
               src="/lovable-uploads/fox-go-capa.png" 
               alt="Fox GO Capa" 
-              className="w-full h-auto object-cover transition-transform duration-500 hover:scale-105"
+              className="w-full h-auto transition-transform duration-500 hover:scale-105"
             />
           </div>
           <div className="overflow-hidden rounded-xl border border-border/50 shadow-lg cursor-pointer">
             <img 
               src="/lovable-uploads/fox-go-game.png" 
               alt="Fox GO Game Preview" 
-              className="w-full h-auto object-cover transition-transform duration-500 hover:scale-105"
+              className="w-full h-auto transition-transform duration-500 hover:scale-105"
             />
           </div>
         </div>
