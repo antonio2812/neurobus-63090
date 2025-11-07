@@ -12,6 +12,7 @@ import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile"; // Novo
 import PlanSelection from "./pages/PlanSelection"; // Novo
+import SessionContextProvider from "./integrations/supabase/SessionContextProvider"; // NOVO IMPORT
 
 const queryClient = new QueryClient();
 
@@ -21,18 +22,20 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/dashboard/profile" element={<Profile />} /> {/* Nova Rota */}
-          <Route path="/dashboard/plans" element={<PlanSelection />} /> {/* Nova Rota */}
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/privacy" element={<Privacy />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <SessionContextProvider> {/* ENVOLVENDO COM O CONTEXTO DE SESSÃO */}
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/profile" element={<Profile />} /> {/* Nova Rota */}
+            <Route path="/dashboard/plans" element={<PlanSelection />} /> {/* Nova Rota */}
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </SessionContextProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

@@ -14,6 +14,7 @@ import SecuritySettingsModal from "@/components/SecuritySettingsModal";
 import NotificationSettingsModal from "@/components/NotificationSettingsModal";
 import AchievementsModal from "@/components/AchievementsModal"; // Importando o novo modal
 import { Tables } from "@/integrations/supabase/types";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect"; // NOVO IMPORT
 
 // Definindo o tipo de dados do perfil com base na tipagem do Supabase
 type ProfileData = Tables<'profiles'> & {
@@ -21,19 +22,21 @@ type ProfileData = Tables<'profiles'> & {
 };
 
 const Profile = () => {
+  const { isLoading: isAuthLoading, isAuthenticated } = useAuthRedirect(); // Usando o novo hook
   const [profile, setProfile] = useState<ProfileData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingProfile, setLoadingProfile] = useState(true);
   const [uploading, setUploading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchProfile = async () => {
-    setLoading(true);
+    setLoadingProfile(true);
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-      navigate("/auth");
+      // Redirecionamento já tratado pelo useAuthRedirect, mas mantemos a verificação
+      setLoadingProfile(false);
       return;
     }
 
@@ -67,12 +70,14 @@ const Profile = () => {
         name: profileData.name || `${profileData.first_name || ''} ${profileData.last_name || ''}`.trim() || user.email?.split('@')[0] || "Usuário",
       });
     }
-    setLoading(false);
+    setLoadingProfile(false);
   };
 
   useEffect(() => {
-    fetchProfile();
-  }, [navigate]);
+    if (isAuthenticated) {
+      fetchProfile();
+    }
+  }, [isAuthenticated]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -176,12 +181,16 @@ const Profile = () => {
     return "Boa noite";
   };
 
-  if (loading || !profile) {
+  if (isAuthLoading || loadingProfile || !isAuthenticated) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <p className="text-white">Carregando Perfil...</p>
+        <Loader2 className="h-8 w-8 animate-spin text-accent" />
       </div>
     );
+  }
+
+  if (!profile) {
+    return null; // Redirecionamento já ocorreu
   }
 
   const memberSince = profile.created_at 

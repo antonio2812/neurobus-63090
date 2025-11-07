@@ -3,10 +3,13 @@ import Pricing from "@/components/Pricing";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuthRedirect } from "@/hooks/useAuthRedirect"; // NOVO IMPORT
+import { Loader2 } from "lucide-react";
 
 const PlanSelection = () => {
+  const { isLoading: isAuthLoading, isAuthenticated } = useAuthRedirect(); // Usando o novo hook
   const [userName, setUserName] = useState("Usuário");
-  const [loading, setLoading] = useState(true);
+  const [loadingProfile, setLoadingProfile] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,7 +17,7 @@ const PlanSelection = () => {
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
-        navigate("/auth");
+        setLoadingProfile(false);
         return;
       }
 
@@ -27,16 +30,18 @@ const PlanSelection = () => {
 
       const name = profileData?.name || user.user_metadata.name || user.email?.split('@')[0] || "Usuário";
       setUserName(name);
-      setLoading(false);
+      setLoadingProfile(false);
     };
 
-    fetchUser();
-  }, [navigate]);
+    if (isAuthenticated) {
+      fetchUser();
+    }
+  }, [isAuthenticated]);
 
-  if (loading) {
+  if (isAuthLoading || loadingProfile || !isAuthenticated) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <p className="text-white">Carregando Planos...</p>
+        <Loader2 className="h-8 w-8 animate-spin text-accent" />
       </div>
     );
   }
@@ -46,8 +51,6 @@ const PlanSelection = () => {
       <DashboardHeader userName={userName} />
       
       <main className="container mx-auto px-6 py-12">
-        {/* Título duplicado removido daqui */}
-
         {/* Reutilizando o componente Pricing */}
         <Pricing />
       </main>

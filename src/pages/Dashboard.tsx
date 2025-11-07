@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Calculator, Store, DollarSign, Brain, Sparkles, Box, AlertTriangle, Bell, BarChart, Trophy, Truck, Search, UserSearch, Eye, ImagePlus } from "lucide-react";
+import { Calculator, Store, DollarSign, Brain, Sparkles, Box, AlertTriangle, Bell, BarChart, Trophy, Truck, Search, UserSearch, Eye, ImagePlus, Loader2 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import type { User } from "@supabase/supabase-js";
@@ -21,6 +21,7 @@ import ForbiddenWordsModal from "@/components/ForbiddenWordsModal"; // NOVO IMPO
 import SupplierFinderModal from "@/components/SupplierFinderModal"; // NOVO IMPORT
 import DateMinerModal from "@/components/DateMinerModal"; // NOVO IMPORT
 import ImageGeneratorModal from "@/components/ImageGeneratorModal"; // NOVO IMPORT
+import { useAuthRedirect } from "@/hooks/useAuthRedirect"; // NOVO IMPORT
 
 // Definição das funcionalidades para os cards (TÍTULOS ATUALIZADOS)
 const features = [
@@ -38,83 +39,49 @@ const features = [
 ];
 
 const Dashboard = () => {
+  const { isLoading: isAuthLoading, isAuthenticated } = useAuthRedirect(); // Usando o novo hook
   const [user, setUser] = useState<User | null>(null);
   const [userName, setUserName] = useState("Usuário");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        
-        if (sessionError) throw sessionError;
-
-        if (!session) {
-          navigate("/auth");
-          return;
-        }
-        
-        setUser(session.user);
+    const fetchUserAndProfile = async () => {
+      const { data: { user: fetchedUser } } = await supabase.auth.getUser();
+      
+      if (fetchedUser) {
+        setUser(fetchedUser);
 
         // Fetch user name from profiles table
         const { data: profileData } = await supabase
           .from('profiles')
           .select('name')
-          .eq('id', session.user.id)
+          .eq('id', fetchedUser.id)
           .single();
 
-        const name = profileData?.name || session.user.user_metadata.name || session.user.email?.split('@')[0] || "Usuário";
+        const name = profileData?.name || fetchedUser.user_metadata.name || fetchedUser.email?.split('@')[0] || "Usuário";
         setUserName(name);
-
-      } catch (e) {
-        console.error("Dashboard: Erro ao verificar sessão:", e);
-        setError(`Erro de autenticação: ${e instanceof Error ? e.message : String(e)}`);
-        navigate("/auth");
-      } finally {
-        setLoading(false);
       }
+      setLoadingProfile(false);
     };
 
-    checkAuth();
+    if (isAuthenticated) {
+      fetchUserAndProfile();
+    }
+  }, [isAuthenticated]);
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (!session) {
-        navigate("/auth");
-      } else {
-        setUser(session.user);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
-
-  // Removendo handleCardClick, pois agora todos os cards usam modais
-  // const handleCardClick = (feature: typeof features[0]) => {
-  //   // ...
-  // };
-
-  if (loading) {
+  if (isAuthLoading || loadingProfile) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <p className="text-white">Carregando...</p>
+        <Loader2 className="h-8 w-8 animate-spin text-accent" />
       </div>
     );
   }
   
-  if (error || !user) {
-    return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-6">
-        <Card className="p-8 border-destructive border-2 max-w-md text-center">
-          <h1 className="text-2xl font-bold text-destructive mb-4">Acesso Negado</h1>
-          <p className="text-muted-foreground mb-6">Sua sessão expirou ou não foi encontrada.</p>
-          <Button onClick={() => navigate("/auth")}>Ir para Login</Button>
-        </Card>
-      </div>
-    );
+  if (!isAuthenticated || !user) {
+    // O redirecionamento já é tratado pelo useAuthRedirect
+    return null; 
   }
 
   const renderFeatureCard = (feature: typeof features[0], index: number) => {
