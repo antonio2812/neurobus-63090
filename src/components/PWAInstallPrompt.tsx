@@ -42,7 +42,7 @@ const PWAInstallPrompt = () => {
         
         <DialogHeader className="text-center">
           {/* Ícone da LucraAI (Maior e Centralizado) */}
-          <div className="flex items-center justify-center mb-4">
+          <div className="flex items-center justify-center mb-2">
             <img 
               src="/lovable-uploads/icone-lucraai-transparente.png" 
               alt="LucraAI Icon" 
