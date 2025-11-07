@@ -29,6 +29,8 @@ interface CalculationResult {
     commissionLimit: boolean;
     adType: string | null;
     additionalCost: number;
+    category: string | null; // NOVO
+    weight: number | null; // NOVO
   };
 }
 
@@ -117,7 +119,9 @@ const calculatePrice = (
   cost: number, 
   margin: number, 
   adType: string | null, 
-  additionalCost: number
+  additionalCost: number,
+  category: string | null, // NOVO
+  weight: number | null // NOVO
 ): CalculationResult => {
   const desiredMarginRate = margin / 100;
   const productCost = cost + additionalCost;
@@ -229,7 +233,7 @@ const calculatePrice = (
     }
 
   } else if (marketplace === 'Magalu') {
-    // Simplificação: Comissão média de 15% + R$5,00 fixo
+    // Simplificação: Comissão média de 15% (entre 10% e 20%) + R$5,00 fixo
     commissionRate = 0.15; 
     fixedFee = 5.00;
     
@@ -252,12 +256,37 @@ const calculatePrice = (
     }
 
   } else if (marketplace === 'Shein') {
-    // Simplificação: Comissão padrão de 16%
+    // Comissão padrão de 16% (ignorando isenção do primeiro mês para cálculo sustentável)
     commissionRate = 0.16;
-    fixedFee = 0.00; // Não há custo fixo mencionado, apenas taxa de frete
+    fixedFee = 0.00; 
     
-    // Frete: Usamos a faixa de peso mais comum (0,5kg a 1kg: R$5,00)
-    freightFee = 5.00; 
+    // Lógica de Frete por Peso (em kg)
+    let currentFreightFee = 0.00;
+    const w = weight || 0.5; // Default para 0.5kg se não informado
+    
+    if (w <= 0.3) {
+        currentFreightFee = 4.00;
+    } else if (w <= 1) { // De 0,3kg a 1kg
+        currentFreightFee = 5.00;
+    } else if (w <= 2) {
+        currentFreightFee = 5.00;
+    } else if (w <= 5) {
+        currentFreightFee = 15.00;
+    } else if (w <= 9) {
+        currentFreightFee = 32.00;
+    } else if (w <= 13) {
+        currentFreightFee = 63.00;
+    } else if (w <= 17) {
+        currentFreightFee = 73.00;
+    } else if (w <= 23) {
+        currentFreightFee = 89.00;
+    } else if (w <= 30) {
+        currentFreightFee = 106.00;
+    } else {
+        currentFreightFee = 120.00; // Fallback para peso muito alto
+    }
+    
+    freightFee = currentFreightFee;
     
     let { idealSalePrice: price } = solveForPrice(productCost, fixedFee, freightFee, commissionRate, desiredMarginRate);
     finalIdealSalePrice = price;
@@ -310,6 +339,8 @@ const calculatePrice = (
       commissionLimit: commissionLimit,
       adType,
       additionalCost,
+      category,
+      weight,
     }
   };
 };
@@ -352,7 +383,7 @@ const generateExplanation = async (calculation: CalculationResult) => {
     
     let sheinNote = '';
     if (details.marketplace === 'Shein') {
-        sheinNote = ' (Regra Shein: Assumimos a taxa de frete de R$5,00 para produtos entre 0,5kg e 1kg).';
+        sheinNote = ` (Regra Shein: A comissão de 16% foi aplicada. O custo de frete de R$${details.freightFee.toFixed(2)} foi baseado no peso de ${details.weight?.toFixed(2) || '0.50'} kg).`;
     }
     
     let facebookNote = '';
@@ -366,6 +397,8 @@ const generateExplanation = async (calculation: CalculationResult) => {
         
         **Dados do Cálculo:**
         - Marketplace: ${details.marketplace}
+        - Categoria: ${details.category}
+        - Peso (kg): ${details.weight?.toFixed(2) || 'N/A'}
         - Custo do Produto: R$ ${details.cost.toFixed(2)}
         - Custos Adicionais: R$ ${details.additionalCost.toFixed(2)}
         - Margem Desejada: ${details.desiredMargin}%
@@ -416,14 +449,14 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { marketplace, cost, margin, adType, additionalCost } = body;
+    const { marketplace, cost, margin, adType, additionalCost, category, weight } = body;
 
-    if (typeof cost !== 'number' || typeof margin !== 'number' || typeof additionalCost !== 'number') {
-        return new Response(JSON.stringify({ error: 'Dados de entrada inválidos. Certifique-se de que custo, margem e custo adicional são números.' }), { status: 400, headers: corsHeaders });
+    if (typeof cost !== 'number' || typeof margin !== 'number' || typeof additionalCost !== 'number' || !category || typeof weight !== 'number') {
+        return new Response(JSON.stringify({ error: 'Dados de entrada inválidos. Certifique-se de que custo, margem, custo adicional e peso são números, e a categoria foi selecionada.' }), { status: 400, headers: corsHeaders });
     }
 
     // 2. Executa o cálculo
-    const calculation = calculatePrice(marketplace, cost, margin, adType, additionalCost);
+    const calculation = calculatePrice(marketplace, cost, margin, adType, additionalCost, category, weight);
     
     // 3. Gera a explicação da IA
     const explanation = await generateExplanation(calculation);

@@ -20,6 +20,8 @@ interface CalculationResult {
     commissionLimit: boolean;
     adType: string | null;
     additionalCost: number;
+    category: string | null; // NOVO
+    weight: number | null; // NOVO
   };
 }
 
@@ -80,7 +82,7 @@ const ChatBubble = ({ message, onOptionSelect, isLoading }: ChatBubbleProps) => 
           renderContentWithBold(content)
         )}
         
-        {/* Opções de Escolha (Apenas para ad_type) */}
+        {/* Opções de Escolha (Apenas para ad_type e select_category) */}
         {options && (
           <div className="flex flex-col space-y-2 mt-3">
             {options.map(option => (

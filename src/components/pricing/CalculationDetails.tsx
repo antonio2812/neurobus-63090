@@ -17,6 +17,8 @@ interface CalculationResult {
     commissionLimit: boolean;
     adType: string | null;
     additionalCost: number;
+    category: string | null; // NOVO
+    weight: number | null; // NOVO
   };
 }
 
@@ -37,6 +39,20 @@ const CalculationDetails = ({ calculation }: CalculationDetailsProps) => {
     <Card className="mt-4 p-4 bg-background border-accent/30 shadow-inner">
       <h4 className="text-lg font-bold text-accent mb-3">Detalhes do Cálculo LucraAI:</h4>
       <div className="space-y-2 text-sm">
+        
+        {/* Categoria e Peso (Novos Detalhes) */}
+        {calculation.details.category && (
+          <div className="flex flex-col sm:flex-row sm:justify-between">
+            <span className="text-muted-foreground">Categoria:</span>
+            <span className="font-semibold text-foreground mt-1 sm:mt-0 sm:text-right">{calculation.details.category}</span>
+          </div>
+        )}
+        {calculation.details.weight !== null && (
+          <div className="flex flex-col sm:flex-row sm:justify-between">
+            <span className="text-muted-foreground">Peso (kg):</span>
+            <span className="font-semibold text-foreground mt-1 sm:mt-0 sm:text-right">{calculation.details.weight.toFixed(2)} kg</span>
+          </div>
+        )}
         
         {/* Custo no Fornecedor */}
         <div className="flex flex-col sm:flex-row sm:justify-between">
