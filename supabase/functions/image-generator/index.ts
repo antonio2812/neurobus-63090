@@ -10,15 +10,19 @@ const corsHeaders = {
 
 // Inicializa as chaves de API
 const GOOGLE_GEMINI_API_KEY = Deno.env.get('GOOGLE_GEMINI_API_KEY');
+const GOOGLE_GEMINI_IMAGE_API_KEY = Deno.env.get('GOOGLE_GEMINI_IMAGE_API_KEY');
 const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY'); // Mantido para consistência
 
 // Função para chamar a API de Geração de Imagens (usando Gemini)
 const generateImage = async (prompt: string) => {
-    if (!GOOGLE_GEMINI_API_KEY) {
-        throw new Error('Chave GOOGLE_GEMINI_API_KEY não configurada para geração de imagens.');
+    // Prioriza a chave específica para imagem, senão usa a chave geral do Gemini
+    const apiKey = GOOGLE_GEMINI_IMAGE_API_KEY || GOOGLE_GEMINI_API_KEY;
+    
+    if (!apiKey) {
+        throw new Error('Chave GOOGLE_GEMINI_API_KEY ou GOOGLE_GEMINI_IMAGE_API_KEY não configurada para geração de imagens.');
     }
 
-    const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:generateImages?key=${GOOGLE_GEMINI_API_KEY}`;
+    const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:generateImages?key=${apiKey}`;
 
     const response = await fetch(GEMINI_URL, {
         method: 'POST',
