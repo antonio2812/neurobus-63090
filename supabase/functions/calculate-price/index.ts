@@ -135,7 +135,7 @@ const calculatePrice = (
     commissionRate = adType === 'Premium' ? 0.18 : 0.14;
     
     // 2. TIER 1: Preço < R$19.00
-    // Custo Fixo: R$6.50. Frete: R$10.00 (Subsidized cost assumed)
+    // Custo Fixo: R$6.50. Frete: R$10.00 (Comprador paga parte)
     let currentFixedFee = 6.50;
     let currentFreightFee = 10.00;
     let { idealSalePrice: price1 } = solveForPrice(productCost, currentFixedFee, currentFreightFee, commissionRate, desiredMarginRate);
@@ -146,7 +146,7 @@ const calculatePrice = (
       freightFee = currentFreightFee;
     } else {
       // TIER 2: Preço R$19.00 to R$78.99
-      // Fixed Fee: R$0.00. Frete: R$25.00 (Full subsidized cost assumed for "Frete Grátis")
+      // Fixed Fee: R$0.00. Frete: R$25.00 (Frete Grátis para o Comprador e Vendedor isento da taxa de envio)
       currentFixedFee = 0.00;
       currentFreightFee = 25.00;
       let { idealSalePrice: price2 } = solveForPrice(productCost, currentFixedFee, currentFreightFee, commissionRate, desiredMarginRate);
@@ -157,9 +157,9 @@ const calculatePrice = (
         freightFee = currentFreightFee;
       } else {
         // TIER 3: Preço > R$78.99
-        // Fixed Fee: R$0.00. Frete: R$0.00 (Assumindo "Frete Grátis para o Vendedor")
+        // Fixed Fee: R$0.00. Frete: R$50.00 (Comprador paga parte do frete R$50)
         currentFixedFee = 0.00;
-        currentFreightFee = 0.00;
+        currentFreightFee = 50.00;
         let { idealSalePrice: price3 } = solveForPrice(productCost, currentFixedFee, currentFreightFee, commissionRate, desiredMarginRate);
         
         finalIdealSalePrice = price3;
@@ -188,6 +188,7 @@ const calculatePrice = (
             finalIdealSalePrice = initialPrice; 
             commissionLimit = true;
         } else {
+            // Novo preço = (Custo + Fixo + Frete + Comissão Máxima) / (1 - Margem Desejada)
             finalIdealSalePrice = (productCost + fixedFee + freightFee + maxCommission) / denominator;
             commissionRate = (maxCommission / finalIdealSalePrice) || 0; // Atualiza a taxa efetiva
             commissionLimit = true;
@@ -227,11 +228,46 @@ const calculatePrice = (
       }
     }
 
+  } else if (marketplace === 'Magalu') {
+    // Simplificação: Comissão média de 15% + R$5,00 fixo
+    commissionRate = 0.15; 
+    fixedFee = 5.00;
+    
+    // Frete: Abaixo de R$79,00 o Vendedor não paga nada (R$0.00)
+    // Acima de R$79,00, assumimos o cenário de 50% de frete pago pelo vendedor (simplificação)
+    let currentFreightFee = 0.00;
+    
+    let { idealSalePrice: initialPrice } = solveForPrice(productCost, fixedFee, currentFreightFee, commissionRate, desiredMarginRate);
+    
+    if (initialPrice > 79.00) {
+        // Se o preço ideal for acima de R$79,00, o frete é cobrado.
+        // Assumimos um custo de frete médio de R$30.00, com 50% pago pelo vendedor (R$15.00)
+        currentFreightFee = 15.00; 
+        let { idealSalePrice: finalPriceWithFreight } = solveForPrice(productCost, fixedFee, currentFreightFee, commissionRate, desiredMarginRate);
+        finalIdealSalePrice = finalPriceWithFreight;
+        freightFee = currentFreightFee;
+    } else {
+        finalIdealSalePrice = initialPrice;
+        freightFee = currentFreightFee;
+    }
+
+  } else if (marketplace === 'Shein') {
+    // Simplificação: Comissão padrão de 16%
+    commissionRate = 0.16;
+    fixedFee = 0.00; // Não há custo fixo mencionado, apenas taxa de frete
+    
+    // Frete: Usamos a faixa de peso mais comum (0,5kg a 1kg: R$5,00)
+    freightFee = 5.00; 
+    
+    // Nota: A isenção de taxa no primeiro mês não é implementada no cálculo, 
+    // pois o objetivo é calcular o preço sustentável a longo prazo.
+    
+    let { idealSalePrice: price } = solveForPrice(productCost, fixedFee, freightFee, commissionRate, desiredMarginRate);
+    finalIdealSalePrice = price;
+
   } else {
-    // Fallback para Magalu, Shein, Facebook (usando valores simplificados)
+    // Fallback para outros (Facebook)
     const fees = {
-      'Magalu': { commission: 0.16, fixedFee: 0.00, freightFee: 10.00 },
-      'Shein': { commission: 0.10, fixedFee: 0.00, freightFee: 7.00 },
       'Facebook': { commission: 0.00, fixedFee: 0.00, freightFee: 0.00 },
     };
     
@@ -304,6 +340,21 @@ const generateExplanation = async (calculation: CalculationResult) => {
         }
         mlNote = ` (Regra ML: O cálculo usou a faixa de preço ${tier} e o tipo de anúncio ${details.adType}).`;
     }
+    
+    let magaluNote = '';
+    if (details.marketplace === 'Magalu') {
+        if (details.freightFee > 0) {
+            magaluNote = ' (Regra Magalu: Assumimos que o preço final exige que o vendedor pague 50% do frete, com custo de R$15,00).';
+        } else {
+            magaluNote = ' (Regra Magalu: O preço final está abaixo de R$79,00, isentando o vendedor do custo de frete).';
+        }
+    }
+    
+    let sheinNote = '';
+    if (details.marketplace === 'Shein') {
+        sheinNote = ' (Regra Shein: Assumimos a taxa de frete de R$5,00 para produtos entre 0,5kg e 1kg).';
+    }
+
 
     const prompt = `
         Você é a IA de Precificação da LucraAI. Sua tarefa é analisar o resultado do cálculo de preço de venda ideal e fornecer uma explicação amigável e estratégica para o usuário.
@@ -325,12 +376,11 @@ const generateExplanation = async (calculation: CalculationResult) => {
         **Instruções para a Resposta:**
         1. Comece com uma saudação e a conclusão principal.
         2. Explique de forma clara e concisa como o preço ideal foi calculado, mencionando os principais custos (comissão, frete, custo do produto).
-        3. Mencione a regra específica do marketplace que foi aplicada (ex: qual faixa de preço do Mercado Livre ou Amazon foi usada). Inclua a nota do Mercado Livre: "${mlNote}".
+        3. Mencione a regra específica do marketplace que foi aplicada.
         4. Se o lucro for negativo (R$ ${netProfit.toFixed(2)} < 0), use um tom de alerta e sugira aumentar o preço ou reduzir custos.
         5. Se a margem líquida for muito diferente da margem desejada, explique brevemente o porquê (geralmente devido a taxas fixas e frete).
-        6. Inclua a nota de Amazon se aplicável: "${amazonNote}".
-        7. Inclua a nota de Shopee se aplicável: "${shopeeNote}".
-        8. Use negrito (**) para destacar valores importantes.
+        6. Inclua as notas específicas de marketplace se aplicável: "${mlNote}${shopeeNote}${amazonNote}${magaluNote}${sheinNote}".
+        7. Use negrito (**) para destacar valores importantes.
         
         Formato de Saída: Retorne apenas o texto da explicação.
     `;
