@@ -17,7 +17,6 @@ const BackgroundEffects = () => {
   ];
 
   useEffect(() => {
-    // Usando 640px como breakpoint padrão do Tailwind (sm)
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 640);
     };
@@ -65,9 +64,9 @@ const BackgroundEffects = () => {
 
   // Determine dynamic styles based on mobile state
   const baseBackgroundStyle = (index: number) => {
-    // Se for mobile, remove todas as transformações e usa background-position: center
+    // No mobile, usamos transform: none e background-size: cover, background-position: center
     const parallaxTransform = isMobile 
-      ? 'none' // Removido translateY(0px) scale(1) para 'none'
+      ? 'translateY(0px) scale(1)' 
       : `translateY(${scrollOffset * 0.5}px) scale(1.05)`;
     
     const mousePositionStyle = isMobile 
@@ -125,7 +124,6 @@ const BackgroundEffects = () => {
             linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)
           `,
           backgroundSize: '50px 50px',
-          // Garante que o transform seja 'none' no mobile
           transform: isMobile ? 'none' : `translate(${mousePosition.x * 0.1}px, ${mousePosition.y * 0.1}px)`,
           transition: 'transform 0.3s ease-out',
         }}
