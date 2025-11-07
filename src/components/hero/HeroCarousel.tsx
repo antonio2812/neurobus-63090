@@ -30,8 +30,11 @@ const HeroCarousel = () => {
           }`}
         >
           <div 
-            // Usando bg-cover por padrão em todas as telas, como no desktop.
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-[0.3] blur-sm"
+            // Aplicando as propriedades CSS solicitadas: 
+            // background-size: cover; 
+            // background-repeat: no-repeat;
+            // background-position: bg-top (mobile) / md:bg-center (desktop)
+            className="absolute inset-0 bg-cover bg-no-repeat bg-top md:bg-center brightness-[0.3] blur-sm"
             style={{ backgroundImage: `url(${image})` }}
           />
         </div>
