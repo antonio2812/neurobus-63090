@@ -292,8 +292,8 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
             >
                 {/* Efeito Neon no Fundo (Aumentando o blur e o spread do shadow) */}
                 <div 
-                    className="absolute inset-0 rounded-full opacity-70 blur-lg transition-all duration-500"
-                    style={{ backgroundColor: accentColor, boxShadow: `0 0 30px 5px ${accentColor}` }} // Aumentado o shadow
+                    className="absolute inset-0 rounded-full opacity-90 blur-xl transition-all duration-500" // Opacidade 90% e blur XL
+                    style={{ backgroundColor: accentColor, boxShadow: `0 0 50px 10px ${accentColor}` }} // Aumentado o shadow para 50px e spread para 10px
                 />
                 <Image className="h-8 w-8 text-black relative z-10" /> {/* Ícone preto sobre o neon */}
             </div>
@@ -369,7 +369,7 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
             disabled={isLoading || step === 'done'}
             className={cn(
                 "h-10 w-10 ml-2 rounded-full text-muted-foreground transition-all duration-300",
-                // Alterado: Removido hover:bg-accent e adicionado hover:text-accent
+                // Mantido: hover:bg-transparent hover:text-accent hover:rounded-full
                 "hover:bg-transparent hover:text-accent hover:rounded-full", 
                 (isLoading || step === 'done') && "opacity-50 cursor-not-allowed hover:bg-transparent hover:text-muted-foreground"
             )}
