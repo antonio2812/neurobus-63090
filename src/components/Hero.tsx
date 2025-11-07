@@ -21,7 +21,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-48"> {/* AUMENTADO py-24 para py-48 */}
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-24"> {/* Alterado h-screen para min-h-screen e adicionado py-24 */}
       <HeroCarousel />
       <FloatingParticles />
       
