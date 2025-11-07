@@ -14,14 +14,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, signupSchema } from "@/lib/validation";
 import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-// Removendo importação de useSound
+import { useSession } from "@/integrations/supabase/SessionContextProvider"; // Importando useSession
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 type SignupFormValues = z.infer<typeof signupSchema>;
 
-// Função playLoginSound removida daqui.
-
 const Auth = () => {
+  const { user, isLoading: isSessionLoading } = useSession(); // Usando o contexto de sessão
   const [isLoading, setIsLoading] = useState(false);
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showSignupPassword, setShowSignupPassword] = useState(false);
@@ -29,7 +28,6 @@ const Auth = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
-  // Removendo inicialização de useSound
 
   // Determine initial tab based on URL hash
   const initialTab = location.hash === '#signup' ? 'signup' : 'login';
@@ -51,29 +49,14 @@ const Auth = () => {
     const newTab = location.hash === '#signup' ? 'signup' : 'login';
     setActiveTab(newTab);
   }, [location.hash]);
-
+  
+  // Redirecionamento se o usuário já estiver logado (tratado pelo SessionContextProvider)
   useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        // Redirect to dashboard if user is logged in
-        if (session?.user) {
-          setTimeout(() => {
-            navigate("/dashboard");
-          }, 0);
-        }
-      }
-    );
+    if (!isSessionLoading && user) {
+      navigate("/dashboard");
+    }
+  }, [user, isSessionLoading, navigate]);
 
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        navigate("/dashboard");
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
 
   const handleLogin = async (data: LoginFormValues) => {
     setIsLoading(true);
@@ -94,12 +77,11 @@ const Auth = () => {
       return;
     }
 
-    // O som será tocado na página de destino (Dashboard) para evitar interrupção.
-
     toast({
       title: "Login realizado com sucesso!",
       description: "Bem-vindo ao LucraAI",
     });
+    // O redirecionamento para /dashboard será acionado pelo useEffect acima
   };
 
   const handleSignup = async (data: SignupFormValues) => {
@@ -134,6 +116,15 @@ const Auth = () => {
       description: "Verifique seu email para confirmar sua conta",
     });
   };
+  
+  // Se a sessão estiver carregando, exibe um loader (embora o SessionContextProvider já faça isso)
+  if (isSessionLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-accent" />
+      </div>
+    );
+  }
 
   return (
     <div 
