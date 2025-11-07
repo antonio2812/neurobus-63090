@@ -62,7 +62,7 @@ const ChatBubble = ({ message, onOptionSelect, isLoading }: ChatBubbleProps) => 
     >
       <div
         className={cn(
-          "max-w-[85%] p-3 shadow-none transition-all duration-300",
+          "max-w-[95%] md:max-w-[85%] p-3 shadow-none transition-all duration-300", // ALTERADO: max-w-[95%] para mobile, md:max-w-[85%] para desktop
           // Estilo da bolha da IA (Sem fundo, texto direto)
           sender === 'ai'
             ? 'bg-transparent text-foreground text-lg leading-relaxed'
