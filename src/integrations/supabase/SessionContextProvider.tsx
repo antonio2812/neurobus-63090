@@ -56,7 +56,7 @@ const SessionContextProvider = ({ children }: SessionContextProviderProps) => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-2xl font-bold text-accent">
+        <p className="text-2xl font-bold text-foreground">
           Carregando...
         </p>
       </div>

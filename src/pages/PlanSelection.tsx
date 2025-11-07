@@ -41,7 +41,7 @@ const PlanSelection = () => {
   if (isAuthLoading || loadingProfile || !isAuthenticated) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
-        <p className="text-2xl font-bold text-accent">
+        <p className="text-2xl font-bold text-foreground">
           Carregando...
         </p>
       </div>
