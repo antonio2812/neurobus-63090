@@ -19,19 +19,19 @@ const premiumFeatures = [
   "Espião de Tendências de Produtos",
   "Espião de Concorrência com Automação",
   "Gerador Inteligente de Kits (NOVO)",
-  "Detector de Palavras Proibidas e Reprovação de Anúncios (NOVO)", // Alterado
-  "Buscador dos Melhores Fornecedores Nacionais e Importadoras (NOVO)", // Adicionado e alterado
+  "Gerador de Imagens de alta qualidade e conversão ilimitadas (NOVO)", // NOVO RECURSO
+  "Buscador dos Melhores Fornecedores Nacionais e Importadoras (NOVO)",
   "Alertas de Datas Especiais + Produtos Minerados",
-  "Relatórios Mensais de Lucro e Crescimento de Faturamento",
+  "Detector de Palavras Proibidas e Reprovação de Anúncios", // RENOMEADO E REORDENADO
 ];
 
 const proFeatures = [
   "IA de Precificação de Produtos (Até 1000 produtos)",
   "Gerador de Títulos e Descrições com IA",
   "Espião de Tendências de Produtos",
-  "Espião de Concorrência com Automação", // Adicionado
+  "Espião de Concorrência com Automação",
   "Alertas de Datas Especiais + Produtos Minerados",
-  "Relatórios Mensais de Lucro e Crescimento de Faturamento",
+  "Detector de Palavras Proibidas e Reprovação de Anúncios", // RENOMEADO
 ];
 
 
