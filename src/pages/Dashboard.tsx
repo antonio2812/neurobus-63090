@@ -25,7 +25,7 @@ import { useAuthRedirect } from "@/hooks/useAuthRedirect"; // NOVO IMPORT
 
 // Definição das funcionalidades para os cards (TÍTULOS ATUALIZADOS)
 const features = [
-  { icon: ImagePlus, title: "Gerador de Imagens com IA", description: "Crie fotos de produtos profissionais e chamativas em segundos.", action: "imagens", isModal: true }, // NOVO CARD
+  { icon: ImagePlus, title: "Gerador de Imagens com IA", description: "Crie fotos de alta qualidade e conversão para os seus produtos em segundos.", action: "imagens", isModal: true }, // TEXTO ATUALIZADO
   { icon: Brain, title: "Precificação de Produtos", description: "Descubra o preço ideal automaticamente e maximize seus ganhos.", action: "precificacao", isModal: true }, // isModal: true
   { icon: Sparkles, title: "Gerador de Títulos e Descrições", description: "Conquiste mais cliques com textos prontos, persuasivos e otimizados.", action: "titulos", isModal: true }, // isModal: true
   { icon: Eye, title: "Espião de Tendências de Produtos", description: "Descubra o que vai bombar antes dos seus concorrentes.", action: "tendencias", isModal: true }, // isModal: true

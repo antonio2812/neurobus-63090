@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Loader2, Send, ImagePlus, Download } from "lucide-react";
+import { ArrowLeft, Loader2, Send, ImagePlus, Download, ThumbsUp, ThumbsDown, Share2, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,6 +18,7 @@ interface ChatMessage {
   content: string;
   generatedImage?: GeneratedImage;
   isTyping?: boolean;
+  isImagePrompt?: boolean; // Novo: indica que a mensagem do usuário é um prompt de imagem
 }
 
 interface ImageGeneratorChatProps {
@@ -32,30 +33,12 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState<ChatStep>('prompt');
   const chatEndRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const accentColor = "#ffc800";
-
-  const initialMessage: ChatMessage = {
-    id: 0,
-    sender: 'ai',
-    content: `Olá! Sou o **Gerador de Imagens com IA** da LucraAI. Descreva a imagem que você deseja criar para o seu produto (ex: 'Tênis esportivo em um fundo futurista').`,
-  };
   
-  const tipMessage: ChatMessage = {
-    id: 0.1,
-    sender: 'ai',
-    content: `<span class="text-foreground font-bold">Dica:</span> Seja detalhado! Inclua estilo, cores, iluminação e o que o produto deve estar fazendo.`,
-  };
-
-  useEffect(() => {
-    if (messages.length === 0) {
-      setMessages([initialMessage, tipMessage]);
-    }
-  }, [messages.length]);
-
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  // Prompt mais usado
+  const mostUsedPrompt = "Vou te enviar uma imagem e preciso que você recrie essa imagem deixando ultra realista, com alta qualidade, melhorando a resolução da imagem, para ficar mais realista, o resto mantenha tudo igual com consistência e qualidade, ok?";
 
   // Componente auxiliar para renderizar a imagem
   const ImageDisplay = ({ image }: { image: GeneratedImage }) => {
@@ -73,6 +56,13 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
         description: "A imagem foi baixada com sucesso.",
       });
     };
+    
+    const handleAction = (action: string) => {
+        toast({
+            title: "Ação Registrada",
+            description: `Você clicou em ${action}. Funcionalidade em desenvolvimento.`,
+        });
+    };
 
     return (
       <div className="mt-4 space-y-4">
@@ -86,17 +76,42 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
             alt="Imagem gerada por IA" 
             className="w-full h-auto object-cover rounded-lg"
           />
-          <Button 
-            onClick={handleDownload}
-            className="w-full bg-accent text-accent-foreground hover:bg-accent/90 mt-2"
-          >
-            <Download className="h-5 w-5 mr-2" />
-            Baixar Imagem
-          </Button>
+          
+          {/* Botões de Ação */}
+          <div className="flex justify-between p-2">
+            <div className="flex gap-2">
+              <Button variant="ghost" size="icon" onClick={() => handleAction("Curtir")} className="text-muted-foreground hover:text-green-500">
+                <ThumbsUp className="h-5 w-5" />
+              </Button>
+              <Button variant="ghost" size="icon" onClick={() => handleAction("Não Curtir")} className="text-muted-foreground hover:text-red-500">
+                <ThumbsDown className="h-5 w-5" />
+              </Button>
+              <Button variant="ghost" size="icon" onClick={() => handleAction("Compartilhar")} className="text-muted-foreground hover:text-blue-500">
+                <Share2 className="h-5 w-5" />
+              </Button>
+            </div>
+            
+            <Button 
+              onClick={handleDownload}
+              className="bg-accent text-accent-foreground hover:bg-accent/90"
+            >
+              <Download className="h-5 w-5 mr-2" />
+              Baixar
+            </Button>
+          </div>
         </Card>
       </div>
     );
   };
+
+  // Removendo as mensagens iniciais e dicas
+  useEffect(() => {
+    // O chat começa vazio, esperando o prompt do usuário
+  }, []);
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   const handleGenerateImage = async (prompt: string) => {
     if (!prompt) return;
@@ -116,6 +131,7 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
     ]);
 
     try {
+      // A Edge Function 'image-generator' está configurada para retornar um erro 503
       const { data, error } = await supabase.functions.invoke('image-generator', {
         body: { prompt },
       });
@@ -126,13 +142,11 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
         throw new Error(data?.error || 'Erro ao processar a geração de imagem.');
       }
       
+      // Se, por algum milagre, a função funcionar, o código abaixo seria executado
       const generatedImage: GeneratedImage = data.generatedImage;
       
       setMessages((prev) => {
-        // Remove a mensagem de carregamento
         const newMessages = prev.filter(msg => msg.id !== loadingMessageId);
-        
-        // Adiciona a resposta final com a imagem
         return [
           ...newMessages,
           {
@@ -149,7 +163,7 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
     } catch (e) {
       console.error("Erro ao gerar imagem:", e);
       
-      let errorMessage = "Erro desconhecido na comunicação com a IA.";
+      let errorMessage = "O Gerador de Imagens com IA está temporariamente indisponível. Estamos atualizando a integração com uma nova API.";
       
       const errorObject = e as any; 
       
@@ -164,13 +178,6 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
           }
       }
       
-      if (e instanceof Error) {
-          errorMessage = errorMessage.includes("Erro desconhecido") ? e.message : errorMessage;
-          if (errorMessage.includes("Edge Function returned a non-2xx status code")) {
-              errorMessage = "Ocorreu um erro interno no servidor da IA. Por favor, verifique se a chave GOOGLE_GEMINI_IMAGE_API_KEY está configurada corretamente.";
-          }
-      }
-      
       // Remove a mensagem de carregamento e adiciona uma mensagem de erro
       setMessages((prev) => {
         const newMessages = prev.filter(msg => msg.id !== loadingMessageId);
@@ -179,7 +186,7 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
           {
             id: Date.now() + 3,
             sender: 'ai',
-            content: `❌ Erro: Não foi possível gerar a imagem. ${errorMessage}. Por favor, tente novamente.`,
+            content: `❌ Erro: Não foi possível gerar a imagem. ${errorMessage}`,
           },
         ];
       });
@@ -206,6 +213,7 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
       id: Date.now(),
       sender: 'user',
       content: prompt,
+      isImagePrompt: true, // Marca como prompt de imagem
     };
     
     setInput(""); 
@@ -224,28 +232,68 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
   const handleNewSearch = () => {
     setStep('prompt');
     setInput("");
-    setMessages([initialMessage, tipMessage]);
+    setMessages([]); // Começa vazio
+  };
+  
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files || event.target.files.length === 0) return;
+    
+    const file = event.target.files[0];
+    
+    // Simulação de processamento de imagem
+    toast({
+        title: "Imagem Anexada",
+        description: `A imagem '${file.name}' foi carregada. Agora, envie o prompt para recriá-la.`,
+    });
+    
+    // Adiciona uma mensagem de usuário simulando o upload
+    setMessages((prev) => [
+        ...prev,
+        {
+            id: Date.now(),
+            sender: 'user',
+            content: `[Imagem anexada: ${file.name}]`,
+        }
+    ]);
+    
+    // Limpa o input de arquivo para permitir novo upload
+    if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+    }
   };
 
   return (
     <div className="flex flex-col h-[80vh] max-h-[600px] bg-background rounded-lg border border-border/50">
       
-      {/* Header do Chat */}
-      <div className="p-4 border-b border-border flex items-center justify-between">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={onBack} 
-          // ESTILO ATUALIZADO: Borda transparente, fundo transparente, hover:bg-accent, hover:text-black
-          // Adicionando 'bg-transparent' para ser explícito, embora 'ghost' já faça isso.
-          className="text-muted-foreground hover:text-black transition-colors duration-300 border-transparent bg-transparent hover:bg-accent" 
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
-        <h3 className="text-lg font-bold text-foreground font-space-mono text-center flex-1 flex items-center justify-center gap-2">
-          Gerador de Imagens com IA
-        </h3>
-        <div className="w-10 h-10"></div>
+      {/* Header do Chat (Novo Design) */}
+      <div className="p-4 border-b border-border flex flex-col items-center justify-center space-y-3">
+        <div className="flex items-center justify-between w-full">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={onBack} 
+              className="text-muted-foreground hover:text-black transition-colors duration-300 border-transparent bg-transparent hover:bg-accent" 
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <h3 className="text-lg font-bold text-foreground font-space-mono text-center flex-1">
+              Gerador de Imagens com IA
+            </h3>
+            <div className="w-10 h-10"></div>
+        </div>
+        
+        {/* Ícone e Prompt Mais Usado */}
+        <div className="flex flex-col items-center space-y-2 pt-2">
+            <div 
+                className="h-16 w-16 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: accentColor }}
+            >
+                <ImagePlus className="h-8 w-8 text-black" />
+            </div>
+            <p className="text-sm text-muted-foreground text-center max-w-xs">
+                <span className="text-white font-bold">Prompt mais usado:</span> {mostUsedPrompt}
+            </p>
+        </div>
       </div>
 
       {/* Área de Mensagens */}
@@ -298,13 +346,35 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
       <div className="p-4 border-t border-border">
         <div className="flex items-center w-full bg-card rounded-3xl border border-border/50 shadow-lg">
           
+          {/* Botão de Anexar Imagem (Plus) */}
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImageUpload}
+            accept="image/*"
+            style={{ display: 'none' }}
+            disabled={isLoading || step === 'done'}
+          />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isLoading || step === 'done'}
+            className={cn(
+                "h-10 w-10 ml-2 rounded-full text-muted-foreground hover:bg-accent hover:text-black transition-all duration-300",
+                (isLoading || step === 'done') && "opacity-50 cursor-not-allowed hover:bg-transparent hover:text-muted-foreground"
+            )}
+          >
+            <Plus className="h-5 w-5" />
+          </Button>
+          
           <Input
             placeholder={step === 'done' ? "Geração concluída." : "Descreva a imagem que você deseja..."}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={isLoading || step === 'done'}
-            className="flex-grow h-12 border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground pl-4" 
+            className="flex-grow h-12 border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground pl-2" 
           />
           
           <Button 
