@@ -157,7 +157,7 @@ const calculatePrice = (
         freightFee = currentFreightFee;
       } else {
         // TIER 3: Preço > R$78.99
-        // Fixed Fee: R$0.00. Frete: R$50.00 (Comprador paga parte do frete R$50)
+        // Fixed Fee: R$0.00. Frete: R$50.00 (Comprador paga uma parte do frete R$50)
         currentFixedFee = 0.00;
         currentFreightFee = 50.00;
         let { idealSalePrice: price3 } = solveForPrice(productCost, currentFixedFee, currentFreightFee, commissionRate, desiredMarginRate);
@@ -234,7 +234,7 @@ const calculatePrice = (
     fixedFee = 5.00;
     
     // Frete: Abaixo de R$79,00 o Vendedor não paga nada (R$0.00)
-    // Acima de R$79,00, assumimos o cenário de 50% de frete pago pelo vendedor (simplificação)
+    // Acima de R$79,00, assumimos o cenário de 50% de frete pago pelo vendedor (R$15.00)
     let currentFreightFee = 0.00;
     
     let { idealSalePrice: initialPrice } = solveForPrice(productCost, fixedFee, currentFreightFee, commissionRate, desiredMarginRate);
@@ -259,23 +259,23 @@ const calculatePrice = (
     // Frete: Usamos a faixa de peso mais comum (0,5kg a 1kg: R$5,00)
     freightFee = 5.00; 
     
-    // Nota: A isenção de taxa no primeiro mês não é implementada no cálculo, 
-    // pois o objetivo é calcular o preço sustentável a longo prazo.
+    let { idealSalePrice: price } = solveForPrice(productCost, fixedFee, freightFee, commissionRate, desiredMarginRate);
+    finalIdealSalePrice = price;
+
+  } else if (marketplace === 'Facebook') {
+    // Regra do Facebook: Não tem taxas/custos de comissão ou fixos.
+    commissionRate = 0.00;
+    fixedFee = 0.00;
+    freightFee = 0.00;
     
     let { idealSalePrice: price } = solveForPrice(productCost, fixedFee, freightFee, commissionRate, desiredMarginRate);
     finalIdealSalePrice = price;
 
   } else {
-    // Fallback para outros (Facebook)
-    const fees = {
-      'Facebook': { commission: 0.00, fixedFee: 0.00, freightFee: 0.00 },
-    };
-    
-    const selectedFees = fees[marketplace] || { commission: 0.14, fixedFee: 6.99, freightFee: 10.00 };
-    
-    commissionRate = selectedFees.commission;
-    fixedFee = selectedFees.fixedFee;
-    freightFee = selectedFees.freightFee;
+    // Fallback para marketplaces não mapeados
+    commissionRate = 0.14;
+    fixedFee = 6.99;
+    freightFee = 10.00;
     
     let { idealSalePrice: price } = solveForPrice(productCost, fixedFee, freightFee, commissionRate, desiredMarginRate);
     finalIdealSalePrice = price;
@@ -354,6 +354,11 @@ const generateExplanation = async (calculation: CalculationResult) => {
     if (details.marketplace === 'Shein') {
         sheinNote = ' (Regra Shein: Assumimos a taxa de frete de R$5,00 para produtos entre 0,5kg e 1kg).';
     }
+    
+    let facebookNote = '';
+    if (details.marketplace === 'Facebook') {
+        facebookNote = ' (Regra Facebook: Não há taxas de comissão ou custos fixos por venda).';
+    }
 
 
     const prompt = `
@@ -379,7 +384,7 @@ const generateExplanation = async (calculation: CalculationResult) => {
         3. Mencione a regra específica do marketplace que foi aplicada.
         4. Se o lucro for negativo (R$ ${netProfit.toFixed(2)} < 0), use um tom de alerta e sugira aumentar o preço ou reduzir custos.
         5. Se a margem líquida for muito diferente da margem desejada, explique brevemente o porquê (geralmente devido a taxas fixas e frete).
-        6. Inclua as notas específicas de marketplace se aplicável: "${mlNote}${shopeeNote}${amazonNote}${magaluNote}${sheinNote}".
+        6. Inclua as notas específicas de marketplace se aplicável: "${mlNote}${shopeeNote}${amazonNote}${magaluNote}${sheinNote}${facebookNote}".
         7. Use negrito (**) para destacar valores importantes.
         
         Formato de Saída: Retorne apenas o texto da explicação.
