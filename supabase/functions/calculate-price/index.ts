@@ -8,11 +8,9 @@ const corsHeaders = {
   'Content-Type': 'application/json',
 };
 
-// Inicializa a API do Google Gemini
+// Inicializa as chaves de API
 const GOOGLE_GEMINI_API_KEY = Deno.env.get('GOOGLE_GEMINI_API_KEY');
-if (!GOOGLE_GEMINI_API_KEY) {
-  console.error("GOOGLE_GEMINI_API_KEY not set in environment.");
-}
+const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY');
 
 // Definições de taxas (Mockadas para simular a lógica de precificação)
 const MARKETPLACE_FEES: { [key: string]: { commission: number, fixedFee: number, freightFee: number } } = {
@@ -24,7 +22,7 @@ const MARKETPLACE_FEES: { [key: string]: { commission: number, fixedFee: number,
   'Facebook': { commission: 0.00, fixedFee: 0.00, freightFee: 0.00 }, // Sem taxas
 };
 
-// Função principal de cálculo (sem usar a API da OpenAI para o cálculo em si, apenas para a explicação)
+// Função principal de cálculo
 const calculatePrice = (
   marketplace: string, 
   cost: number, 
@@ -49,23 +47,13 @@ const calculatePrice = (
   const fixedFee = fees.fixedFee;
   const freightFee = fees.freightFee;
   
-  // Fórmula para calcular o preço de venda ideal (P)
-  // P = (Custo Total + Taxas Fixas + Frete) / (1 - Taxa de Comissão - Margem Desejada)
-  // Simplificando: P = (Custo + Taxas) / (1 - Taxa Comissão - Margem)
-  
-  // O cálculo deve garantir que a margem desejada seja alcançada APÓS todas as deduções.
-  // P = (Custo Produto + Custo Fixo + Custo Frete) / (1 - Taxa Comissão - Margem Desejada)
-  
-  // Se a margem desejada for muito alta, o denominador pode ser negativo ou zero.
   const denominator = 1 - commissionRate - desiredMarginRate;
   
   if (denominator <= 0.05) { // Evita divisão por zero ou margem irrealista
-    // Se a margem for muito alta, tentamos calcular o preço mínimo para atingir 5% de lucro
     const minMarginRate = 0.05;
     const minDenominator = 1 - commissionRate - minMarginRate;
     
     if (minDenominator <= 0) {
-        // Se mesmo com 5% de margem for impossível, definimos um preço alto para forçar o lucro negativo
         const idealSalePrice = (productCost + fixedFee + freightFee) / (1 - commissionRate);
         const commissionValue = idealSalePrice * commissionRate;
         const totalCosts = productCost + fixedFee + freightFee + commissionValue;
@@ -92,7 +80,6 @@ const calculatePrice = (
         };
     }
     
-    // Se for possível, calculamos com 5% de margem e alertamos o usuário
     const idealSalePrice = (productCost + fixedFee + freightFee) / minDenominator;
     const commissionValue = idealSalePrice * commissionRate;
     const totalCosts = productCost + fixedFee + freightFee + commissionValue;
@@ -148,7 +135,66 @@ const calculatePrice = (
   };
 };
 
-// Função para gerar a explicação da IA (usando Google Gemini)
+// Função para chamar a IA (OpenRouter ou Gemini)
+const callAI = async (prompt: string, isJson: boolean = false) => {
+    if (OPENROUTER_API_KEY) {
+        const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
+        const MODEL = 'openai/gpt-3.5-turbo'; 
+
+        const response = await fetch(OPENROUTER_URL, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                'Content-Type': 'application/json',
+                'HTTP-Referer': 'https://urbbngcarxdqesenfvsb.supabase.co', 
+            },
+            body: JSON.stringify({
+                model: MODEL,
+                messages: [{ role: 'user', content: prompt }],
+                temperature: 0.5,
+                ...(isJson && { response_format: { type: "json_object" } }),
+            }),
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error("OpenRouter API error:", response.status, errorText);
+            throw new Error(`Erro da API do OpenRouter: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.choices?.[0]?.message?.content || "A IA não gerou conteúdo.";
+
+    } else if (GOOGLE_GEMINI_API_KEY) {
+        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GOOGLE_GEMINI_API_KEY}`;
+
+        const response = await fetch(GEMINI_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: { 
+                    temperature: 0.5,
+                    ...(isJson && { responseMimeType: "application/json" })
+                }
+            })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Google Gemini API error:", response.status, errorText);
+            throw new Error(`Erro da API do Google Gemini: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.candidates?.[0]?.content?.parts?.[0]?.text || "A IA não gerou conteúdo.";
+    } else {
+        throw new Error('Nenhuma chave de API (OpenRouter ou Gemini) configurada.');
+    }
+}
+
+
+// Função para gerar a explicação da IA (usando callAI)
 const generateExplanation = async (calculation: ReturnType<typeof calculatePrice>) => {
     const { idealSalePrice, netProfit, netMargin, details } = calculation;
     
@@ -180,26 +226,7 @@ const generateExplanation = async (calculation: ReturnType<typeof calculatePrice
     `;
 
     try {
-        const response = await fetch(
-            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GOOGLE_GEMINI_API_KEY}`,
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }],
-                    generationConfig: { temperature: 0.5 }
-                })
-            }
-        );
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error("Google Gemini API error:", response.status, errorText);
-            throw new Error(`Erro da API do Google Gemini: ${response.status}`);
-        }
-
-        const data = await response.json();
-        return data.candidates?.[0]?.content?.parts?.[0]?.text || "Cálculo concluído, mas a IA não gerou uma explicação detalhada.";
+        return await callAI(prompt, false); // Não é JSON
     } catch (e) {
         console.error("Erro ao gerar explicação da IA:", e);
         return "Cálculo concluído! O preço ideal foi determinado com base nas taxas do marketplace e sua margem desejada. Veja os detalhes abaixo.";
@@ -214,10 +241,10 @@ serve(async (req) => {
   
   console.log("Edge Function 'calculate-price' started execution.");
 
-  // 1. Verificação da Chave do Google Gemini
-  if (!GOOGLE_GEMINI_API_KEY) {
+  // 1. Verificação da Chave do Google Gemini / OpenRouter
+  if (!GOOGLE_GEMINI_API_KEY && !OPENROUTER_API_KEY) {
     return new Response(
-      JSON.stringify({ error: 'Erro de Configuração: A chave GOOGLE_GEMINI_API_KEY não está definida.' }),
+      JSON.stringify({ error: 'Erro de Configuração: Nenhuma chave de API (OpenRouter ou Gemini) está definida.' }),
       { status: 500, headers: corsHeaders }
     );
   }
@@ -255,15 +282,14 @@ serve(async (req) => {
     if (error instanceof Error) {
         errorMessage = error.message;
         
-        // Check for common API errors
-        if (errorMessage.includes("API key") || errorMessage.includes("401")) {
-            errorMessage = "Chave API do Google Gemini inválida. Por favor, verifique a configuração.";
+        if (errorMessage.includes("API key") || errorMessage.includes("401") || errorMessage.includes("OpenRouter")) {
+            errorMessage = "Chave API inválida ou erro de comunicação com a IA. Por favor, verifique a configuração da chave OPENROUTER_API_KEY ou GOOGLE_GEMINI_API_KEY.";
         } else if (errorMessage.includes("quota") || errorMessage.includes("429")) {
             errorMessage = "Limite de taxa excedido. Tente novamente em breve.";
         } else if (errorMessage.includes("Erro da API do Google Gemini")) {
             // Mantém a mensagem de erro da API
         } else {
-            errorMessage = "Falha na comunicação com o Google Gemini. Verifique sua conexão ou tente novamente.";
+            errorMessage = "Falha na comunicação com a IA. Verifique sua conexão ou tente novamente.";
         }
     }
     
