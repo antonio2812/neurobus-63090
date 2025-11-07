@@ -23,8 +23,8 @@ const FoxGoCard = () => {
           do seu negócio de maneira envolvente e estratégica.
         </p>
 
-        {/* Images (Responsive Grid) - Rounded borders are handled by rounded-xl on the container */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl pt-4">
+        {/* Images (Responsive Grid) - Alterado para grid-cols-1 por padrão e lg:grid-cols-2 para telas maiores */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full max-w-4xl pt-4">
           <div className="overflow-hidden rounded-xl border border-border/50 shadow-lg cursor-pointer">
             <img 
               src="/lovable-uploads/fox-go-capa.png" 
