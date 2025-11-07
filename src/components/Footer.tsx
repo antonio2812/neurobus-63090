@@ -46,7 +46,7 @@ const Footer = () => {
               className="transition-transform duration-300 hover:scale-105"
             >
               <img 
-                src="/lovable-uploads/logo-lucraai-fox-new.png"
+                src="/lovable-uploads/logo-lucraai-fox-new.png" 
                 alt="LucraAI Logo" 
                 className="h-14 w-auto rounded-lg"
               />
@@ -112,8 +112,10 @@ const Footer = () => {
           
           {/* Coluna 3: Baixe o App (Ordem 3) - Centralizado no desktop */}
           <div className="text-center xl:text-center xl:col-span-1 order-3">
-            <div className="flex flex-col items-center xl:items-center">
-              <h3 className="text-foreground font-semibold mb-6">Baixe o App</h3>
+            <div className="flex flex-col items-center xl:items-center space-y-4"> {/* Adicionado space-y-4 */}
+              <h3 className="text-foreground font-semibold mb-2">Baixe o App</h3> {/* Reduzido mb-6 para mb-2 */}
+              
+              {/* Google Play */}
               <a 
                 href="https://wa.link/adnlkj"
                 target="_blank"
@@ -123,6 +125,20 @@ const Footer = () => {
                 <img 
                   src="/lovable-uploads/Google Play - Rodapé.png"
                   alt="Disponível no Google Play"
+                  className="w-40 h-auto rounded-lg" 
+                />
+              </a>
+              
+              {/* App Store (NOVO) */}
+              <a 
+                href="https://wa.link/adnlkj"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block transition-transform duration-300 hover:scale-105"
+              >
+                <img 
+                  src="/lovable-uploads/Apple Store - Rodapé.png"
+                  alt="Baixar na App Store"
                   className="w-40 h-auto rounded-lg" 
                 />
               </a>

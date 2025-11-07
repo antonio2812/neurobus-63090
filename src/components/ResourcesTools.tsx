@@ -46,7 +46,7 @@ const ResourcesTools = () => {
     {
       icon: AlertTriangle, // Ícone de Alerta Profissional
       title: "Detector de Palavras Proibidas", 
-      description: "Evite bloqueios e reprovações antes que prejudiquem suas vendas.",
+      description: "Evite bloqueios e reprovações de anúncios antes que prejudiquem suas vendas.", // TEXTO ALTERADO
       modalImages: [],
       modalDescription: "Funcionalidade de visualização de exemplos em desenvolvimento.",
     },

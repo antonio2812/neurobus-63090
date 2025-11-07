@@ -286,7 +286,7 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
         <div className="flex flex-col items-center space-y-4 pt-4">
             <div 
                 className={cn(
-                    "h-16 w-16 rounded-full flex items-center justify-center border border-accent/50",
+                    "h-16 w-16 rounded-full flex items-center justify-center border-2 border-accent/50", // Aumentado para border-2
                     "relative overflow-hidden bg-transparent" // Fundo transparente
                 )}
             >
@@ -295,7 +295,7 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
                     className="absolute inset-0 rounded-full opacity-100 transition-all duration-500"
                     style={{ 
                         // Aumentando o glow e o spread para um efeito mais forte e chamativo
-                        boxShadow: `0 0 80px 20px ${accentColor}`, 
+                        boxShadow: `0 0 100px 30px ${accentColor}`, // Aumentado o glow
                         backgroundColor: 'transparent' // Fundo transparente
                     }} 
                 />
