@@ -290,14 +290,14 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
                     "relative" // Adicionado relative para posicionar o neon
                 )}
             >
-                {/* Efeito Neon no Fundo */}
+                {/* Efeito Neon no Fundo (Aumentando o blur e o spread do shadow) */}
                 <div 
-                    className="absolute inset-0 rounded-full opacity-50 blur-md transition-all duration-500"
-                    style={{ backgroundColor: accentColor, boxShadow: `0 0 20px ${accentColor}` }}
+                    className="absolute inset-0 rounded-full opacity-70 blur-lg transition-all duration-500"
+                    style={{ backgroundColor: accentColor, boxShadow: `0 0 30px 5px ${accentColor}` }} // Aumentado o shadow
                 />
                 <Image className="h-8 w-8 text-black relative z-10" /> {/* Ícone preto sobre o neon */}
             </div>
-            <p className="text-sm text-muted-foreground text-center max-w-xs">
+            <p className="text-sm text-muted-foreground text-center max-w-xs pt-4"> {/* Aumentado pt-4 para espaçamento */}
                 <span className="text-white font-bold">Prompt mais usado:</span> {mostUsedPrompt}
             </p>
         </div>
