@@ -19,7 +19,7 @@ const premiumFeatures = [
   "Espião de Tendências de Produtos",
   "Espião de Concorrência com Automação",
   "Gerador Inteligente de Kits (NOVO)",
-  "Gerador de Imagens de alta qualidade e conversão ilimitadas (NOVO)", // NOVO RECURSO
+  "Gerador de Imagens de Alta Qualidade e Conversão ilimitadas (NOVO)", // TEXTO CORRIGIDO
   "Buscador dos Melhores Fornecedores Nacionais e Importadoras (NOVO)",
   "Alertas de Datas Especiais + Produtos Minerados",
   "Detector de Palavras Proibidas e Reprovação de Anúncios", // RENOMEADO E REORDENADO
