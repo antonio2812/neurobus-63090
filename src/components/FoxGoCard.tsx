@@ -7,7 +7,7 @@ const FoxGoCard = () => {
   const instagramLink = "https://instagram.com/lucraa.ai";
 
   return (
-    <Card className="p-6 md:p-10 bg-gradient-card border-accent/30 shadow-glow-accent/50 transition-all duration-500 hover-lift cursor-pointer">
+    <Card className="p-6 md:p-10 bg-gradient-card border-accent/30 shadow-glow-accent/50 transition-all duration-500 hover-lift">
       <div className="flex flex-col items-center text-center space-y-6">
         
         {/* Title - Removed Zap icon and changed 'Fox GO' color to text-foreground (white/light gray) */}
@@ -25,14 +25,14 @@ const FoxGoCard = () => {
 
         {/* Images (Responsive Grid) - Rounded borders are handled by rounded-xl on the container */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full max-w-4xl pt-4">
-          <div className="overflow-hidden rounded-xl border border-border/50 shadow-lg">
+          <div className="overflow-hidden rounded-xl border border-border/50 shadow-lg cursor-pointer">
             <img 
               src="/lovable-uploads/fox-go-capa.png" 
               alt="Fox GO Capa" 
               className="w-full h-auto object-cover transition-transform duration-500 hover:scale-105"
             />
           </div>
-          <div className="overflow-hidden rounded-xl border border-border/50 shadow-lg">
+          <div className="overflow-hidden rounded-xl border border-border/50 shadow-lg cursor-pointer">
             <img 
               src="/lovable-uploads/fox-go-game.png" 
               alt="Fox GO Game Preview" 
