@@ -10,11 +10,11 @@ const PWAInstallPrompt = () => {
   const [isOpen, setIsOpen] = useState(false);
   const accentColor = "#ffc800";
 
-  // Mostra o modal se for instalável e ainda não estiver instalado
+  // Mostra o modal se for instalável e ainda não estiver instalado, após 10 segundos
   useEffect(() => {
     if (isInstallable && !isInstalled) {
-      // Usa um timeout para garantir que o modal apareça após o carregamento inicial
-      const timer = setTimeout(() => setIsOpen(true), 1500);
+      // Atraso de 10 segundos (10000 ms)
+      const timer = setTimeout(() => setIsOpen(true), 10000);
       return () => clearTimeout(timer);
     } else {
       setIsOpen(false);
@@ -33,11 +33,21 @@ const PWAInstallPrompt = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-[400px] p-6 md:p-8 bg-card border-accent/50 shadow-glow-accent/50 max-h-[90vh] overflow-y-auto">
+      <DialogContent 
+        className={cn(
+          "sm:max-w-[400px] p-6 md:p-8 bg-card border-accent/50 shadow-glow-accent/50 max-h-[90vh] overflow-y-auto",
+          "animate-scale-in" // Adiciona o efeito de aparecer (scale-in)
+        )}
+      >
         
         <DialogHeader className="text-center">
+          {/* Ícone da LucraAI (Maior e Centralizado) */}
           <div className="flex items-center justify-center mb-4">
-            <Zap className="h-10 w-10" style={{ color: accentColor }} />
+            <img 
+              src="/lovable-uploads/icone-lucraai-transparente.png" 
+              alt="LucraAI Icon" 
+              className="h-20 w-20 object-contain mx-auto" // Aumentado para h-20 w-20
+            />
           </div>
           <DialogTitle className="text-2xl font-bold text-foreground font-space-mono text-center">
             Instalar App
@@ -53,7 +63,7 @@ const PWAInstallPrompt = () => {
           </p>
         </div>
         
-        <div className="pt-4 flex justify-center">
+        <div className="pt-4 flex flex-col items-center">
           <Button 
             variant="default" 
             size="lg"
@@ -66,6 +76,11 @@ const PWAInstallPrompt = () => {
             <Download className="h-5 w-5 mr-2" />
             Instalar Agora
           </Button>
+          
+          {/* Texto Adicional */}
+          <p className="text-sm text-muted-foreground mt-3">
+            Ou Toque no Ícone de Instalar na Barra de pesquisas do seu Navegador.
+          </p>
         </div>
       </DialogContent>
     </Dialog>
