@@ -30,8 +30,9 @@ const HeroCarousel = () => {
           }`}
         >
           <div 
-            // Revertido para bg-cover para preencher toda a seção em telas grandes (com corte se necessário)
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat brightness-[0.3] blur-sm"
+            // Padrão (Mobile/Tablet): bg-contain (não corta)
+            // lg:bg-cover (Desktop): preenche a largura (pode cortar)
+            className="absolute inset-0 bg-contain lg:bg-cover bg-center bg-no-repeat brightness-[0.3] blur-sm"
             style={{ backgroundImage: `url(${image})` }}
           />
         </div>
