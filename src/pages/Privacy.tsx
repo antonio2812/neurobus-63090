@@ -137,7 +137,7 @@ const Privacy = () => {
             </section>
 
             <p className="text-sm text-muted-foreground mt-8">
-              Última atualização: {new Date().toLocaleDateString('pt-BR')}
+              Última atualização: 28/10/2025
             </p>
           </div>
         </div>
