@@ -14,10 +14,10 @@ const Footer = () => {
   };
 
   const socialLinks = [
-    { icon: Instagram, href: "#", label: "Instagram" },
-    { icon: Facebook, href: "#", label: "Facebook" },
-    { icon: Youtube, href: "#", label: "YouTube" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
+    { icon: Instagram, href: "https://www.instagram.com/lucraa.ai", label: "Instagram" },
+    { icon: Facebook, href: "https://wa.link/adnlkj", label: "Facebook" }, // Link alterado para WhatsApp
+    { icon: Youtube, href: "https://www.youtube.com/@lucra.ai", label: "YouTube" },
+    { icon: Linkedin, href: "https://www.linkedin.com/company/lucra.ai", label: "LinkedIn" },
   ];
 
   const solutionsLinks = [
