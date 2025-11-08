@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils"; // Importando cn
 
 const HeroCarousel = () => {
   const images = [
@@ -31,10 +32,16 @@ const HeroCarousel = () => {
         >
           <div 
             // Aplicando as propriedades CSS solicitadas: 
-            // background-size: cover; 
-            // background-repeat: no-repeat;
-            // background-position: center (em todas as telas)
-            className="absolute inset-0 bg-cover bg-no-repeat bg-center brightness-[0.3] blur-sm"
+            // bg-cover (padrão) para telas grandes (2xl)
+            // 2xl:bg-cover (acima de 1400px)
+            // bg-contain (abaixo de 1400px) para garantir que a imagem caiba inteira
+            className={cn(
+              "absolute inset-0 bg-no-repeat bg-center brightness-[0.3] blur-sm",
+              // Padrão (Mobile/Tablet/Desktop): Contain (para caber)
+              "bg-contain",
+              // 2XL (Acima de 1400px): Cover (para preencher)
+              "2xl:bg-cover"
+            )}
             style={{ backgroundImage: `url(${image})` }}
           />
         </div>
