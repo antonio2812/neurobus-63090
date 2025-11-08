@@ -23,6 +23,7 @@ interface CalculationResult {
     weight: number | null; // Em KG
     rawWeightValue: number | null; // NOVO: Valor numérico digitado pelo usuário
     weightUnit: 'g' | 'kg';
+    rawWeightInputString: string | null; // NOVO
   };
 }
 
@@ -71,8 +72,9 @@ export const usePricingChat = (marketplace: string) => {
   const [adType, setAdType] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [weight, setWeight] = useState<number | null>(null); // Peso em KG
-  const [rawWeightValue, setRawWeightValue] = useState<number | null>(null); // NOVO: Valor numérico digitado
+  const [rawWeightValue, setRawWeightValue] = useState<number | null>(null); // Valor numérico digitado
   const [weightUnit, setWeightUnit] = useState<'g' | 'kg'>('kg');
+  const [rawWeightInputString, setRawWeightInputString] = useState<string | null>(null); // NOVO ESTADO
   const { toast } = useToast();
   
   const chatEndRef = useRef<HTMLDivElement>(null);
@@ -92,7 +94,8 @@ export const usePricingChat = (marketplace: string) => {
     setAdType(null);
     setSelectedCategory(null);
     setWeight(null);
-    setRawWeightValue(null); // Resetando o novo estado
+    setRawWeightValue(null);
+    setRawWeightInputString(null); // Resetando o novo estado
     setWeightUnit('kg');
     
     const newInitialStep = marketplace === 'Mercado Livre' ? 'select_ad_type' : 'select_category';
@@ -216,7 +219,10 @@ export const usePricingChat = (marketplace: string) => {
       let unit: 'g' | 'kg' = 'kg';
       let valueInKg: number;
 
-      // 1. Limpa o valor, mantendo apenas números e o separador decimal (vírgula ou ponto)
+      // 1. Armazena a string bruta para exibição
+      setRawWeightInputString(userMessage.content.trim());
+
+      // 2. Limpa o valor, mantendo apenas números e o separador decimal (vírgula ou ponto)
       const cleanValue = rawInput.replace(/r\$/g, '').replace(/g|kg/g, '').replace(',', '.').trim();
       numericValue = parseFloat(cleanValue);
 
@@ -233,7 +239,7 @@ export const usePricingChat = (marketplace: string) => {
         return;
       }
       
-      // 2. Detecta a unidade e converte para KG (padrão da Edge Function)
+      // 3. Detecta a unidade e converte para KG (padrão da Edge Function)
       const isGram = rawInput.includes('g');
       const isKg = rawInput.includes('kg');
       
@@ -317,7 +323,7 @@ export const usePricingChat = (marketplace: string) => {
         ]);
         setIsLoading(false);
 
-      } else if (step === 'margin' && cost !== null && selectedCategory !== null && weight !== null && rawWeightValue !== null) {
+      } else if (step === 'margin' && cost !== null && selectedCategory !== null && weight !== null && rawWeightValue !== null && rawWeightInputString !== null) {
         const margin = numericValue;
         setStep('done');
         
@@ -342,7 +348,8 @@ export const usePricingChat = (marketplace: string) => {
               category: selectedCategory,
               weight,
               weightUnit,
-              rawWeightValue, // PASSANDO O NOVO VALOR
+              rawWeightValue,
+              rawWeightInputString, // PASSANDO O NOVO VALOR
             },
           });
 
@@ -357,7 +364,8 @@ export const usePricingChat = (marketplace: string) => {
               details: {
                   ...data.calculation.details,
                   weightUnit: weightUnit,
-                  rawWeightValue: rawWeightValue, // GARANTINDO QUE O VALOR BRUTO ESTEJA NO RESULTADO
+                  rawWeightValue: rawWeightValue,
+                  rawWeightInputString: rawWeightInputString, // GARANTINDO QUE O VALOR BRUTO ESTEJA NO RESULTADO
               }
           };
 

@@ -68,10 +68,13 @@ export const callAI = async (prompt: string, isJson: boolean = false) => {
 export const generateExplanation = async (calculation: CalculationResult) => {
     const { idealSalePrice, netProfit, netMargin, details } = calculation;
     
-    // Formatação do peso para a explicação (usando rawWeightValue)
+    // Formatação do peso para a explicação (usando rawWeightInputString)
     let weightDisplay = 'N/A';
-    if (details.rawWeightValue !== null) {
-        // Exibe o valor bruto formatado com a unidade original
+    if (details.rawWeightInputString) {
+        // Usa a string bruta digitada pelo usuário
+        weightDisplay = details.rawWeightInputString;
+    } else if (details.rawWeightValue !== null) {
+        // Fallback para o valor numérico formatado com a unidade original
         weightDisplay = `${details.rawWeightValue.toFixed(details.weightUnit === 'g' ? 0 : 2).replace('.', ',')} ${details.weightUnit}`;
     }
     

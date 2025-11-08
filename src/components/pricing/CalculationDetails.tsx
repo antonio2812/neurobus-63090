@@ -21,6 +21,7 @@ interface CalculationResult {
     weight: number | null; // NOVO (em KG)
     rawWeightValue: number | null; // NOVO: Valor numérico digitado pelo usuário
     weightUnit: 'g' | 'kg'; // NOVO
+    rawWeightInputString: string | null; // NOVO
   };
 }
 
@@ -39,17 +40,21 @@ const formatPercentage = (value: number) => {
 const CalculationDetails = ({ calculation }: CalculationDetailsProps) => {
   
   // Determina o valor e a unidade a ser exibida
-  const rawWeightValue = calculation.details.rawWeightValue;
-  const originalUnit = calculation.details.weightUnit;
+  const rawWeightInputString = calculation.details.rawWeightInputString;
   
   let formattedWeight = 'N/A';
-  if (rawWeightValue !== null) {
-    // Formata o valor bruto: 
-    // 1. Converte para string e substitui ponto por vírgula
-    const valueString = rawWeightValue.toString().replace('.', ',');
-    
-    // 2. Adiciona a unidade original
-    formattedWeight = `${valueString} ${originalUnit}`;
+  if (rawWeightInputString) {
+    // Usa a string bruta digitada pelo usuário
+    formattedWeight = rawWeightInputString;
+  } else {
+    // Lógica de fallback (se a string bruta não estiver disponível)
+    const rawWeightValue = calculation.details.rawWeightValue;
+    const originalUnit = calculation.details.weightUnit;
+    if (rawWeightValue !== null) {
+      // Formata o valor numérico com a unidade original
+      const valueString = rawWeightValue.toString().replace('.', ',');
+      formattedWeight = `${valueString} ${originalUnit}`;
+    }
   }
 
   return (

@@ -207,7 +207,8 @@ export const calculatePrice = (
   category: string | null,
   weight: number | null, // Em KG
   weightUnit: 'g' | 'kg', // Unidade original
-  rawWeightValue: number | null // NOVO
+  rawWeightValue: number | null, // Valor numérico digitado
+  rawWeightInputString: string | null // NOVO: String bruta digitada
 ): CalculationResult => {
   const desiredMarginRate = margin / 100;
   const productCost = cost + additionalCost;
@@ -272,6 +273,7 @@ export const calculatePrice = (
       weight,
       weightUnit,
       rawWeightValue, // INCLUINDO O NOVO VALOR
+      rawWeightInputString, // INCLUINDO O NOVO VALOR
     }
   };
 };

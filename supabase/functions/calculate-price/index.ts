@@ -29,10 +29,10 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { marketplace, cost, margin, adType, additionalCost, category, weight, weightUnit, rawWeightValue } = body;
+    const { marketplace, cost, margin, adType, additionalCost, category, weight, weightUnit, rawWeightValue, rawWeightInputString } = body;
 
-    if (typeof cost !== 'number' || typeof margin !== 'number' || typeof additionalCost !== 'number' || !category || typeof weight !== 'number' || !weightUnit || typeof rawWeightValue !== 'number') {
-        return new Response(JSON.stringify({ error: 'Dados de entrada inválidos. Certifique-se de que custo, margem, custo adicional, peso e rawWeightValue são números, a categoria foi selecionada e a unidade de peso foi fornecida.' }), { status: 400, headers: corsHeaders });
+    if (typeof cost !== 'number' || typeof margin !== 'number' || typeof additionalCost !== 'number' || !category || typeof weight !== 'number' || !weightUnit || typeof rawWeightValue !== 'number' || typeof rawWeightInputString !== 'string') {
+        return new Response(JSON.stringify({ error: 'Dados de entrada inválidos. Certifique-se de que custo, margem, custo adicional, peso, rawWeightValue e rawWeightInputString são válidos.' }), { status: 400, headers: corsHeaders });
     }
     
     // Se for Mercado Livre, adType é obrigatório
@@ -41,7 +41,7 @@ serve(async (req) => {
     }
 
     // 2. Executa o cálculo
-    const calculation = calculatePrice(marketplace, cost, margin, adType, additionalCost, category, weight, weightUnit, rawWeightValue);
+    const calculation = calculatePrice(marketplace, cost, margin, adType, additionalCost, category, weight, weightUnit, rawWeightValue, rawWeightInputString);
     
     // 3. Gera a explicação da IA
     const explanation = await generateExplanation(calculation);
