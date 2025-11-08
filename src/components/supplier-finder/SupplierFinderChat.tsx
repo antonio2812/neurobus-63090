@@ -32,7 +32,7 @@ interface SupplierFinderChatProps {
 type ChatStep = 'select_type' | 'select_category' | 'done';
 
 const categories = [
-  "Produtos variados", // TEXTO ALTERADO AQUI
+  "Produtos variados",
   "Perfumaria & cosméticos (beleza)",
   "Alimentos e bebidas",
   "Saúde e bem-estar",
@@ -47,12 +47,45 @@ const categories = [
   "Automotivo & peças para veículos",
   "Livros, música & entretenimento",
   "Alimentos funcionais ou suplementos",
-  "Produtos importados",
+  // REMOVIDO: "Produtos importados",
 ];
 
 const formatCurrency = (value: number) => {
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 };
+
+// Função auxiliar para tornar o link clicável e formatar o contato
+const formatContact = (contact: string) => {
+  // Tenta detectar se é um URL (começa com http/https)
+  if (contact.startsWith('http')) {
+    // Garante que o link tenha um texto amigável (ex: "Acessar Site")
+    const displayUrl = contact.replace(/^https?:\/\/(www\.)?/, '').split('/')[0];
+    return (
+      <a 
+        href={contact} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="text-blue-400 hover:text-blue-300 hover:underline transition-colors"
+      >
+        Acessar Site ({displayUrl})
+      </a>
+    );
+  }
+  // Tenta detectar se é um email
+  if (contact.includes('@')) {
+    return (
+      <a 
+        href={`mailto:${contact}`} 
+        className="text-blue-400 hover:text-blue-300 hover:underline transition-colors"
+      >
+        {contact}
+      </a>
+    );
+  }
+  // Retorna o contato como texto simples (telefone, etc.)
+  return contact;
+};
+
 
 const SupplierFinderChat = ({ onBack }: SupplierFinderChatProps) => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -108,19 +141,38 @@ const SupplierFinderChat = ({ onBack }: SupplierFinderChatProps) => {
           </div>
           
           <div className="space-y-2 pt-2 text-sm text-muted-foreground">
+            
+            {/* 1. Nicho/Categoria */}
             <p>
-              <strong className="text-foreground">Foco de Produtos:</strong> {supplier.productFocus}
+              <strong className="text-foreground">Nicho/Categoria:</strong> {supplier.productFocus}
             </p>
+            
+            {/* 2. Modalidade de Venda */}
             <p>
-              <strong className="text-foreground">Foco de Venda:</strong> <span className="font-semibold text-accent">{supplier.focus}</span>
+              <strong className="text-foreground">Modalidade de Venda:</strong> 
+              <span className="font-semibold text-accent ml-1">{supplier.focus}</span>
             </p>
-            <p className="flex items-center gap-2">
-              <DollarSign className="h-4 w-4 text-accent shrink-0" />
-              <strong className="text-foreground">Pedido Mínimo:</strong> {formatCurrency(supplier.minOrder)}
-            </p>
-            <p className="flex items-center gap-2">
+            
+            {/* 2.1. Detalhes da Modalidade (Atacado/Pedido Mínimo) */}
+            {(supplier.focus === 'Atacado' || supplier.focus === 'Ambos') && (
+              <p className="flex items-center gap-2 ml-4">
+                <DollarSign className="h-4 w-4 text-accent shrink-0" />
+                <strong className="text-foreground">Quantidade Mínima de Pedidos (Atacado):</strong> {formatCurrency(supplier.minOrder)}
+              </p>
+            )}
+            
+            {/* 2.2. Dropshipping (Simulação) */}
+            {(supplier.focus === 'Varejo' || supplier.focus === 'Ambos') && (
+              <p className="flex items-center gap-2 ml-4">
+                <strong className="text-foreground">Dropshipping:</strong> 
+                <span className="text-green-400 font-semibold">Disponível (Verificar no contato)</span>
+              </p>
+            )}
+            
+            {/* 3. Contato (Site Clicável / Email) */}
+            <p className="flex items-center gap-2 pt-2">
               <Mail className="h-4 w-4 text-accent shrink-0" />
-              <strong className="text-foreground">Contato:</strong> {supplier.contact}
+              <strong className="text-foreground">Contato:</strong> {formatContact(supplier.contact)}
             </p>
           </div>
         </Card>
