@@ -23,7 +23,7 @@ const KitGeneratorModal = ({ children }: KitGeneratorModalProps) => {
         className={cn(
           "sm:max-w-[90vw] md:max-w-[800px] p-0 bg-card border-border shadow-elevated max-h-[95vh] overflow-hidden",
           // Estilo do botão de fechar (X)
-          "[&>button]:border-transparent [&>button:hover]:border-accent [&>button:hover]:bg-card/50 [&>button:hover]:text-foreground"
+          "[&>button]:border-transparent [&>button:hover]:border-transparent [&>button:hover]:bg-card/50 [&>button:hover]:text-foreground"
         )}
       >
         <KitGeneratorChat onBack={handleBack} />

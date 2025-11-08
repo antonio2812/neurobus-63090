@@ -104,20 +104,6 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
     );
   };
 
-  // Mensagem inicial (REMOVIDA)
-  const initialMessage: ChatMessage = {
-    id: 0,
-    sender: 'ai',
-    content: `Descreva a imagem que você deseja criar para o seu anúncio.`,
-  };
-  
-  // Mensagem de dica (REMOVIDA)
-  const tipMessage: ChatMessage = {
-    id: 0.1,
-    sender: 'ai',
-    content: `<span class="text-foreground font-bold">Dica:</span> Seja detalhado! Inclua o produto, o estilo (ex: ultra realista, 3D), e o fundo (ex: fundo branco, estúdio fotográfico).`,
-  };
-
   useEffect(() => {
     // Apenas a mensagem de prompt e a dica são mantidas no estado inicial
     if (messages.length === 0) {
@@ -325,7 +311,8 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
               variant="ghost" 
               size="icon" 
               onClick={onBack} 
-              className="text-muted-foreground hover:text-black transition-colors duration-300 border-transparent bg-transparent hover:bg-accent" 
+              // CLASSE ATUALIZADA: border-transparent hover:border-accent hover:bg-accent hover:text-black transition-all duration-300
+              className="text-muted-foreground hover:text-black transition-colors duration-300 border-transparent bg-transparent hover:bg-accent hover:border-accent" 
             >
               <ArrowLeft className="h-5 w-5" />
             </Button>

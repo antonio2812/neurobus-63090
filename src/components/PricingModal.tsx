@@ -43,10 +43,10 @@ const PricingModal = ({ children }: PricingModalProps) => {
           "max-w-[95vw] md:max-w-4xl p-0 bg-card border-border shadow-elevated max-h-[95vh] overflow-hidden", // Alterado sm:max-w para max-w
           // Estilo do botão de fechar (X) ATUALIZADO:
           // 1. Borda transparente por padrão
-          // 2. Borda amarela (accent) no hover
-          // 3. Fundo transparente no hover (removido bg-card/50)
+          // 2. Borda transparente no hover (removendo hover:border-accent)
+          // 3. Fundo transparente no hover
           // 4. Ícone foreground (branco/cinza) no hover
-          "[&>button]:border-transparent [&>button:hover]:border-accent [&>button:hover]:bg-transparent [&>button:hover]:text-foreground"
+          "[&>button]:border-transparent [&>button:hover]:border-transparent [&>button:hover]:bg-transparent [&>button:hover]:text-foreground"
         )}
       >
         

@@ -233,7 +233,8 @@ const DateMinerChat = ({ onBack }: DateMinerChatProps) => {
           variant="ghost" 
           size="icon" 
           onClick={onBack} 
-          className="text-muted-foreground hover:text-black hover:bg-accent transition-colors duration-300 border-transparent" 
+          // CLASSE ATUALIZADA: border-transparent hover:border-accent hover:bg-accent hover:text-black transition-all duration-300
+          className="text-muted-foreground hover:text-black hover:bg-accent transition-all duration-300 border-transparent hover:border-accent" 
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>
