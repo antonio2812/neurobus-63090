@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import DateMinerChat from "./date-miner/DateMinerChat";
-import { useState } => "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface DateMinerModalProps {
