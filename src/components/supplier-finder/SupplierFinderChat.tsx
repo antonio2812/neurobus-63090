@@ -155,7 +155,7 @@ const SupplierFinderChat = ({ onBack }: SupplierFinderChatProps) => {
             </span>
           </div>
           
-          <div className="space-y-2 pt-2 text-sm text-muted-foreground">
+          <div className="space-y-3 pt-2 text-sm text-muted-foreground">
             
             {/* 1. Nicho/Categoria */}
             <div className="flex justify-between items-start">
@@ -163,32 +163,38 @@ const SupplierFinderChat = ({ onBack }: SupplierFinderChatProps) => {
               <span className="text-right max-w-[60%]">{supplier.productFocus}</span>
             </div>
             
-            {/* 2. Modalidade de Venda (Lado a Lado) */}
-            <div className="flex justify-between items-start">
-              <strong className="text-foreground">Modalidade de Venda:</strong> 
-              <span className="text-right max-w-[60%]">
-                {/* Lista de modalidades separadas por vírgula */}
-                {supplier.focus === 'Ambos' && 'Varejo, Atacado, '}
-                {supplier.focus === 'Varejo' && 'Varejo, '}
-                {supplier.focus === 'Atacado' && 'Atacado, '}
-                Dropshipping (Verificar no contato)
-              </span>
+            {/* 2. Modalidade de Venda & Quantidade Mínima (Combined Row) */}
+            {/* Usando grid para alinhar Modalidade (esquerda) e Quantidade Mínima (direita) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 sm:gap-x-4 border-t border-border/50 pt-2">
+                {/* Left Column: Modalidade */}
+                <div className="flex flex-col items-start">
+                    <strong className="text-foreground">Modalidade de Venda:</strong>
+                    <span className="text-muted-foreground text-xs sm:text-sm">
+                        {/* Logic to list Varejo, Atacado, Dropshipping separated by commas */}
+                        {supplier.focus === 'Ambos' && 'Varejo, Atacado, Dropshipping (Verificar no contato)'}
+                        {supplier.focus === 'Varejo' && 'Varejo, Dropshipping (Verificar no contato)'}
+                        {supplier.focus === 'Atacado' && 'Atacado, Dropshipping (Verificar no contato)'}
+                    </span>
+                </div>
+                
+                {/* Right Column: Quantidade Mínima (Only shows if Atacado/Ambos and minOrder > 0) */}
+                {(supplier.focus === 'Atacado' || supplier.focus === 'Ambos') && supplier.minOrder > 0 && (
+                    <div className="flex flex-col items-start sm:items-end sm:text-right">
+                        <strong className="text-foreground">Quantidade Mínima de Pedidos:</strong> 
+                        <span className="text-accent font-semibold text-xs sm:text-sm">
+                            {formatCurrency(supplier.minOrder)}
+                        </span>
+                    </div>
+                )}
             </div>
-            
-            {/* 2.1. Quantidade Mínima de Pedidos (Lado a Lado com Atacado) */}
-            {(supplier.focus === 'Atacado' || supplier.focus === 'Ambos') && supplier.minOrder > 0 && (
-              <div className="flex justify-between items-start">
-                <strong className="text-foreground">Quantidade Mínima de Pedidos:</strong> 
-                <span className="text-foreground font-semibold text-right">{formatCurrency(supplier.minOrder)}</span>
-              </div>
-            )}
-            
+
             {/* 3. Contato (Site | Email) */}
-            <div className="flex justify-between items-start pt-2">
+            <div className="flex justify-between items-start pt-2 border-t border-border/50">
               <strong className="text-foreground flex items-center gap-2 mb-1">
                 <Mail className="h-4 w-4 text-accent shrink-0" /> Contato:
               </strong>
-              <span className="text-right max-w-[60%]">
+              {/* Contato formatado (Site | Email) no lado direito */}
+              <span className="text-right max-w-[60%] text-sm">
                 {formatContact(supplier.contact)}
               </span>
             </div>

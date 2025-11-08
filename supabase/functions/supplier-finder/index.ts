@@ -89,7 +89,7 @@ const generateSupplierPrompt = (category: string, supplierType: 'Nacional' | 'Im
     Sua tarefa é simular a busca e identificação de 5 fornecedores (Atacado e Varejo) ideais para a categoria de produtos: "${category}", focando em fornecedores do tipo "${supplierType}".
     
     **INSTRUÇÕES CRÍTICAS:**
-    1. **REALISMO E ATUALIDADE (2024/2025):** Simule 5 fornecedores que pareçam reais e sejam adequados para o mercado brasileiro (Mercado Livre, Shopee, Amazon). Os dados devem ser ATUAIS (2024/2025).
+    1. **REALISMO, VERIFICAÇÃO E ATUALIDADE (2024/2025):** Simule 5 fornecedores que pareçam reais, verificados e sejam adequados para o mercado brasileiro (Mercado Livre, Shopee, Amazon). Os dados devem ser autênticos, relevantes e ATUAIS (2024/2025).
     2. **FOCO:** Todos os fornecedores devem ser do tipo "${supplierType}".
     3. **ATACADO/VAREJO:** Inclua fornecedores que atendam Atacado, Varejo ou Ambos.
     4. Para cada fornecedor, forneça:
