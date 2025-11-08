@@ -343,10 +343,8 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
   const inputPlaceholder = (() => {
     if (step === 'done') return "Precificação concluída.";
     if (step === 'select_category') return "Selecione uma opção acima...";
-    if (step === 'weight') return "Digite o peso em g ou kg (ex: 0.5)...";
-    if (step === 'cost') return "Digite o custo (ex: 49.90)...";
-    if (step === 'additional_cost') return "Digite o custo adicional (ex: 15.00 ou 0)...";
-    if (step === 'margin') return "Digite a margem desejada (ex: 30)...";
+    // Alterado para "Digite aqui..." para os passos de entrada de dados
+    if (step === 'weight' || step === 'cost' || step === 'additional_cost' || step === 'margin') return "Digite aqui...";
     return "Digite aqui...";
   })();
   
