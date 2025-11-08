@@ -132,10 +132,10 @@ const calculateMercadoLivrePrice = (productCost: number, desiredMarginRate: numb
     let finalIdealSalePrice = 0;
     let fixedFee = 0;
     let freightFee = 0;
-
-    // TIER 1: Preço < R$19.00
+    
+    // 1. TIER 1: Preço < R$19.00 (NOVA REGRA)
     let currentFixedFee = 6.50;
-    let currentFreightFee = 10.00;
+    let currentFreightFee = 10.00; // Frete estimado para produtos de baixo valor
     let { idealSalePrice: price1 } = solveForPrice(productCost, currentFixedFee, currentFreightFee, commissionRate, desiredMarginRate);
     
     if (price1 < 19.00) {
@@ -143,7 +143,7 @@ const calculateMercadoLivrePrice = (productCost: number, desiredMarginRate: numb
       fixedFee = currentFixedFee;
       freightFee = currentFreightFee;
     } else {
-      // TIER 2: Preço R$19.00 to R$78.99
+      // 2. TIER 2: Preço R$19.00 to R$78.99
       currentFixedFee = 0.00;
       currentFreightFee = 25.00;
       let { idealSalePrice: price2 } = solveForPrice(productCost, currentFixedFee, currentFreightFee, commissionRate, desiredMarginRate);
@@ -153,7 +153,7 @@ const calculateMercadoLivrePrice = (productCost: number, desiredMarginRate: numb
         fixedFee = currentFixedFee;
         freightFee = currentFreightFee;
       } else {
-        // TIER 3: Preço > R$78.99
+        // 3. TIER 3: Preço > R$78.99
         currentFixedFee = 0.00;
         currentFreightFee = 50.00;
         let { idealSalePrice: price3 } = solveForPrice(productCost, currentFixedFee, currentFreightFee, commissionRate, desiredMarginRate);
@@ -408,14 +408,16 @@ const generateExplanation = async (calculation: CalculationResult) => {
     let mlNote = '';
     if (details.marketplace === 'Mercado Livre') {
         let tier = '';
+        let fixedFeeDisplay = '';
         if (details.idealSalePrice < 19.00) {
             tier = 'abaixo de R$19,00';
+            fixedFeeDisplay = ` (incluindo a taxa fixa de R$6,50)`;
         } else if (details.idealSalePrice >= 19.00 && details.idealSalePrice <= 78.99) {
             tier = 'entre R$19,00 e R$78,99';
         } else {
             tier = 'acima de R$78,99';
         }
-        mlNote = ` (Regra ML: O cálculo usou a faixa de preço ${tier} e o tipo de anúncio ${details.adType}).`;
+        mlNote = ` (Regra ML: O cálculo usou a faixa de preço ${tier}${fixedFeeDisplay} e o tipo de anúncio ${details.adType}).`;
     }
     
     let magaluNote = '';
@@ -537,6 +539,8 @@ serve(async (req) => {
             errorMessage = "Chave API inválida ou erro de comunicação com a IA. Por favor, verifique a configuração da chave OPENROUTER_API_KEY ou GOOGLE_GEMINI_API_KEY.";
         } else if (errorMessage.includes("quota") || errorMessage.includes("429")) {
             errorMessage = "Limite de taxa excedido. Tente novamente em breve.";
+        } else if (errorMessage.includes("Erro de formato da IA")) {
+            // Mantém a mensagem de erro de formato
         } else if (errorMessage.includes("Erro da API do Google Gemini")) {
             // Mantém a mensagem de erro da API
         } else {
