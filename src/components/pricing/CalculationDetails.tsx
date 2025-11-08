@@ -40,26 +40,18 @@ const formatPercentage = (value: number) => {
 const CalculationDetails = ({ calculation }: CalculationDetailsProps) => {
   
   // Determina o valor e a unidade a ser exibida
-  const rawWeightInputString = calculation.details.rawWeightInputString;
-  const originalUnit = calculation.details.weightUnit;
-  
   let formattedWeight = 'N/A';
-  
-  if (rawWeightInputString) {
-    const trimmedInput = rawWeightInputString.trim();
-    
-    // Verifica se a string bruta já contém a unidade (g ou kg)
-    if (trimmedInput.toLowerCase().endsWith('g') || trimmedInput.toLowerCase().endsWith('kg')) {
-      formattedWeight = trimmedInput;
+  const weightInKg = calculation.details.weight; // Peso normalizado em KG
+
+  if (weightInKg !== null) {
+    if (weightInKg < 1) {
+      // Se for menor que 1kg, exibe em gramas (arredondado)
+      const weightInGrams = Math.round(weightInKg * 1000);
+      formattedWeight = `${weightInGrams.toLocaleString('pt-BR')} g`;
     } else {
-      // Se não contiver a unidade, anexa a unidade inferida
-      formattedWeight = `${trimmedInput} ${originalUnit}`;
+      // Se for 1kg ou mais, exibe em quilogramas (com 2 casas decimais)
+      formattedWeight = `${weightInKg.toFixed(2).replace('.', ',')} kg`;
     }
-  } else if (calculation.details.rawWeightValue !== null) {
-    // Lógica de fallback (se a string bruta não estiver disponível)
-    const rawWeightValue = calculation.details.rawWeightValue;
-    const valueString = rawWeightValue.toString().replace('.', ',');
-    formattedWeight = `${valueString} ${originalUnit}`;
   }
 
   return (
@@ -74,7 +66,7 @@ const CalculationDetails = ({ calculation }: CalculationDetailsProps) => {
             <span className="font-semibold text-foreground mt-1 sm:mt-0 sm:text-right">{calculation.details.category}</span>
           </div>
         )}
-        {calculation.details.rawWeightValue !== null && (
+        {calculation.details.weight !== null && (
           <div className="flex flex-col sm:flex-row sm:justify-between">
             <span className="text-muted-foreground">Peso:</span>
             <span className="font-semibold text-foreground mt-1 sm:mt-0 sm:text-right">{formattedWeight}</span>
