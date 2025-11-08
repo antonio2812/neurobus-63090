@@ -19,6 +19,7 @@ interface CalculationResult {
     additionalCost: number;
     category: string | null; // NOVO
     weight: number | null; // NOVO (em KG)
+    rawWeightValue: number | null; // NOVO: Valor numérico digitado pelo usuário
     weightUnit: 'g' | 'kg'; // NOVO
   };
 }
@@ -38,25 +39,19 @@ const formatPercentage = (value: number) => {
 const CalculationDetails = ({ calculation }: CalculationDetailsProps) => {
   
   // Determina o valor e a unidade a ser exibida
-  const weightInKg = calculation.details.weight;
+  const rawWeightValue = calculation.details.rawWeightValue;
   const originalUnit = calculation.details.weightUnit;
   
   let formattedWeight = 'N/A';
-  if (weightInKg !== null) {
-    if (originalUnit === 'g') {
-      // Se a unidade original for gramas, exibe o valor em gramas (multiplica por 1000)
-      const weightInGrams = weightInKg * 1000;
-      // Exibe como inteiro (ex: 500 g)
-      formattedWeight = `${weightInGrams.toFixed(0)} g`;
+  if (rawWeightValue !== null) {
+    // Formata o valor bruto: 0 casas decimais para gramas, 2 para kg (se não for inteiro)
+    const decimalPlaces = originalUnit === 'g' ? 0 : 2;
+    
+    // Se for kg e o valor for inteiro (ex: 2.0), exibe sem casas decimais.
+    if (originalUnit === 'kg' && rawWeightValue % 1 === 0) {
+        formattedWeight = `${rawWeightValue.toFixed(0)} kg`;
     } else {
-      // Se a unidade original for kg, exibe em kg
-      // Se for um número inteiro (ex: 2), exibe sem casas decimais.
-      if (weightInKg % 1 === 0) {
-        formattedWeight = `${weightInKg.toFixed(0)} kg`;
-      } else {
-        // Se for fracionado (ex: 2.5), exibe com duas casas decimais
-        formattedWeight = `${weightInKg.toFixed(2)} kg`;
-      }
+        formattedWeight = `${rawWeightValue.toFixed(decimalPlaces).replace('.', ',')} ${originalUnit}`;
     }
   }
 
@@ -72,7 +67,7 @@ const CalculationDetails = ({ calculation }: CalculationDetailsProps) => {
             <span className="font-semibold text-foreground mt-1 sm:mt-0 sm:text-right">{calculation.details.category}</span>
           </div>
         )}
-        {calculation.details.weight !== null && (
+        {calculation.details.rawWeightValue !== null && (
           <div className="flex flex-col sm:flex-row sm:justify-between">
             <span className="text-muted-foreground">Peso:</span>
             <span className="font-semibold text-foreground mt-1 sm:mt-0 sm:text-right">{formattedWeight}</span>

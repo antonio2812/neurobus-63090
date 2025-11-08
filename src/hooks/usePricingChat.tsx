@@ -20,7 +20,8 @@ interface CalculationResult {
     adType: string | null;
     additionalCost: number;
     category: string | null;
-    weight: number | null;
+    weight: number | null; // Em KG
+    rawWeightValue: number | null; // NOVO: Valor numérico digitado pelo usuário
     weightUnit: 'g' | 'kg';
   };
 }
@@ -69,7 +70,8 @@ export const usePricingChat = (marketplace: string) => {
   const [additionalCost, setAdditionalCost] = useState<number>(0);
   const [adType, setAdType] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [weight, setWeight] = useState<number | null>(null);
+  const [weight, setWeight] = useState<number | null>(null); // Peso em KG
+  const [rawWeightValue, setRawWeightValue] = useState<number | null>(null); // NOVO: Valor numérico digitado
   const [weightUnit, setWeightUnit] = useState<'g' | 'kg'>('kg');
   const { toast } = useToast();
   
@@ -90,6 +92,7 @@ export const usePricingChat = (marketplace: string) => {
     setAdType(null);
     setSelectedCategory(null);
     setWeight(null);
+    setRawWeightValue(null); // Resetando o novo estado
     setWeightUnit('kg');
     
     const newInitialStep = marketplace === 'Mercado Livre' ? 'select_ad_type' : 'select_category';
@@ -213,10 +216,8 @@ export const usePricingChat = (marketplace: string) => {
       let unit: 'g' | 'kg' = 'kg';
       let valueInKg: number;
 
-      const isGram = rawInput.includes('g');
-      const isKg = rawInput.includes('kg');
-      
-      const cleanValue = rawInput.replace(/r\$/g, '').replace(/g|kg/g, '').replace('.', '').replace(',', '.').trim();
+      // 1. Limpa o valor, mantendo apenas números e o separador decimal (vírgula ou ponto)
+      const cleanValue = rawInput.replace(/r\$/g, '').replace(/g|kg/g, '').replace(',', '.').trim();
       numericValue = parseFloat(cleanValue);
 
       if (isNaN(numericValue) || numericValue < 0) {
@@ -232,21 +233,30 @@ export const usePricingChat = (marketplace: string) => {
         return;
       }
       
+      // 2. Detecta a unidade e converte para KG (padrão da Edge Function)
+      const isGram = rawInput.includes('g');
+      const isKg = rawInput.includes('kg');
+      
       if (isGram && !isKg) {
+        // Se explicitamente 'g' (ex: 500g)
         valueInKg = numericValue / 1000;
         unit = 'g';
-      } else if (isKg || (numericValue >= 10 && !isGram)) {
+      } else if (isKg) {
+        // Se explicitamente 'kg' (ex: 0.5kg)
         valueInKg = numericValue;
         unit = 'kg';
-      } else if (numericValue < 10 && !isGram) {
-        valueInKg = numericValue;
-        unit = 'kg';
+      } else if (numericValue >= 100) {
+        // Se não houver unidade, mas o valor for grande (>= 100), assume-se gramas
+        valueInKg = numericValue / 1000;
+        unit = 'g';
       } else {
+        // Caso contrário (ex: 0.5, 2.3), assume-se quilogramas
         valueInKg = numericValue;
         unit = 'kg';
       }
       
       setWeight(valueInKg);
+      setRawWeightValue(numericValue); // Armazena o valor numérico original
       setWeightUnit(unit);
       setStep('cost');
       
@@ -307,7 +317,7 @@ export const usePricingChat = (marketplace: string) => {
         ]);
         setIsLoading(false);
 
-      } else if (step === 'margin' && cost !== null && selectedCategory !== null && weight !== null) {
+      } else if (step === 'margin' && cost !== null && selectedCategory !== null && weight !== null && rawWeightValue !== null) {
         const margin = numericValue;
         setStep('done');
         
@@ -332,6 +342,7 @@ export const usePricingChat = (marketplace: string) => {
               category: selectedCategory,
               weight,
               weightUnit,
+              rawWeightValue, // PASSANDO O NOVO VALOR
             },
           });
 
@@ -346,6 +357,7 @@ export const usePricingChat = (marketplace: string) => {
               details: {
                   ...data.calculation.details,
                   weightUnit: weightUnit,
+                  rawWeightValue: rawWeightValue, // GARANTINDO QUE O VALOR BRUTO ESTEJA NO RESULTADO
               }
           };
 

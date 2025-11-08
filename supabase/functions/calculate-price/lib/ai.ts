@@ -68,14 +68,11 @@ export const callAI = async (prompt: string, isJson: boolean = false) => {
 export const generateExplanation = async (calculation: CalculationResult) => {
     const { idealSalePrice, netProfit, netMargin, details } = calculation;
     
-    // Formatação do peso para a explicação
+    // Formatação do peso para a explicação (usando rawWeightValue)
     let weightDisplay = 'N/A';
-    if (details.weight !== null) {
-        if (details.weightUnit === 'g') {
-            weightDisplay = `${(details.weight * 1000).toFixed(0)} g`;
-        } else {
-            weightDisplay = `${details.weight.toFixed(2)} kg`;
-        }
+    if (details.rawWeightValue !== null) {
+        // Exibe o valor bruto formatado com a unidade original
+        weightDisplay = `${details.rawWeightValue.toFixed(details.weightUnit === 'g' ? 0 : 2).replace('.', ',')} ${details.weightUnit}`;
     }
     
     let amazonNote = '';
@@ -114,6 +111,7 @@ export const generateExplanation = async (calculation: CalculationResult) => {
     
     let sheinNote = '';
     if (details.marketplace === 'Shein') {
+        // Aqui usamos o peso em KG para o cálculo da taxa, mas exibimos o peso digitado
         sheinNote = ` (Regra Shein: A comissão de 16% foi aplicada. O custo de frete de R$${details.freightFee.toFixed(2)} foi baseado no peso de ${weightDisplay}).`;
     }
     

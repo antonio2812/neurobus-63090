@@ -18,6 +18,7 @@ export interface CalculationResult {
     additionalCost: number;
     category: string | null;
     weight: number | null; // Em KG
+    rawWeightValue: number | null; // NOVO: Valor numérico digitado pelo usuário
     weightUnit: 'g' | 'kg'; // Unidade original
   };
 }

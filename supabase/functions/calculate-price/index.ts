@@ -1,4 +1,4 @@
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
+import "https://deno.land/x/xhr@0.190.0/mod.ts";
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { calculatePrice } from "./lib/pricing.ts";
 import { generateExplanation } from "./lib/ai.ts";
@@ -30,10 +30,10 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { marketplace, cost, margin, adType, additionalCost, category, weight, weightUnit } = body;
+    const { marketplace, cost, margin, adType, additionalCost, category, weight, weightUnit, rawWeightValue } = body;
 
-    if (typeof cost !== 'number' || typeof margin !== 'number' || typeof additionalCost !== 'number' || !category || typeof weight !== 'number' || !weightUnit) {
-        return new Response(JSON.stringify({ error: 'Dados de entrada inválidos. Certifique-se de que custo, margem, custo adicional e peso são números, a categoria foi selecionada e a unidade de peso foi fornecida.' }), { status: 400, headers: corsHeaders });
+    if (typeof cost !== 'number' || typeof margin !== 'number' || typeof additionalCost !== 'number' || !category || typeof weight !== 'number' || !weightUnit || typeof rawWeightValue !== 'number') {
+        return new Response(JSON.stringify({ error: 'Dados de entrada inválidos. Certifique-se de que custo, margem, custo adicional, peso e rawWeightValue são números, a categoria foi selecionada e a unidade de peso foi fornecida.' }), { status: 400, headers: corsHeaders });
     }
     
     // Se for Mercado Livre, adType é obrigatório
@@ -42,7 +42,7 @@ serve(async (req) => {
     }
 
     // 2. Executa o cálculo
-    const calculation = calculatePrice(marketplace, cost, margin, adType, additionalCost, category, weight, weightUnit);
+    const calculation = calculatePrice(marketplace, cost, margin, adType, additionalCost, category, weight, weightUnit, rawWeightValue);
     
     // 3. Gera a explicação da IA
     const explanation = await generateExplanation(calculation);

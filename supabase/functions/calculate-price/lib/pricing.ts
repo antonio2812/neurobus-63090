@@ -206,7 +206,8 @@ export const calculatePrice = (
   additionalCost: number,
   category: string | null,
   weight: number | null, // Em KG
-  weightUnit: 'g' | 'kg' // Unidade original
+  weightUnit: 'g' | 'kg', // Unidade original
+  rawWeightValue: number | null // NOVO
 ): CalculationResult => {
   const desiredMarginRate = margin / 100;
   const productCost = cost + additionalCost;
@@ -270,6 +271,7 @@ export const calculatePrice = (
       category,
       weight,
       weightUnit,
+      rawWeightValue, // INCLUINDO O NOVO VALOR
     }
   };
 };
