@@ -185,7 +185,7 @@ export const usePricingChat = (marketplace: string) => {
           {
             id: Date.now() + 1,
             sender: 'ai',
-            content: "Qual é o **peso do produto** em gramas ou quilogramas (g, kg)? (Apenas o valor, ex: 0.5 ou 2.3)",
+            content: "Qual é o **peso do produto** em gramas ou quilogramas (g, kg)? (Apenas o valor, ex: 0.500 ou 2).",
           },
           {
             id: Date.now() + 2,

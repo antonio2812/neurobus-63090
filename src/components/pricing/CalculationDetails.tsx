@@ -44,15 +44,12 @@ const CalculationDetails = ({ calculation }: CalculationDetailsProps) => {
   
   let formattedWeight = 'N/A';
   if (rawWeightValue !== null) {
-    // Formata o valor bruto: 0 casas decimais para gramas, 2 para kg (se não for inteiro)
-    const decimalPlaces = originalUnit === 'g' ? 0 : 2;
+    // Formata o valor bruto: 
+    // 1. Converte para string e substitui ponto por vírgula
+    const valueString = rawWeightValue.toString().replace('.', ',');
     
-    // Se for kg e o valor for inteiro (ex: 2.0), exibe sem casas decimais.
-    if (originalUnit === 'kg' && rawWeightValue % 1 === 0) {
-        formattedWeight = `${rawWeightValue.toFixed(0)} kg`;
-    } else {
-        formattedWeight = `${rawWeightValue.toFixed(decimalPlaces).replace('.', ',')} ${originalUnit}`;
-    }
+    // 2. Adiciona a unidade original
+    formattedWeight = `${valueString} ${originalUnit}`;
   }
 
   return (
