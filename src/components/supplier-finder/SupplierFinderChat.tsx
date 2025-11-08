@@ -162,37 +162,38 @@ const SupplierFinderChat = ({ onBack }: SupplierFinderChatProps) => {
               <strong className="text-foreground">Nicho/Categoria:</strong> {supplier.productFocus}
             </p>
             
-            {/* 2. Modalidade de Venda (Reorganizado) */}
+            {/* 2. Modalidade de Venda (Lado a Lado) */}
             <p className="flex flex-col space-y-1">
               <strong className="text-foreground">Modalidade de Venda:</strong> 
-              
-              {/* Varejo */}
-              {(supplier.focus === 'Varejo' || supplier.focus === 'Ambos') && (
-                <span className="flex items-center gap-2 ml-4">
+              <span className="flex flex-wrap gap-x-4 gap-y-1 ml-4">
+                
+                {/* Varejo */}
+                {(supplier.focus === 'Varejo' || supplier.focus === 'Ambos') && (
                   <span className="text-foreground font-semibold">Varejo</span>
-                </span>
-              )}
-              
-              {/* Atacado + Pedido Mínimo */}
-              {(supplier.focus === 'Atacado' || supplier.focus === 'Ambos') && (
-                <span className="flex flex-col ml-4">
+                )}
+                
+                {/* Atacado */}
+                {(supplier.focus === 'Atacado' || supplier.focus === 'Ambos') && (
                   <span className="text-foreground font-semibold">Atacado</span>
-                  {supplier.minOrder > 0 && (
-                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                      (Quantidade Mínima de Pedidos: <strong className="text-foreground">{formatCurrency(supplier.minOrder)}</strong>)
-                    </span>
-                  )}
-                </span>
-              )}
-              
-              {/* Dropshipping (Simulação) */}
-              {(supplier.focus === 'Varejo' || supplier.focus === 'Ambos') && (
-                <span className="flex items-center gap-2 ml-4">
-                  <span className="text-foreground font-semibold">Dropshipping</span>
-                  <span className="text-green-400 text-xs">(Verificar no contato)</span>
-                </span>
-              )}
+                )}
+                
+                {/* Dropshipping */}
+                {(supplier.focus === 'Varejo' || supplier.focus === 'Ambos') && (
+                  <span className="text-foreground font-semibold">
+                    Dropshipping
+                    <span className="text-foreground text-xs ml-1">(Verificar no contato)</span>
+                  </span>
+                )}
+              </span>
             </p>
+            
+            {/* 2.1. Quantidade Mínima de Pedidos (Abaixo das Modalidades) */}
+            {(supplier.focus === 'Atacado' || supplier.focus === 'Ambos') && supplier.minOrder > 0 && (
+              <p className="flex items-center gap-2">
+                <strong className="text-foreground">Quantidade Mínima de Pedidos:</strong> 
+                <span className="text-foreground font-semibold">{formatCurrency(supplier.minOrder)}</span>
+              </p>
+            )}
             
             {/* 3. Contato (Site | Email) */}
             <p className="flex flex-col pt-2">
