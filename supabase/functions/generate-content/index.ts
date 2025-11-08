@@ -81,8 +81,8 @@ const callAI = async (prompt: string, isJson: boolean = false) => {
 
 // Função para gerar o prompt principal
 const generatePrompt = (productName: string, count: number): string => {
-  // ALTERADO: De EXATAMENTE 100 CARACTERES para NO MÁXIMO 100 CARACTERES
-  const titleFormat = "Gere um título de NO MÁXIMO 100 CARACTERES, focado em SEO para Google e Marketplaces (Mercado Livre, Shopee, Amazon), usando palavras-chave de alto valor (ex: Original, Melhor Preço, Envio Rápido, Lançamento). Formato: [PRODUTO] | [BENEFÍCIO 1] | [KEYWORD].";
+  // ALTERADO: Instrução de título mais forte em SEO
+  const titleFormat = "Gere um título de NO MÁXIMO 100 CARACTERES, focado em SEO para Google e Marketplaces (Mercado Livre, Shopee, Amazon). O título deve ser uma combinação estratégica de: [NOME DO PRODUTO] + [MARCA/MODELO] + [BENEFÍCIO PRINCIPAL] + [PALAVRAS-CHAVE DE ALTO VALOR (ex: Original, Melhor Preço, Envio Rápido, Lançamento, Oferta, Promoção, Frete Grátis)].";
   
   return `
     Você é um especialista em SEO e Copywriting para e-commerce e marketplaces (Mercado Livre, Shopee, Amazon).
