@@ -16,7 +16,7 @@ const AppStoreMaintenanceModal = ({ children }: AppStoreMaintenanceModalProps) =
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[550px] p-6 md:p-8 bg-card border-accent/50 shadow-glow-accent/50 max-h-[90vh] overflow-y-auto text-center">
+      <DialogContent className="sm:max-w-[650px] p-6 md:p-8 bg-card border-accent/50 shadow-glow-accent/50 max-h-[90vh] overflow-y-auto text-center">
         
         <DialogHeader className="text-center">
           <div className="flex items-center justify-center mb-4">
