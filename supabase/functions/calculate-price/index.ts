@@ -23,7 +23,7 @@ serve(async (req) => {
   
   console.log("Edge Function 'calculate-price' started execution.");
 
-  // 1. Verificação da Chave do Google Gemini / OpenRouter (para a explicação da IA)
+  // 1. Verificação da Chave do Google Gemini / OpenRouter
   if (!GOOGLE_GEMINI_API_KEY && !OPENROUTER_API_KEY) {
     console.warn('Aviso: Nenhuma chave de API (OpenRouter ou Gemini) está definida. A explicação da IA pode falhar.');
   }
