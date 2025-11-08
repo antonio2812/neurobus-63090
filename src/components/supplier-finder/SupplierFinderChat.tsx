@@ -54,36 +54,51 @@ const formatCurrency = (value: number) => {
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 };
 
-// Função auxiliar para tornar o link clicável e formatar o contato
+// Função auxiliar para formatar o contato (Site | Email)
 const formatContact = (contact: string) => {
-  // Tenta detectar se é um URL (começa com http/https)
-  if (contact.startsWith('http')) {
-    // Garante que o link tenha um texto amigável (ex: "Acessar Site")
-    const displayUrl = contact.replace(/^https?:\/\/(www\.)?/, '').split('/')[0];
+  const parts = contact.split('|').map(p => p.trim()).filter(p => p.length > 0);
+  
+  return parts.map((part, index) => {
+    let element;
+    
+    // 1. Tenta detectar se é um URL
+    if (part.startsWith('http')) {
+      const displayUrl = part.replace(/^https?:\/\/(www\.)?/, '').split('/')[0];
+      element = (
+        <a 
+          href={part} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-blue-400 hover:text-blue-300 hover:underline transition-colors"
+        >
+          {displayUrl}
+        </a>
+      );
+    } 
+    // 2. Tenta detectar se é um email
+    else if (part.includes('@')) {
+      element = (
+        <a 
+          href={`mailto:${part}`} 
+          className="text-blue-400 hover:text-blue-300 hover:underline transition-colors"
+        >
+          {part}
+        </a>
+      );
+    } 
+    // 3. Texto simples (fallback)
+    else {
+      element = <span>{part}</span>;
+    }
+    
+    // Adiciona o pipe de separação se não for o último elemento
     return (
-      <a 
-        href={contact} 
-        target="_blank" 
-        rel="noopener noreferrer" 
-        className="text-blue-400 hover:text-blue-300 hover:underline transition-colors"
-      >
-        Acessar Site ({displayUrl})
-      </a>
+      <span key={index} className="inline-flex items-center">
+        {element}
+        {index < parts.length - 1 && <span className="mx-2 text-muted-foreground">|</span>}
+      </span>
     );
-  }
-  // Tenta detectar se é um email
-  if (contact.includes('@')) {
-    return (
-      <a 
-        href={`mailto:${contact}`} 
-        className="text-blue-400 hover:text-blue-300 hover:underline transition-colors"
-      >
-        {contact}
-      </a>
-    );
-  }
-  // Retorna o contato como texto simples (telefone, etc.)
-  return contact;
+  });
 };
 
 
@@ -147,32 +162,46 @@ const SupplierFinderChat = ({ onBack }: SupplierFinderChatProps) => {
               <strong className="text-foreground">Nicho/Categoria:</strong> {supplier.productFocus}
             </p>
             
-            {/* 2. Modalidade de Venda */}
-            <p>
+            {/* 2. Modalidade de Venda (Reorganizado) */}
+            <p className="flex flex-col space-y-1">
               <strong className="text-foreground">Modalidade de Venda:</strong> 
-              <span className="font-semibold text-accent ml-1">{supplier.focus}</span>
+              
+              {/* Varejo */}
+              {(supplier.focus === 'Varejo' || supplier.focus === 'Ambos') && (
+                <span className="flex items-center gap-2 ml-4">
+                  <span className="text-foreground font-semibold">Varejo</span>
+                </span>
+              )}
+              
+              {/* Atacado + Pedido Mínimo */}
+              {(supplier.focus === 'Atacado' || supplier.focus === 'Ambos') && (
+                <span className="flex flex-col ml-4">
+                  <span className="text-foreground font-semibold">Atacado</span>
+                  {supplier.minOrder > 0 && (
+                    <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                      (Quantidade Mínima de Pedidos: <strong className="text-foreground">{formatCurrency(supplier.minOrder)}</strong>)
+                    </span>
+                  )}
+                </span>
+              )}
+              
+              {/* Dropshipping (Simulação) */}
+              {(supplier.focus === 'Varejo' || supplier.focus === 'Ambos') && (
+                <span className="flex items-center gap-2 ml-4">
+                  <span className="text-foreground font-semibold">Dropshipping</span>
+                  <span className="text-green-400 text-xs">(Verificar no contato)</span>
+                </span>
+              )}
             </p>
             
-            {/* 2.1. Detalhes da Modalidade (Atacado/Pedido Mínimo) */}
-            {(supplier.focus === 'Atacado' || supplier.focus === 'Ambos') && (
-              <p className="flex items-center gap-2 ml-4">
-                <DollarSign className="h-4 w-4 text-accent shrink-0" />
-                <strong className="text-foreground">Quantidade Mínima de Pedidos (Atacado):</strong> {formatCurrency(supplier.minOrder)}
-              </p>
-            )}
-            
-            {/* 2.2. Dropshipping (Simulação) */}
-            {(supplier.focus === 'Varejo' || supplier.focus === 'Ambos') && (
-              <p className="flex items-center gap-2 ml-4">
-                <strong className="text-foreground">Dropshipping:</strong> 
-                <span className="text-green-400 font-semibold">Disponível (Verificar no contato)</span>
-              </p>
-            )}
-            
-            {/* 3. Contato (Site Clicável / Email) */}
-            <p className="flex items-center gap-2 pt-2">
-              <Mail className="h-4 w-4 text-accent shrink-0" />
-              <strong className="text-foreground">Contato:</strong> {formatContact(supplier.contact)}
+            {/* 3. Contato (Site | Email) */}
+            <p className="flex flex-col pt-2">
+              <strong className="text-foreground flex items-center gap-2 mb-1">
+                <Mail className="h-4 w-4 text-accent shrink-0" /> Contato:
+              </strong>
+              <span className="ml-6 text-sm text-muted-foreground">
+                {formatContact(supplier.contact)}
+              </span>
             </p>
           </div>
         </Card>

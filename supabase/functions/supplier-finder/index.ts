@@ -89,19 +89,19 @@ const generateSupplierPrompt = (category: string, supplierType: 'Nacional' | 'Im
     Sua tarefa é simular a busca e identificação de 5 fornecedores (Atacado e Varejo) ideais para a categoria de produtos: "${category}", focando em fornecedores do tipo "${supplierType}".
     
     **INSTRUÇÕES CRÍTICAS:**
-    1. **REALISMO E ATUALIDADE:** Simule 5 fornecedores que pareçam reais e sejam adequados para o mercado brasileiro (Mercado Livre, Shopee, Amazon). Os dados devem ser recentes (2024/2025).
+    1. **REALISMO E ATUALIDADE (2024/2025):** Simule 5 fornecedores que pareçam reais e sejam adequados para o mercado brasileiro (Mercado Livre, Shopee, Amazon). Os dados devem ser ATUAIS (2024/2025).
     2. **FOCO:** Todos os fornecedores devem ser do tipo "${supplierType}".
     3. **ATACADO/VAREJO:** Inclua fornecedores que atendam Atacado, Varejo ou Ambos.
     4. Para cada fornecedor, forneça:
         a. O nome da empresa (name).
         b. O tipo ('Nacional' ou 'Importadora') (type).
         c. O foco principal de produtos (productFocus).
-        d. Um contato simulado (ex: site, email ou telefone fictício) (contact).
+        d. **CONTATO COMPLETO:** Um contato simulado que inclua OBRIGATORIAMENTE um URL de site funcional (ex: https://www.lojaexemplo.com.br) E um E-mail funcional (ex: contato@lojaexemplo.com.br). Separe o site e o e-mail por um pipe (|). Exemplo: https://www.lojaexemplo.com.br | contato@lojaexemplo.com.br (contact).
         e. O valor mínimo de pedido (minOrder) em Reais (R$). O valor deve ser um número (float) sem formatação de moeda.
         f. O foco de venda ('Atacado', 'Varejo' ou 'Ambos') (focus).
     
-    Formato de Saída: Retorne um objeto JSON com a chave 'suppliers' contendo um array de objetos, cada um com as chaves 'name', 'type', 'productFocus', 'contact', 'minOrder' (number) e 'focus' (string).
-    Exemplo: {"suppliers": [{"name": "...", "type": "Nacional", "productFocus": "...", "contact": "...", "minOrder": 500.00, "focus": "Atacado"}, ...]}
+    Formato de Saída: Retorne um objeto JSON com a chave 'suppliers' contendo um array de objetos, cada um com as chaves 'name', 'type', 'productFocus', 'contact' (string contendo URL | Email), 'minOrder' (number) e 'focus' (string).
+    Exemplo: {"suppliers": [{"name": "...", "type": "Nacional", "productFocus": "...", "contact": "https://www.site.com.br | email@site.com.br", "minOrder": 500.00, "focus": "Atacado"}, ...]}
   `;
 };
 
