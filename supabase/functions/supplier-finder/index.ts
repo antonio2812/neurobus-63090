@@ -53,7 +53,8 @@ const callAI = async (prompt: string, isJson: boolean = false) => {
         return data.choices?.[0]?.message?.content || "A IA não retornou conteúdo.";
 
     } else if (GOOGLE_GEMINI_API_KEY) {
-        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${GOOGLE_GEMINI_API_KEY}`;
+        // ATUALIZADO: Usando gemini-2.5-flash
+        const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GOOGLE_GEMINI_API_KEY}`;
 
         const response = await fetch(GEMINI_URL, {
             method: 'POST',
