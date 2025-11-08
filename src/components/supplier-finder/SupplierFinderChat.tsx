@@ -163,7 +163,7 @@ const SupplierFinderChat = ({ onBack }: SupplierFinderChatProps) => {
               
               {/* Badge (Tipo) - Ordem 1 no mobile, Ordem 2 no desktop */}
               <span className={cn(
-                "text-sm font-semibold px-3 py-1 rounded-full mb-2 sm:mb-0 sm:order-2", // Adicionado mb-2 para mobile
+                "text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 rounded-full mb-2 sm:mb-0 sm:order-2", // Alterado text-sm para text-xs e px-3 para px-2 (mobile-first)
                 supplier.type === 'Nacional' ? "bg-blue-500/20 text-blue-400" : "bg-green-500/20 text-green-400"
               )}>
                 {supplier.type}
