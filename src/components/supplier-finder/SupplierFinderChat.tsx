@@ -176,13 +176,15 @@ const SupplierFinderChat = ({ onBack }: SupplierFinderChatProps) => {
               {/* 1. Nicho/Categoria (Alinhado à direita) */}
               <div className="flex justify-between items-start">
                 <strong className="text-foreground shrink-0 pr-4">Nicho/Categoria:</strong> 
-                <span className="text-right max-w-[60%]">{supplier.productFocus}</span>
+                {/* Ajustado max-w para 70% para dar mais espaço e evitar que fique muito no canto */}
+                <span className="text-right max-w-[70%]">{supplier.productFocus}</span>
               </div>
               
               {/* 2. Modalidade de Venda (Alinhado à direita, combinado com Quantidade Mínima) */}
               <div className="flex justify-between items-start pt-2 border-t border-border/50">
                 <strong className="text-foreground shrink-0 pr-4">Modalidade de Venda:</strong> 
-                <span className="text-right max-w-[60%] text-sm">
+                {/* Ajustado max-w para 70% */}
+                <span className="text-right max-w-[70%] text-sm">
                   {modalityString}
                 </span>
               </div>
@@ -192,8 +194,8 @@ const SupplierFinderChat = ({ onBack }: SupplierFinderChatProps) => {
                 <strong className="text-foreground flex items-center gap-2 mb-1 shrink-0 pr-4">
                   <Mail className="h-4 w-4 text-accent shrink-0" /> Contato:
                 </strong>
-                {/* Contato formatado (Site | Email) no lado direito */}
-                <span className="text-right max-w-[60%] text-sm">
+                {/* Ajustado max-w para 70% */}
+                <span className="text-right max-w-[70%] text-sm">
                   {formatContact(supplier.contact)}
                 </span>
               </div>
