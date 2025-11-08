@@ -173,29 +173,26 @@ const SupplierFinderChat = ({ onBack }: SupplierFinderChatProps) => {
             
             <div className="space-y-3 pt-2 text-sm text-muted-foreground">
               
-              {/* 1. Nicho/Categoria (Alinhado à direita) */}
-              <div className="flex justify-between items-start">
+              {/* 1. Nicho/Categoria */}
+              <div className="flex flex-col md:flex-row md:justify-between md:items-start">
                 <strong className="text-foreground shrink-0 pr-4">Nicho/Categoria:</strong> 
-                {/* Ajustado max-w para 70% para dar mais espaço e evitar que fique muito no canto */}
-                <span className="text-right max-w-[70%]">{supplier.productFocus}</span>
+                <span className="text-left md:text-right mt-1 md:mt-0 md:max-w-[70%]">{supplier.productFocus}</span>
               </div>
               
-              {/* 2. Modalidade de Venda (Alinhado à direita, combinado com Quantidade Mínima) */}
-              <div className="flex justify-between items-start pt-2 border-t border-border/50">
+              {/* 2. Modalidade de Venda */}
+              <div className="flex flex-col md:flex-row md:justify-between md:items-start pt-2 border-t border-border/50">
                 <strong className="text-foreground shrink-0 pr-4">Modalidade de Venda:</strong> 
-                {/* Ajustado max-w para 70% */}
-                <span className="text-right max-w-[70%] text-sm">
+                <span className="text-left md:text-right mt-1 md:mt-0 md:max-w-[70%] text-sm">
                   {modalityString}
                 </span>
               </div>
 
-              {/* 3. Contato (Site | Email) (Alinhado à direita) */}
-              <div className="flex justify-between items-start pt-2 border-t border-border/50">
+              {/* 3. Contato */}
+              <div className="flex flex-col md:flex-row md:justify-between md:items-start pt-2 border-t border-border/50">
                 <strong className="text-foreground flex items-center gap-2 mb-1 shrink-0 pr-4">
                   <Mail className="h-4 w-4 text-accent shrink-0" /> Contato:
                 </strong>
-                {/* Ajustado max-w para 70% */}
-                <span className="text-right max-w-[70%] text-sm">
+                <span className="text-left md:text-right mt-1 md:mt-0 md:max-w-[70%] text-sm">
                   {formatContact(supplier.contact)}
                 </span>
               </div>
