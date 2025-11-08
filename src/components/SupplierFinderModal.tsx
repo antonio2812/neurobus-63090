@@ -21,7 +21,8 @@ const SupplierFinderModal = ({ children }: SupplierFinderModalProps) => {
       </DialogTrigger>
       <DialogContent 
         className={cn(
-          "sm:max-w-[90vw] md:max-w-[800px] p-0 bg-card border-border shadow-elevated max-h-[95vh] overflow-hidden",
+          // Aumentando a largura máxima para 5xl (1024px)
+          "sm:max-w-[90vw] md:max-w-5xl p-0 bg-card border-border shadow-elevated max-h-[95vh] overflow-hidden",
           // Estilo do botão de fechar (X)
           "[&>button]:border-transparent [&>button:hover]:border-transparent [&>button:hover]:bg-transparent [&>button:hover]:text-foreground"
         )}
