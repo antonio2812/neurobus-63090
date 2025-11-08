@@ -46,7 +46,7 @@ interface ChatMessage {
   isAlert?: boolean;
 }
 
-type ChatStep = 'select_category' | 'weight' | 'cost' | 'additional_cost' | 'margin' | 'done';
+type ChatStep = 'select_ad_type' | 'select_category' | 'weight' | 'cost' | 'additional_cost' | 'margin' | 'done';
 
 const categories = [
   "Perfumaria & cosméticos (beleza)",
@@ -70,13 +70,14 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [step, setStep] = useState<ChatStep>('select_category'); // Começa na categoria
+  // Define o passo inicial: se for Mercado Livre, começa em 'select_ad_type', senão, em 'select_category'
+  const [step, setStep] = useState<ChatStep>(marketplace === 'Mercado Livre' ? 'select_ad_type' : 'select_category'); 
   const [cost, setCost] = useState<number | null>(null);
   const [additionalCost, setAdditionalCost] = useState<number>(0);
   const [adType, setAdType] = useState<string | null>(null);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // NOVO
-  const [weight, setWeight] = useState<number | null>(null); // NOVO (em KG)
-  const [weightUnit, setWeightUnit] = useState<'g' | 'kg'>('kg'); // NOVO (Unidade original para exibição)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [weight, setWeight] = useState<number | null>(null);
+  const [weightUnit, setWeightUnit] = useState<'g' | 'kg'>('kg');
   const chatEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -102,23 +103,34 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
       });
     }
     
-    // Se for Mercado Livre, define o adType padrão como 'Clássico'
-    if (marketplace === 'Mercado Livre') {
-        setAdType('Clássico');
-    }
-
     setMessages(initialMessages);
     
-    // Primeira pergunta: Categoria
+    // Lógica da primeira pergunta
     setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: 1,
-          sender: 'ai',
-          content: "Para começar, qual é a **Categoria do Produto** que você deseja precificar?",
-        }
-      ]);
+      if (marketplace === 'Mercado Livre') {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: 1,
+            sender: 'ai',
+            content: "Para o **Mercado Livre**, qual **tipo de anúncio** você deseja usar? (Isso afeta as taxas de comissão)",
+            options: [
+              { label: "Clássico (14% de comissão)", value: "Clássico" },
+              { label: "Premium (18% de comissão)", value: "Premium" },
+            ]
+          }
+        ]);
+      } else {
+        // Se não for Mercado Livre, vai direto para a categoria
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: 1,
+            sender: 'ai',
+            content: "Para começar, qual é a **Categoria do Produto** que você deseja precificar?",
+          }
+        ]);
+      }
     }, 500);
   }, [marketplace]);
 
@@ -127,7 +139,29 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
   }, [messages]);
 
   const handleOptionSelect = (value: string) => {
-    if (step === 'select_category') {
+    if (step === 'select_ad_type') {
+      setAdType(value);
+      setStep('select_category');
+      
+      // Adiciona a resposta do usuário
+      setMessages((prev) => [
+        ...prev.filter(msg => !msg.options),
+        { id: Date.now(), sender: 'user', content: `Tipo de anúncio: ${value}` },
+      ]);
+
+      // Próxima pergunta: Categoria
+      setTimeout(() => {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now() + 1,
+            sender: 'ai',
+            content: "Certo. Agora, qual é a **Categoria do Produto** que você deseja precificar?",
+          }
+        ]);
+      }, 500);
+      
+    } else if (step === 'select_category') {
       setSelectedCategory(value);
       setStep('weight');
       
@@ -137,7 +171,7 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
         { id: Date.now(), sender: 'user', content: `Categoria: ${value}` },
       ]);
 
-      // Próxima pergunta: Peso (AJUSTADA)
+      // Próxima pergunta: Peso
       setTimeout(() => {
         setMessages((prev) => [
           ...prev,
@@ -157,7 +191,7 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
   };
 
   const handleSend = async () => {
-    if (!input.trim() || isLoading || step === 'done' || step === 'select_category') return;
+    if (!input.trim() || isLoading || step === 'done' || step === 'select_category' || step === 'select_ad_type') return;
 
     const userMessage: ChatMessage = {
       id: Date.now(),
@@ -404,23 +438,27 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
   // Determina o placeholder do input
   const inputPlaceholder = (() => {
     if (step === 'done') return "Precificação concluída.";
-    if (step === 'select_category') return "Selecione uma opção acima...";
+    if (step === 'select_category' || step === 'select_ad_type') return "Selecione uma opção acima...";
     // Alterado para "Digite aqui..." para os passos de entrada de dados
     if (step === 'weight' || step === 'cost' || step === 'additional_cost' || step === 'margin') return "Digite aqui...";
     return "Digite aqui...";
   })();
   
   // Determina se o input deve estar desabilitado
-  const isInputDisabled = isLoading || step === 'done' || step === 'select_category';
+  const isInputDisabled = isLoading || step === 'done' || step === 'select_category' || step === 'select_ad_type';
 
   const handleNewPricing = () => {
-    setStep('select_category');
+    // Resetar todos os estados
     setCost(null);
     setAdditionalCost(0);
-    setAdType(marketplace === 'Mercado Livre' ? 'Clássico' : null); // Mantém o adType padrão para ML
+    setAdType(null);
     setSelectedCategory(null);
     setWeight(null);
-    setWeightUnit('kg'); // Reset da unidade
+    setWeightUnit('kg');
+    
+    // Define o passo inicial: se for Mercado Livre, volta para 'select_ad_type', senão, para 'select_category'
+    const initialStep = marketplace === 'Mercado Livre' ? 'select_ad_type' : 'select_category';
+    setStep(initialStep);
     
     const newInitialMessages: ChatMessage[] = [initialMessage];
     if (marketplace === "Facebook") {
@@ -434,14 +472,29 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
     setMessages(newInitialMessages);
     
     setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now() + 4,
-          sender: 'ai',
-          content: "Para começar, qual é a **Categoria do Produto** que você deseja precificar?",
-        }
-      ]);
+      if (marketplace === 'Mercado Livre') {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now() + 4,
+            sender: 'ai',
+            content: "Para o **Mercado Livre**, qual **tipo de anúncio** você deseja usar? (Isso afeta as taxas de comissão)",
+            options: [
+              { label: "Clássico (14% de comissão)", value: "Clássico" },
+              { label: "Premium (18% de comissão)", value: "Premium" },
+            ]
+          }
+        ]);
+      } else {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now() + 4,
+            sender: 'ai',
+            content: "Para começar, qual é a **Categoria do Produto** que você deseja precificar?",
+          }
+        ]);
+      }
     }, 100);
   };
 
@@ -497,7 +550,25 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
           </div>
         )}
         
-        {/* Opções de Ad Type (REMOVIDO) */}
+        {/* Opções de Ad Type (Aparece apenas no passo 'select_ad_type') */}
+        {step === 'select_ad_type' && !isLoading && messages.some(m => m.options) && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
+            {messages.find(m => m.options)?.options?.map((option) => (
+              <Button
+                key={option.value}
+                variant="outline"
+                className={cn(
+                  "w-full justify-center text-center h-auto py-3 px-4 border-accent text-accent transition-all duration-300",
+                  "hover:bg-accent hover:text-black hover:border-accent"
+                )}
+                onClick={() => handleOptionSelect(option.value)}
+                disabled={isLoading}
+              >
+                {option.label}
+              </Button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Input e Botão de Envio */}

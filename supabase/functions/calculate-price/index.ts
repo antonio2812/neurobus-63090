@@ -138,6 +138,7 @@ const calculatePrice = (
 
   if (marketplace === 'Mercado Livre') {
     // 1. Define a comissão baseada no adType
+    // Se adType for nulo (o que não deve acontecer se o fluxo for seguido), assume Clássico
     commissionRate = adType === 'Premium' ? 0.18 : 0.14;
     
     // 2. TIER 1: Preço < R$19.00
@@ -466,6 +467,11 @@ serve(async (req) => {
 
     if (typeof cost !== 'number' || typeof margin !== 'number' || typeof additionalCost !== 'number' || !category || typeof weight !== 'number' || !weightUnit) {
         return new Response(JSON.stringify({ error: 'Dados de entrada inválidos. Certifique-se de que custo, margem, custo adicional e peso são números, a categoria foi selecionada e a unidade de peso foi fornecida.' }), { status: 400, headers: corsHeaders });
+    }
+    
+    // Se for Mercado Livre, adType é obrigatório
+    if (marketplace === 'Mercado Livre' && !adType) {
+        return new Response(JSON.stringify({ error: 'Tipo de anúncio (adType) é obrigatório para o Mercado Livre.' }), { status: 400, headers: corsHeaders });
     }
 
     // 2. Executa o cálculo (weight já está em KG)
