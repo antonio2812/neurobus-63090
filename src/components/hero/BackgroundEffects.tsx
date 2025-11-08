@@ -7,6 +7,7 @@ const BackgroundEffects = () => {
   const [nextImageIndex, setNextImageIndex] = useState(1);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isLargeScreen, setIsLargeScreen] = useState(false); // Novo estado para 1630px
 
   const backgroundImages = [
     "/lovable-uploads/4aa271d3-a6a3-4aab-9924e55da6a2.png", // Satellite in orbit
@@ -17,12 +18,13 @@ const BackgroundEffects = () => {
   ];
 
   useEffect(() => {
-    // Usando 1630px como o limite superior para o ajuste fino, mas mantendo 640px para o mobile
-    const checkMobile = () => {
+    const checkScreenSize = () => {
+      // Usando 1630px como o limite superior para o ajuste fino
+      setIsLargeScreen(window.innerWidth > 1630);
       setIsMobile(window.innerWidth <= 640);
     };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
 
     const handleScroll = () => {
       setScrollOffset(window.pageYOffset);
@@ -41,7 +43,7 @@ const BackgroundEffects = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('resize', checkMobile);
+      window.removeEventListener('resize', checkScreenSize);
     };
   }, []);
 
@@ -65,13 +67,16 @@ const BackgroundEffects = () => {
 
   // Determine dynamic styles based on mobile state
   const baseBackgroundStyle = (index: number) => {
-    // Aplicando o scale e parallax apenas em telas maiores que 1630px (ou um valor grande)
-    // Para telas menores, mantemos o scale em 1 para evitar overflow.
-    const isLargeScreen = window.innerWidth > 1630;
     
-    const parallaxTransform = isMobile || !isLargeScreen
-      ? 'translateY(0px) scale(1)' 
-      : `translateY(${scrollOffset * 0.5}px) scale(1.05)`;
+    // 1. Parallax e Escala Vertical (Apenas em telas grandes)
+    const parallaxY = isLargeScreen ? scrollOffset * 0.5 : 0;
+    const scaleY = isLargeScreen ? 1.05 : 1;
+    
+    // 2. Escala Horizontal (Diminuir largura em telas menores que 1630px)
+    // Se não for tela grande (<= 1630px), aplicamos uma escala horizontal menor (ex: 0.9)
+    const scaleX = isLargeScreen ? 1.05 : 0.9; 
+
+    const transformStyle = `translateY(${parallaxY}px) scale(${scaleX}, ${scaleY})`;
     
     const mousePositionStyle = isMobile 
       ? 'center' // Fixo no centro para mobile
@@ -79,10 +84,10 @@ const BackgroundEffects = () => {
 
     return {
       backgroundImage: `url(${backgroundImages[index]})`,
-      backgroundSize: 'cover', // Sempre cover
+      backgroundSize: 'cover', // Sempre cover para maximizar a altura
       backgroundPosition: mousePositionStyle,
       backgroundRepeat: 'no-repeat',
-      transform: parallaxTransform,
+      transform: transformStyle,
       opacity: index === currentImageIndex 
         ? (isTransitioning ? 0 : 1) 
         : (index === nextImageIndex ? (isTransitioning ? 1 : 0) : 0),
