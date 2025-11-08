@@ -22,6 +22,7 @@ interface CalculationResult {
     additionalCost: number;
     category: string | null; // NOVO
     weight: number | null; // NOVO
+    weightUnit: 'g' | 'kg'; // NOVO
   };
 }
 
@@ -97,8 +98,8 @@ const ChatBubble = ({ message, onOptionSelect, isLoading }: ChatBubbleProps) => 
                 variant="outline"
                 size="sm"
                 className={cn(
-                  "w-full justify-start bg-transparent border-white text-white transition-all duration-300",
-                  "hover:bg-accent hover:text-black hover:border-accent"
+                  "w-full justify-center bg-transparent border-accent text-accent transition-all duration-300", // Usando border-accent e text-accent
+                  "hover:bg-accent hover:text-black hover:border-accent" // Hover para preto no fundo amarelo
                 )}
                 onClick={() => onOptionSelect(option.value)}
                 disabled={isLoading}

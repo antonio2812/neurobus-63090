@@ -115,8 +115,9 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
             sender: 'ai',
             content: "Para o **Mercado Livre**, qual **tipo de anúncio** você deseja usar? (Isso afeta as taxas de comissão)",
             options: [
-              { label: "Clássico (14% de comissão)", value: "Clássico" },
-              { label: "Premium (18% de comissão)", value: "Premium" },
+              // TEXTOS ATUALIZADOS AQUI
+              { label: "Clássico (14% de taxa)", value: "Clássico" },
+              { label: "Premium (18% de taxa)", value: "Premium" },
             ]
           }
         ]);
@@ -480,8 +481,8 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
             sender: 'ai',
             content: "Para o **Mercado Livre**, qual **tipo de anúncio** você deseja usar? (Isso afeta as taxas de comissão)",
             options: [
-              { label: "Clássico (14% de comissão)", value: "Clássico" },
-              { label: "Premium (18% de comissão)", value: "Premium" },
+              { label: "Clássico (14% de taxa)", value: "Clássico" },
+              { label: "Premium (18% de taxa)", value: "Premium" },
             ]
           }
         ]);
@@ -550,25 +551,7 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
           </div>
         )}
         
-        {/* Opções de Ad Type (Aparece apenas no passo 'select_ad_type') */}
-        {step === 'select_ad_type' && !isLoading && messages.some(m => m.options) && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
-            {messages.find(m => m.options)?.options?.map((option) => (
-              <Button
-                key={option.value}
-                variant="outline"
-                className={cn(
-                  "w-full justify-center text-center h-auto py-3 px-4 border-accent text-accent transition-all duration-300",
-                  "hover:bg-accent hover:text-black hover:border-accent"
-                )}
-                onClick={() => handleOptionSelect(option.value)}
-                disabled={isLoading}
-              >
-                {option.label}
-              </Button>
-            ))}
-          </div>
-        )}
+        {/* Opções de Ad Type (REMOVIDO DAQUI - AGORA É RENDERIZADO APENAS PELO CHATBUBBLE) */}
       </div>
 
       {/* Input e Botão de Envio */}
