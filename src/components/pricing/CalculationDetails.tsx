@@ -43,28 +43,28 @@ const CalculationDetails = ({ calculation }: CalculationDetailsProps) => {
   let formattedWeight = 'N/A';
   const weightInKg = calculation.details.weight; // Peso normalizado em KG
   const rawValue = calculation.details.rawWeightValue; // Valor numérico digitado (ex: 500 ou 0.5)
-  const rawUnit = calculation.details.weightUnit; // Unidade detectada (g ou kg)
 
-  if (weightInKg !== null && rawValue !== null) {
-    if (weightInKg < 1 && rawUnit === 'g') {
-      // Se for menor que 1kg E a unidade original for gramas (ex: 500g)
-      // Exibe o valor original em gramas (rawValue)
-      formattedWeight = `${rawValue.toLocaleString('pt-BR')} g`;
-    } else if (weightInKg >= 1 || rawUnit === 'kg') {
-      // Se for 1kg ou mais, ou se a unidade original for kg (ex: 1.5kg, 5kg, 0.5kg)
+  if (weightInKg !== null) {
+    if (weightInKg < 1) {
+      // Se for menor que 1kg, exibe em gramas (arredondado)
+      const weightInGrams = Math.round(weightInKg * 1000);
+      // Usa toLocaleString para garantir a formatação correta (ex: 500 g)
+      formattedWeight = `${weightInGrams.toLocaleString('pt-BR', { maximumFractionDigits: 0 })} g`;
+    } else {
+      // Se for 1kg ou mais, exibe em quilogramas
+      
+      // Usa o valor bruto digitado (rawValue) para manter a precisão original (ex: 5 vs 5.5)
+      const valueToDisplay = rawValue !== null ? rawValue : weightInKg;
       
       // Verifica se o valor é um número inteiro para evitar .00 desnecessário
-      const isInteger = rawValue % 1 === 0;
+      const isInteger = valueToDisplay % 1 === 0;
       
       // Formata o valor: se for inteiro, sem casas decimais; se não, com 2 casas.
       const formattedValue = isInteger 
-        ? rawValue.toLocaleString('pt-BR', { maximumFractionDigits: 0 })
-        : rawValue.toFixed(2).replace('.', ',');
+        ? valueToDisplay.toLocaleString('pt-BR', { maximumFractionDigits: 0 })
+        : valueToDisplay.toFixed(2).replace('.', ',');
         
       formattedWeight = `${formattedValue} kg`;
-    } else {
-        // Fallback para o valor bruto digitado se a lógica acima não cobrir
-        formattedWeight = calculation.details.rawWeightInputString || 'N/A';
     }
   }
 
