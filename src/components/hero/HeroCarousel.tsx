@@ -62,7 +62,8 @@ const HeroCarousel = () => {
               "absolute inset-0 bg-no-repeat bg-center brightness-[0.3] blur-sm",
               "bg-cover" // Garante que a imagem preencha o contêiner sem vazar
             )}
-            style={{ backgroundImage: `url(${image})` }}
+            // CORREÇÃO: Usando encodeURI para lidar com espaços nos nomes dos arquivos
+            style={{ backgroundImage: `url(${encodeURI(image)})` }}
           />
         </div>
       ))}
