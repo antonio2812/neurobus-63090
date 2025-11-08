@@ -41,20 +41,25 @@ const CalculationDetails = ({ calculation }: CalculationDetailsProps) => {
   
   // Determina o valor e a unidade a ser exibida
   const rawWeightInputString = calculation.details.rawWeightInputString;
+  const originalUnit = calculation.details.weightUnit;
   
   let formattedWeight = 'N/A';
+  
   if (rawWeightInputString) {
-    // Usa a string bruta digitada pelo usuário
-    formattedWeight = rawWeightInputString;
-  } else {
+    const trimmedInput = rawWeightInputString.trim();
+    
+    // Verifica se a string bruta já contém a unidade (g ou kg)
+    if (trimmedInput.toLowerCase().endsWith('g') || trimmedInput.toLowerCase().endsWith('kg')) {
+      formattedWeight = trimmedInput;
+    } else {
+      // Se não contiver a unidade, anexa a unidade inferida
+      formattedWeight = `${trimmedInput} ${originalUnit}`;
+    }
+  } else if (calculation.details.rawWeightValue !== null) {
     // Lógica de fallback (se a string bruta não estiver disponível)
     const rawWeightValue = calculation.details.rawWeightValue;
-    const originalUnit = calculation.details.weightUnit;
-    if (rawWeightValue !== null) {
-      // Formata o valor numérico com a unidade original
-      const valueString = rawWeightValue.toString().replace('.', ',');
-      formattedWeight = `${valueString} ${originalUnit}`;
-    }
+    const valueString = rawWeightValue.toString().replace('.', ',');
+    formattedWeight = `${valueString} ${originalUnit}`;
   }
 
   return (
