@@ -18,7 +18,8 @@ interface CalculationResult {
     adType: string | null;
     additionalCost: number;
     category: string | null; // NOVO
-    weight: number | null; // NOVO
+    weight: number | null; // NOVO (em KG)
+    weightUnit: 'g' | 'kg'; // NOVO
   };
 }
 
@@ -35,6 +36,22 @@ const formatPercentage = (value: number) => {
 };
 
 const CalculationDetails = ({ calculation }: CalculationDetailsProps) => {
+  
+  // Determina o valor e a unidade a ser exibida
+  const displayWeight = calculation.details.weight;
+  const displayUnit = calculation.details.weightUnit;
+  
+  let formattedWeight = 'N/A';
+  if (displayWeight !== null) {
+    if (displayUnit === 'g') {
+      // Se a unidade original for gramas, exibe em gramas
+      formattedWeight = `${(displayWeight * 1000).toFixed(0)} g`;
+    } else {
+      // Se for kg, exibe em kg (com duas casas decimais)
+      formattedWeight = `${displayWeight.toFixed(2)} kg`;
+    }
+  }
+
   return (
     <Card className="mt-4 p-4 bg-background border-accent/30 shadow-inner">
       <h4 className="text-lg font-bold text-accent mb-3">Detalhes do Cálculo LucraAI:</h4>
@@ -49,8 +66,8 @@ const CalculationDetails = ({ calculation }: CalculationDetailsProps) => {
         )}
         {calculation.details.weight !== null && (
           <div className="flex flex-col sm:flex-row sm:justify-between">
-            <span className="text-muted-foreground">Peso (kg):</span>
-            <span className="font-semibold text-foreground mt-1 sm:mt-0 sm:text-right">{calculation.details.weight.toFixed(2)} kg</span>
+            <span className="text-muted-foreground">Peso:</span>
+            <span className="font-semibold text-foreground mt-1 sm:mt-0 sm:text-right">{formattedWeight}</span>
           </div>
         )}
         

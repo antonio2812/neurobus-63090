@@ -32,6 +32,7 @@ interface CalculationResult {
     additionalCost: number;
     category: string | null; // NOVO
     weight: number | null; // NOVO
+    weightUnit: 'g' | 'kg'; // NOVO
   };
 }
 
@@ -74,7 +75,8 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
   const [additionalCost, setAdditionalCost] = useState<number>(0);
   const [adType, setAdType] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null); // NOVO
-  const [weight, setWeight] = useState<number | null>(null); // NOVO
+  const [weight, setWeight] = useState<number | null>(null); // NOVO (em KG)
+  const [weightUnit, setWeightUnit] = useState<'g' | 'kg'>('kg'); // NOVO (Unidade original para exibição)
   const chatEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -115,7 +117,6 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
           id: 1,
           sender: 'ai',
           content: "Para começar, qual é a **Categoria do Produto** que você deseja precificar?",
-          // REMOVIDO: options: categories.map(c => ({ label: c, value: c }))
         }
       ]);
     }, 500);
@@ -168,25 +169,55 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
     setInput("");
     setIsLoading(true);
 
-    // Tenta extrair o valor numérico (aceita R$ e vírgula)
-    const rawInput = input.trim().replace('R$', '').replace('.', '').replace(',', '.');
-    const numericValue = parseFloat(rawInput);
-
-    if (isNaN(numericValue) || numericValue < 0) {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now() + 1,
-          sender: 'ai',
-          content: "Ops! Por favor, insira um valor numérico válido e positivo (ou zero).",
-        },
-      ]);
-      setIsLoading(false);
-      return;
-    }
-
     if (step === 'weight') {
-      setWeight(numericValue);
+      const rawInput = input.trim().toLowerCase();
+      let numericValue: number;
+      let unit: 'g' | 'kg' = 'kg';
+      let valueInKg: number;
+
+      // 1. Tenta detectar a unidade (g ou kg)
+      const isGram = rawInput.includes('g');
+      const isKg = rawInput.includes('kg');
+      
+      // Remove letras e formatação (R$, vírgula)
+      const cleanValue = rawInput.replace(/r\$/g, '').replace(/g|kg/g, '').replace('.', '').replace(',', '.').trim();
+      numericValue = parseFloat(cleanValue);
+
+      if (isNaN(numericValue) || numericValue < 0) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now() + 1,
+            sender: 'ai',
+            content: "Ops! Por favor, insira um valor numérico válido e positivo (ex: 500g ou 0.5kg).",
+          },
+        ]);
+        setIsLoading(false);
+        return;
+      }
+      
+      // 2. Determina a unidade e converte para KG
+      if (isGram && !isKg) {
+        // Se for grama, converte para kg (ex: 500g -> 0.5)
+        valueInKg = numericValue / 1000;
+        unit = 'g';
+      } else if (isKg || (numericValue >= 10 && !isGram)) {
+        // Se for kg (explicitamente ou se for um número grande sem unidade, assumimos kg)
+        valueInKg = numericValue;
+        unit = 'kg';
+      } else if (numericValue < 10 && !isGram) {
+        // Se for um número pequeno sem unidade, assumimos kg (ex: 0.5)
+        valueInKg = numericValue;
+        unit = 'kg';
+      } else {
+        // Fallback seguro (deve ser raro com a lógica acima)
+        valueInKg = numericValue;
+        unit = 'kg';
+      }
+      
+      // 3. Armazena o peso em KG e a unidade original
+      setWeight(valueInKg);
+      setWeightUnit(unit);
       setStep('cost');
       
       setTimeout(() => {
@@ -201,134 +232,165 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
       }, 500);
       setIsLoading(false);
       
-    } else if (step === 'cost') {
-      setCost(numericValue);
-      setStep('additional_cost');
+    } else {
+      // --- Passos de Custo, Custo Adicional e Margem ---
       
-      // Nova pergunta sobre custos adicionais
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now() + 1,
-          sender: 'ai',
-          content: `Certo, ${formatCurrency(numericValue)} de custo. Agora, você possui algum **custo adicional** na sua operação, como envios pelos Correios ou ponto de coleta, embalagens, impressão de etiquetas e notas fiscais, devoluções ou custos de importação (caso compre de plataformas como Alibaba ou AliExpress)? (Apenas o valor total, ex: 15,00 ou 0 em caso de nenhum).`,
-        },
-      ]);
-      setIsLoading(false);
-      
-    } else if (step === 'additional_cost' && cost !== null) {
-      setAdditionalCost(numericValue);
-      setStep('margin');
-      
-      // Pergunta sobre margem
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now() + 1,
-          sender: 'ai',
-          content: `Entendido, ${formatCurrency(numericValue)} em custos adicionais. Por fim, qual é a **margem de lucro desejada** (apenas o percentual, ex: 30)?`,
-        },
-      ]);
-      setIsLoading(false);
+      // Tenta extrair o valor numérico (aceita R$ e vírgula)
+      const rawInput = input.trim().replace('R$', '').replace('.', '').replace(',', '.');
+      const numericValue = parseFloat(rawInput);
 
-    } else if (step === 'margin' && cost !== null && selectedCategory !== null && weight !== null) {
-      const margin = numericValue;
-      setStep('done');
-      
-      // Adicionar mensagem de "calculando"
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: Date.now() + 1,
-          sender: 'ai',
-          content: "Calculando... Aguarde um momento enquanto a IA processa as taxas e custos do Marketplace.",
-          isTyping: true,
-        },
-      ]);
-
-      // Chamar a Edge Function
-      try {
-        const { data, error } = await supabase.functions.invoke('calculate-price', {
-          body: {
-            marketplace,
-            cost,
-            margin,
-            adType: adType,
-            additionalCost,
-            category: selectedCategory, // NOVO
-            weight, // NOVO
+      if (isNaN(numericValue) || numericValue < 0) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now() + 1,
+            sender: 'ai',
+            content: "Ops! Por favor, insira um valor numérico válido e positivo (ou zero).",
           },
-        });
-
-        if (error) throw error;
-        
-        if (!data || !data.success) {
-          throw new Error(data?.error || 'Erro ao processar cálculo');
-        }
-        
-        // Remover a mensagem de "calculando" e adicionar a resposta final
-        setMessages((prev) => {
-          const newMessages = prev.filter(msg => !msg.isTyping);
-          return [
-            ...newMessages,
-            {
-              id: Date.now() + 2,
-              sender: 'ai',
-              content: data.explanation,
-              calculation: data.calculation,
-            },
-          ];
-        });
-
-      } catch (e) {
-        console.error("Erro ao calcular preço:", e);
-        
-        let errorMessage = "Erro desconhecido na comunicação com a IA.";
-      
-        const errorObject = e as any; 
-        
-        // Tenta extrair a mensagem de erro detalhada do corpo da resposta da Edge Function
-        if (errorObject.context && errorObject.context.body) {
-            try {
-                const errorBody = JSON.parse(errorObject.context.body);
-                if (errorBody.error) {
-                    errorMessage = errorBody.error;
-                }
-            } catch (parseError) {
-                console.error("Failed to parse error body:", parseError);
-            }
-        }
-        
-        // Se for um erro de Edge Function, usa a mensagem de erro retornada
-        if (e instanceof Error) {
-            errorMessage = errorMessage.includes("Erro desconhecido") ? e.message : errorMessage;
-            
-            // Se o erro for o genérico de status, simplifica a mensagem para o usuário
-            if (errorMessage.includes("Edge Function returned a non-2xx status code")) {
-                errorMessage = "Ocorreu um erro interno no servidor da IA. Por favor, verifique se a chave GOOGLE_GEMINI_API_KEY está configurada corretamente.";
-            }
-        }
-        
-        // Remove a mensagem de carregamento e adiciona uma mensagem de erro
-        setMessages((prev) => {
-          const newMessages = prev.filter(msg => !msg.isTyping);
-          return [
-            ...newMessages,
-            {
-              id: Date.now() + 4,
-              sender: 'ai',
-              content: `❌ Erro: Não foi possível calcular o preço. ${errorMessage}. Por favor, tente novamente.`,
-            },
-          ];
-        });
-        
-        toast({
-          title: "Erro de Cálculo",
-          description: errorMessage,
-          variant: "destructive",
-        });
-      } finally {
+        ]);
         setIsLoading(false);
+        return;
+      }
+      
+      if (step === 'cost') {
+        setCost(numericValue);
+        setStep('additional_cost');
+        
+        // Nova pergunta sobre custos adicionais
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now() + 1,
+            sender: 'ai',
+            content: `Certo, ${formatCurrency(numericValue)} de custo. Agora, você possui algum **custo adicional** na sua operação, como envios pelos Correios ou ponto de coleta, embalagens, impressão de etiquetas e notas fiscais, devoluções ou custos de importação (caso compre de plataformas como Alibaba ou AliExpress)? (Apenas o valor total, ex: 15,00 ou 0 em caso de nenhum).`,
+          },
+        ]);
+        setIsLoading(false);
+        
+      } else if (step === 'additional_cost' && cost !== null) {
+        setAdditionalCost(numericValue);
+        setStep('margin');
+        
+        // Pergunta sobre margem
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now() + 1,
+            sender: 'ai',
+            content: `Entendido, ${formatCurrency(numericValue)} em custos adicionais. Por fim, qual é a **margem de lucro desejada** (apenas o percentual, ex: 30)?`,
+          },
+        ]);
+        setIsLoading(false);
+
+      } else if (step === 'margin' && cost !== null && selectedCategory !== null && weight !== null) {
+        const margin = numericValue;
+        setStep('done');
+        
+        // Adicionar mensagem de "calculando"
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: Date.now() + 1,
+            sender: 'ai',
+            content: "Calculando... Aguarde um momento enquanto a IA processa as taxas e custos do Marketplace.",
+            isTyping: true,
+          },
+        ]);
+
+        // Chamar a Edge Function
+        try {
+          const { data, error } = await supabase.functions.invoke('calculate-price', {
+            body: {
+              marketplace,
+              cost,
+              margin,
+              adType: adType,
+              additionalCost,
+              category: selectedCategory,
+              weight, // Peso já está em KG
+              weightUnit, // Unidade original para a Edge Function usar na explicação
+            },
+          });
+
+          if (error) throw error;
+          
+          if (!data || !data.success) {
+            throw new Error(data?.error || 'Erro ao processar cálculo');
+          }
+          
+          // Adiciona a unidade original ao objeto de cálculo retornado
+          const finalCalculation = {
+              ...data.calculation,
+              details: {
+                  ...data.calculation.details,
+                  weightUnit: weightUnit,
+              }
+          };
+
+          // Remover a mensagem de "calculando" e adicionar a resposta final
+          setMessages((prev) => {
+            const newMessages = prev.filter(msg => !msg.isTyping);
+            return [
+              ...newMessages,
+              {
+                id: Date.now() + 2,
+                sender: 'ai',
+                content: data.explanation,
+                calculation: finalCalculation,
+              },
+            ];
+          });
+
+        } catch (e) {
+          console.error("Erro ao calcular preço:", e);
+          
+          let errorMessage = "Erro desconhecido na comunicação com a IA.";
+        
+          const errorObject = e as any; 
+          
+          // Tenta extrair a mensagem de erro detalhada do corpo da resposta da Edge Function
+          if (errorObject.context && errorObject.context.body) {
+              try {
+                  const errorBody = JSON.parse(errorObject.context.body);
+                  if (errorBody.error) {
+                      errorMessage = errorBody.error;
+                  }
+              } catch (parseError) {
+                  console.error("Failed to parse error body:", parseError);
+              }
+          }
+          
+          // Se for um erro de Edge Function, usa a mensagem de erro retornada
+          if (e instanceof Error) {
+              errorMessage = errorMessage.includes("Erro desconhecido") ? e.message : errorMessage;
+              
+              // Se o erro for o genérico de status, simplifica a mensagem para o usuário
+              if (errorMessage.includes("Edge Function returned a non-2xx status code")) {
+                  errorMessage = "Ocorreu um erro interno no servidor da IA. Por favor, verifique se a chave GOOGLE_GEMINI_API_KEY está configurada corretamente.";
+              }
+          }
+          
+          // Remove a mensagem de carregamento e adiciona uma mensagem de erro
+          setMessages((prev) => {
+            const newMessages = prev.filter(msg => !msg.isTyping);
+            return [
+              ...newMessages,
+              {
+                id: Date.now() + 4,
+                sender: 'ai',
+                content: `❌ Erro: Não foi possível calcular o preço. ${errorMessage}. Por favor, tente novamente.`,
+              },
+            ];
+          });
+          
+          toast({
+            title: "Erro de Cálculo",
+            description: errorMessage,
+            variant: "destructive",
+          });
+        } finally {
+          setIsLoading(false);
+        }
       }
     }
   };
@@ -358,6 +420,7 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
     setAdType(marketplace === 'Mercado Livre' ? 'Clássico' : null); // Mantém o adType padrão para ML
     setSelectedCategory(null);
     setWeight(null);
+    setWeightUnit('kg'); // Reset da unidade
     
     const newInitialMessages: ChatMessage[] = [initialMessage];
     if (marketplace === "Facebook") {

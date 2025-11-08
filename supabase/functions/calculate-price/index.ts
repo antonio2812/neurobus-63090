@@ -29,8 +29,9 @@ interface CalculationResult {
     commissionLimit: boolean;
     adType: string | null;
     additionalCost: number;
-    category: string | null; // NOVO
-    weight: number | null; // NOVO
+    category: string | null;
+    weight: number | null; // Em KG
+    weightUnit: 'g' | 'kg'; // Unidade original
   };
 }
 
@@ -120,8 +121,9 @@ const calculatePrice = (
   margin: number, 
   adType: string | null, 
   additionalCost: number,
-  category: string | null, // NOVO
-  weight: number | null // NOVO
+  category: string | null,
+  weight: number | null, // Em KG
+  weightUnit: 'g' | 'kg' // Unidade original
 ): CalculationResult => {
   const desiredMarginRate = margin / 100;
   const productCost = cost + additionalCost;
@@ -262,7 +264,7 @@ const calculatePrice = (
     
     // Lógica de Frete por Peso (em kg)
     let currentFreightFee = 0.00;
-    const w = weight || 0.5; // Default para 0.5kg se não informado
+    const w = weight || 0.5; // Default para 0.5kg se não informado (weight já está em KG)
     
     if (w <= 0.3) {
         currentFreightFee = 4.00;
@@ -341,6 +343,7 @@ const calculatePrice = (
       additionalCost,
       category,
       weight,
+      weightUnit, // Incluindo a unidade original
     }
   };
 };
@@ -348,6 +351,16 @@ const calculatePrice = (
 // Função para gerar a explicação da IA (usando callAI)
 const generateExplanation = async (calculation: CalculationResult) => {
     const { idealSalePrice, netProfit, netMargin, details } = calculation;
+    
+    // Formatação do peso para a explicação
+    let weightDisplay = 'N/A';
+    if (details.weight !== null) {
+        if (details.weightUnit === 'g') {
+            weightDisplay = `${(details.weight * 1000).toFixed(0)} g`;
+        } else {
+            weightDisplay = `${details.weight.toFixed(2)} kg`;
+        }
+    }
     
     let amazonNote = '';
     if (details.marketplace === 'Amazon' && details.fixedFee === 15.00) {
@@ -383,7 +396,7 @@ const generateExplanation = async (calculation: CalculationResult) => {
     
     let sheinNote = '';
     if (details.marketplace === 'Shein') {
-        sheinNote = ` (Regra Shein: A comissão de 16% foi aplicada. O custo de frete de R$${details.freightFee.toFixed(2)} foi baseado no peso de ${details.weight?.toFixed(2) || '0.50'} kg).`;
+        sheinNote = ` (Regra Shein: A comissão de 16% foi aplicada. O custo de frete de R$${details.freightFee.toFixed(2)} foi baseado no peso de ${weightDisplay}).`;
     }
     
     let facebookNote = '';
@@ -398,7 +411,7 @@ const generateExplanation = async (calculation: CalculationResult) => {
         **Dados do Cálculo:**
         - Marketplace: ${details.marketplace}
         - Categoria: ${details.category}
-        - Peso (kg): ${details.weight?.toFixed(2) || 'N/A'}
+        - Peso: ${weightDisplay}
         - Custo do Produto: R$ ${details.cost.toFixed(2)}
         - Custos Adicionais: R$ ${details.additionalCost.toFixed(2)}
         - Margem Desejada: ${details.desiredMargin}%
@@ -449,14 +462,14 @@ serve(async (req) => {
 
   try {
     const body = await req.json();
-    const { marketplace, cost, margin, adType, additionalCost, category, weight } = body;
+    const { marketplace, cost, margin, adType, additionalCost, category, weight, weightUnit } = body;
 
-    if (typeof cost !== 'number' || typeof margin !== 'number' || typeof additionalCost !== 'number' || !category || typeof weight !== 'number') {
-        return new Response(JSON.stringify({ error: 'Dados de entrada inválidos. Certifique-se de que custo, margem, custo adicional e peso são números, e a categoria foi selecionada.' }), { status: 400, headers: corsHeaders });
+    if (typeof cost !== 'number' || typeof margin !== 'number' || typeof additionalCost !== 'number' || !category || typeof weight !== 'number' || !weightUnit) {
+        return new Response(JSON.stringify({ error: 'Dados de entrada inválidos. Certifique-se de que custo, margem, custo adicional e peso são números, a categoria foi selecionada e a unidade de peso foi fornecida.' }), { status: 400, headers: corsHeaders });
     }
 
-    // 2. Executa o cálculo
-    const calculation = calculatePrice(marketplace, cost, margin, adType, additionalCost, category, weight);
+    // 2. Executa o cálculo (weight já está em KG)
+    const calculation = calculatePrice(marketplace, cost, margin, adType, additionalCost, category, weight, weightUnit);
     
     // 3. Gera a explicação da IA
     const explanation = await generateExplanation(calculation);
