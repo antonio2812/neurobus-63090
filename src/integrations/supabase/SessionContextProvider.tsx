@@ -61,7 +61,7 @@ const SessionContextProvider = ({ children }: SessionContextProviderProps) => {
       <div className="min-h-screen flex items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-accent mr-2" />
         <p className="text-xl font-bold text-foreground">
-          Carregando Autenticação...
+          Carregando...
         </p>
       </div>
     );
