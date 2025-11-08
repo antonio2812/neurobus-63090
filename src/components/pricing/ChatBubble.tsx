@@ -98,8 +98,10 @@ const ChatBubble = ({ message, onOptionSelect, isLoading }: ChatBubbleProps) => 
                 variant="outline"
                 size="sm"
                 className={cn(
-                  "w-full justify-center bg-transparent border-accent text-accent transition-all duration-300", // Usando border-accent e text-accent
-                  "hover:bg-accent hover:text-black hover:border-accent" // Hover para preto no fundo amarelo
+                  // NOVO ESTILO: Borda e texto branco (foreground)
+                  "w-full justify-center bg-transparent border-foreground text-foreground transition-all duration-300", 
+                  // NOVO HOVER: Fundo amarelo (accent) e texto preto (accent-foreground)
+                  "hover:bg-accent hover:text-accent-foreground hover:border-accent" 
                 )}
                 onClick={() => onOptionSelect(option.value)}
                 disabled={isLoading}

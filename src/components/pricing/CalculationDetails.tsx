@@ -38,25 +38,24 @@ const formatPercentage = (value: number) => {
 const CalculationDetails = ({ calculation }: CalculationDetailsProps) => {
   
   // Determina o valor e a unidade a ser exibida
-  const displayWeight = calculation.details.weight;
-  const displayUnit = calculation.details.weightUnit;
+  const weightInKg = calculation.details.weight;
+  const originalUnit = calculation.details.weightUnit;
   
   let formattedWeight = 'N/A';
-  if (displayWeight !== null) {
-    if (displayUnit === 'g') {
-      // Se a unidade original for gramas, exibe em gramas (ex: 600 g)
-      // Multiplica por 1000 para obter o valor em gramas
-      const weightInGrams = displayWeight * 1000;
-      // Formata para garantir 3 casas decimais (ex: 0.600) e remove a vírgula se for inteiro
+  if (weightInKg !== null) {
+    if (originalUnit === 'g') {
+      // Se a unidade original for gramas, exibe o valor em gramas (multiplica por 1000)
+      const weightInGrams = weightInKg * 1000;
+      // Exibe como inteiro (ex: 500 g)
       formattedWeight = `${weightInGrams.toFixed(0)} g`;
     } else {
-      // Se for kg, exibe em kg (ex: 2 kg ou 2.50 kg)
+      // Se a unidade original for kg, exibe em kg
       // Se for um número inteiro (ex: 2), exibe sem casas decimais.
-      if (displayWeight % 1 === 0) {
-        formattedWeight = `${displayWeight.toFixed(0)} kg`;
+      if (weightInKg % 1 === 0) {
+        formattedWeight = `${weightInKg.toFixed(0)} kg`;
       } else {
         // Se for fracionado (ex: 2.5), exibe com duas casas decimais
-        formattedWeight = `${displayWeight.toFixed(2)} kg`;
+        formattedWeight = `${weightInKg.toFixed(2)} kg`;
       }
     }
   }

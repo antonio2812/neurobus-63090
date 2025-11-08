@@ -82,7 +82,7 @@ const getAllDates = (year: number): SpecialDate[] => {
     { name: "Dia do Professor", date: `${year}-10-15`, month: 'OUTUBRO', isVariable: false },
     { name: "Dia das Bruxas (Halloween)", date: `${year}-10-31`, month: 'OUTUBRO', isVariable: false },
     
-    // NOVEMBRO
+    // NOVEMBRO (POSIÇÃO CORRIGIDA)
     { name: "Proclamação da República (Feriado Nacional)", date: `${year}-11-15`, month: 'NOVEMBRO', isVariable: false },
     { name: "Dia da Consciência Negra", date: `${year}-11-20`, month: 'NOVEMBRO', isVariable: false },
     { name: "Black Friday", date: `${year}-11-28`, month: 'NOVEMBRO', isVariable: false }, 

@@ -104,13 +104,14 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
     );
   };
 
-  // Mensagem inicial
+  // Mensagem inicial (REMOVIDA)
   const initialMessage: ChatMessage = {
     id: 0,
     sender: 'ai',
-    content: `Olá! Sou o **Gerador de Imagens com IA** da LucraAI. Descreva a imagem que você deseja criar para o seu anúncio.`,
+    content: `Descreva a imagem que você deseja criar para o seu anúncio.`,
   };
   
+  // Mensagem de dica (REMOVIDA)
   const tipMessage: ChatMessage = {
     id: 0.1,
     sender: 'ai',
@@ -118,8 +119,20 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
   };
 
   useEffect(() => {
+    // Apenas a mensagem de prompt e a dica são mantidas no estado inicial
     if (messages.length === 0) {
-      setMessages([initialMessage, tipMessage]);
+      setMessages([
+        {
+          id: 0,
+          sender: 'ai',
+          content: `Olá! Sou o **Gerador de Imagens com IA** da LucraAI. Descreva a imagem que você deseja criar para o seu anúncio.`,
+        },
+        {
+          id: 0.1,
+          sender: 'ai',
+          content: `<span class="text-foreground font-bold">Dica:</span> Seja detalhado! Inclua o produto, o estilo (ex: ultra realista, 3D), e o fundo (ex: fundo branco, estúdio fotográfico).`,
+        }
+      ]);
     }
   }, [messages.length]);
 
@@ -260,7 +273,19 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
   const handleNewSearch = () => {
     setStep('prompt');
     setInput("");
-    setMessages([initialMessage, tipMessage]); // Reinicia com as mensagens iniciais
+    // Reinicia com as mensagens iniciais (agora definidas no useEffect)
+    setMessages([
+        {
+          id: 0,
+          sender: 'ai',
+          content: `Olá! Sou o **Gerador de Imagens com IA** da LucraAI. Descreva a imagem que você deseja criar para o seu anúncio.`,
+        },
+        {
+          id: 0.1,
+          sender: 'ai',
+          content: `<span class="text-foreground font-bold">Dica:</span> Seja detalhado! Inclua o produto, o estilo (ex: ultra realista, 3D), e o fundo (ex: fundo branco, estúdio fotográfico).`,
+        }
+    ]);
   };
   
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -431,6 +456,16 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
             )}
           </Button>
         </div>
+        
+        {step === 'done' && (
+          <Button 
+            variant="link" 
+            onClick={handleNewSearch}
+            className="w-full mt-2 text-accent hover:text-accent/80"
+          >
+            Novo Produto
+          </Button>
+        )}
       </div>
     </div>
   );
