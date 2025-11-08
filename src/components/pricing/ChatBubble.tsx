@@ -43,6 +43,12 @@ interface ChatBubbleProps {
 
 // Função auxiliar para renderizar texto com negrito (markdown **)
 const renderContentWithBold = (content: string) => {
+  // Verifica se o conteúdo contém tags HTML (como a dica de peso)
+  if (content.includes('<span class="text-foreground font-bold">')) {
+    return <span dangerouslySetInnerHTML={{ __html: content }} />;
+  }
+  
+  // Se não tiver HTML, processa o markdown **
   const parts = content.split(/(\*\*.*?\*\*)/g);
   return parts.map((part, index) => {
     if (part.startsWith('**') && part.endsWith('**')) {
