@@ -39,24 +39,30 @@ const generateImage = async (prompt: string) => {
     // Prompt de engenharia para garantir qualidade e estilo de marketplace
     const finalPrompt = `Crie uma imagem de alta qualidade, ultra realista, com iluminação profissional e fundo limpo (branco ou gradiente sutil) para um anúncio de marketplace. O produto é: "${prompt}". Foco em detalhes e conversão.`;
 
-    const response = await openai.images.generate({
-        model: "dall-e-3",
-        prompt: finalPrompt,
-        n: 1,
-        size: "1024x1024",
-        response_format: "b64_json", // Solicita a imagem em base64
-    });
+    try {
+        const response = await openai.images.generate({
+            model: "dall-e-3",
+            prompt: finalPrompt,
+            n: 1,
+            size: "1024x1024",
+            response_format: "b64_json", // Solicita a imagem em base64
+        });
 
-    if (!response.data || response.data.length === 0) {
-        throw new Error("A API não retornou dados de imagem.");
+        if (!response.data || response.data.length === 0) {
+            throw new Error("A API não retornou dados de imagem.");
+        }
+
+        const image = response.data[0];
+        
+        return {
+            base64Image: image.b64_json,
+            mimeType: 'image/png', // DALL-E 3 geralmente retorna PNG
+        };
+    } catch (e) {
+        console.error("Erro ao chamar a API de Imagem:", e);
+        // Re-lança o erro para ser capturado pelo bloco try/catch principal
+        throw e;
     }
-
-    const image = response.data[0];
-    
-    return {
-        base64Image: image.b64_json,
-        mimeType: 'image/png', // DALL-E 3 geralmente retorna PNG
-    };
 };
 
 serve(async (req) => {
@@ -100,6 +106,8 @@ serve(async (req) => {
             errorMessage = "Limite de taxa excedido. Tente novamente em breve.";
         } else if (errorMessage.includes("A API não retornou dados de imagem")) {
             errorMessage = "A IA não conseguiu gerar a imagem com o prompt fornecido. Tente ser mais específico.";
+        } else if (errorMessage.includes("Nenhuma chave de API")) {
+            errorMessage = "Erro de Configuração: Nenhuma chave de API (OPENAI_API_KEY ou OPENROUTER_API_KEY) está definida nos segredos do Supabase.";
         } else {
             errorMessage = "Falha na comunicação com a IA. Verifique sua conexão ou tente novamente.";
         }
