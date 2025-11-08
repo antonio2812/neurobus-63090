@@ -81,8 +81,8 @@ const callAI = async (prompt: string, isJson: boolean = false) => {
 
 // Função para gerar o prompt principal
 const generatePrompt = (productName: string, count: number): string => {
-  // ALTERADO: Instrução de título mais forte em SEO, removendo exemplos genéricos.
-  const titleFormat = "Gere um título de NO MÁXIMO 100 CARACTERES, focado em SEO para Google e Marketplaces (Mercado Livre, Shopee, Amazon). O título deve ser uma combinação estratégica de: [NOME DO PRODUTO] + [MARCA/MODELO] + [BENEFÍCIO PRINCIPAL] + [PALAVRAS-CHAVE DE ALTO VOLUME DE BUSCA (termos que pessoas reais pesquisam, ex: 'para que serve', 'melhor custo benefício', 'original', 'kit com 2')].";
+  // ALTERADO: Instrução de título para usar o pipe (|) como separador
+  const titleFormat = "Gere um título de NO MÁXIMO 100 CARACTERES, focado em SEO para Google e Marketplaces (Mercado Livre, Shopee, Amazon). O título deve ser uma combinação estratégica de: [NOME DO PRODUTO] | [MARCA/MODELO] | [BENEFÍCIO PRINCIPAL] | [PALAVRAS-CHAVE DE ALTO VOLUME DE BUSCA (termos que pessoas reais pesquisam, ex: 'para que serve', 'melhor custo benefício', 'original', 'kit com 2')]. **USE O CARACTERE PIPE (|) COMO SEPARADOR ENTRE AS PALAVRAS-CHAVE.**";
   
   return `
     Você é um especialista em SEO e Copywriting para e-commerce e marketplaces (Mercado Livre, Shopee, Amazon).
