@@ -104,23 +104,7 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
     );
   };
 
-  useEffect(() => {
-    // Apenas a mensagem de prompt e a dica são mantidas no estado inicial
-    if (messages.length === 0) {
-      setMessages([
-        {
-          id: 0,
-          sender: 'ai',
-          content: `Olá! Sou o **Gerador de Imagens com IA** da LucraAI. Descreva a imagem que você deseja criar para o seu anúncio.`,
-        },
-        {
-          id: 0.1,
-          sender: 'ai',
-          content: `<span class="text-foreground font-bold">Dica:</span> Seja detalhado! Inclua o produto, o estilo (ex: ultra realista, 3D), e o fundo (ex: fundo branco, estúdio fotográfico).`,
-        }
-      ]);
-    }
-  }, [messages.length]);
+  // REMOVIDO: useEffect para adicionar mensagens iniciais
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -259,19 +243,8 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
   const handleNewSearch = () => {
     setStep('prompt');
     setInput("");
-    // Reinicia com as mensagens iniciais (agora definidas no useEffect)
-    setMessages([
-        {
-          id: 0,
-          sender: 'ai',
-          content: `Olá! Sou o **Gerador de Imagens com IA** da LucraAI. Descreva a imagem que você deseja criar para o seu anúncio.`,
-        },
-        {
-          id: 0.1,
-          sender: 'ai',
-          content: `<span class="text-foreground font-bold">Dica:</span> Seja detalhado! Inclua o produto, o estilo (ex: ultra realista, 3D), e o fundo (ex: fundo branco, estúdio fotográfico).`,
-        }
-    ]);
+    // Reinicia com mensagens vazias
+    setMessages([]);
   };
   
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
