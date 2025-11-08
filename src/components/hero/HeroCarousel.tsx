@@ -31,16 +31,10 @@ const HeroCarousel = () => {
           }`}
         >
           <div 
-            // Aplicando as propriedades CSS solicitadas: 
-            // bg-cover (padrão) para telas grandes (2xl)
-            // 2xl:bg-cover (acima de 1400px)
-            // bg-contain (abaixo de 1400px) para garantir que a imagem caiba inteira
+            // Usando bg-cover por padrão para maximizar a altura e preencher o espaço verticalmente.
             className={cn(
               "absolute inset-0 bg-no-repeat bg-center brightness-[0.3] blur-sm",
-              // Padrão (Mobile/Tablet/Desktop): Contain (para caber)
-              "bg-contain",
-              // 2XL (Acima de 1400px): Cover (para preencher)
-              "2xl:bg-cover"
+              "bg-cover" // Usando cover em todas as resoluções para maximizar a altura
             )}
             style={{ backgroundImage: `url(${image})` }}
           />
