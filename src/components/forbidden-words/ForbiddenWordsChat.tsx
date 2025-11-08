@@ -241,7 +241,7 @@ const ForbiddenWordsChat = ({ onBack }: ForbiddenWordsChatProps) => {
           size="icon" 
           onClick={onBack} 
           // CLASSE ATUALIZADA: border-transparent hover:border-accent hover:bg-accent hover:text-black transition-all duration-300
-          className="text-muted-foreground hover:text-black hover:bg-accent transition-all duration-300 border-transparent hover:border-accent" 
+          className="text-muted-foreground hover:text-accent-foreground transition-all duration-300 border-transparent hover:bg-accent hover:border-accent hover:text-black" 
         >
           <ArrowLeft className="h-5 w-5" />
         </Button>

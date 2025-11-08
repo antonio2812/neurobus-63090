@@ -26,8 +26,8 @@ const TitleGeneratorModal = ({ children }: TitleGeneratorModalProps) => {
           "sm:max-w-[90vw] md:max-w-[800px] p-0 bg-card border-border shadow-elevated max-h-[95vh] overflow-hidden",
           // Estilo do botão de fechar (X):
           // 1. Borda transparente por padrão
-          // 2. Borda transparente no hover (removendo hover:border-accent)
-          "[&>button]:border-transparent [&>button:hover]:border-transparent [&>button:hover]:bg-card/50 [&>button:hover]:text-foreground"
+          // 2. Borda transparente no hover
+          "[&>button]:border-transparent [&>button:hover]:border-transparent [&>button:hover]:bg-transparent [&>button:hover]:text-foreground"
         )}
       >
         <TitleGeneratorChat onBack={handleBack} />

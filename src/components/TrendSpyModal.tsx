@@ -24,10 +24,10 @@ const TrendSpyModal = ({ children }: TrendSpyModalProps) => {
           "sm:max-w-[90vw] md:max-w-[800px] p-0 bg-card border-border shadow-elevated max-h-[95vh] overflow-hidden",
           // Estilo do botão de fechar (X) ATUALIZADO:
           // 1. Borda transparente por padrão
-          // 2. Borda transparente no hover (removendo hover:border-accent)
-          // 3. Fundo transparente/card/50 no hover
+          // 2. Borda transparente no hover
+          // 3. Fundo transparente no hover
           // 4. Ícone foreground (branco/cinza) no hover
-          "[&>button]:border-transparent [&>button:hover]:border-transparent [&>button:hover]:bg-card/50 [&>button:hover]:text-foreground"
+          "[&>button]:border-transparent [&>button:hover]:border-transparent [&>button:hover]:bg-transparent [&>button:hover]:text-foreground"
         )}
       >
         <TrendSpyChat onBack={handleBack} />

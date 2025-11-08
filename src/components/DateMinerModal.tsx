@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import DateMinerChat from "./date-miner/DateMinerChat";
-import { useState } from "react";
+import { useState } => "react";
 import { cn } from "@/lib/utils";
 
 interface DateMinerModalProps {
@@ -23,7 +23,7 @@ const DateMinerModal = ({ children }: DateMinerModalProps) => {
         className={cn(
           "sm:max-w-[90vw] md:max-w-[800px] p-0 bg-card border-border shadow-elevated max-h-[95vh] overflow-hidden",
           // Estilo do botão de fechar (X)
-          "[&>button]:border-transparent [&>button:hover]:border-transparent [&>button:hover]:bg-card/50 [&>button:hover]:text-foreground"
+          "[&>button]:border-transparent [&>button:hover]:border-transparent [&>button:hover]:bg-transparent [&>button:hover]:text-foreground"
         )}
       >
         <DateMinerChat onBack={handleBack} />
