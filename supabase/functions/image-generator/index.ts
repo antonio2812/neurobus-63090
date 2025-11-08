@@ -19,7 +19,7 @@ const generateImage = async (prompt: string) => {
     let baseURL = 'https://api.openai.com/v1';
     let headers = {};
 
-    // Se a chave OpenRouter estiver disponível, usaremos ela, pois ela pode rotear para DALL-E 3
+    // Prioriza OpenRouter se a chave estiver disponível
     if (OPENROUTER_API_KEY) {
         apiKey = OPENROUTER_API_KEY;
         baseURL = 'https://openrouter.ai/api/v1';
@@ -27,6 +27,7 @@ const generateImage = async (prompt: string) => {
             'HTTP-Referer': 'https://urbbngcarxdqesenfvsb.supabase.co',
         };
     } else if (!OPENAI_API_KEY) {
+        // Se nenhuma chave estiver configurada, o erro será lançado no bloco try/catch principal
         throw new Error('Nenhuma chave de API (OPENAI_API_KEY ou OPENROUTER_API_KEY) configurada para geração de imagens.');
     }
 
@@ -71,6 +72,14 @@ serve(async (req) => {
   }
   
   console.log("Edge Function 'image-generator' started execution.");
+
+  // Verificação explícita das chaves
+  if (!OPENAI_API_KEY && !OPENROUTER_API_KEY) {
+    return new Response(
+      JSON.stringify({ error: 'Erro de Configuração: Nenhuma chave de API (OPENAI_API_KEY ou OPENROUTER_API_KEY) está definida nos segredos do Supabase.' }),
+      { status: 500, headers: corsHeaders }
+    );
+  }
 
   try {
     const body = await req.json();
