@@ -16,16 +16,16 @@ const StrategyCard = () => {
 
   useEffect(() => {
     const fadeDuration = 500; // 0.5s fade in/out
-    const displayDuration = 300000; // 5 minutes (300,000 ms)
+    const displayDuration = 10000; // 10 segundos para visualização (300000 ms = 5 minutos)
 
     const interval = setInterval(() => {
+      // 1. Inicia o fade-out
       setIsFading(true);
       
-      // Inicia o fade-out
+      // 2. Troca o texto após o fade-out
       setTimeout(() => {
-        // Troca o texto
         setCurrentStrategyIndex((prevIndex) => (prevIndex + 1) % strategies.length);
-        // Inicia o fade-in
+        // 3. Inicia o fade-in
         setIsFading(false);
       }, fadeDuration);
 
