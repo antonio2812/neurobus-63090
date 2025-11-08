@@ -141,66 +141,66 @@ const SupplierFinderChat = ({ onBack }: SupplierFinderChatProps) => {
         <Truck className="h-6 w-6" /> Fornecedores Encontrados
       </h3>
       
-      {suppliers.map((supplier, index) => (
-        <Card key={index} className="p-4 bg-background border-accent/30 shadow-inner space-y-3">
-          <div className="flex items-center justify-between border-b border-border/50 pb-2">
-            <h4 className="text-lg font-bold text-foreground">
-              {supplier.name}
-            </h4>
-            <span className={cn(
-              "text-sm font-semibold px-3 py-1 rounded-full",
-              supplier.type === 'Nacional' ? "bg-blue-500/20 text-blue-400" : "bg-green-500/20 text-green-400"
-            )}>
-              {supplier.type}
-            </span>
-          </div>
-          
-          <div className="space-y-3 pt-2 text-sm text-muted-foreground">
-            
-            {/* 1. Nicho/Categoria */}
-            <div className="flex justify-between items-start">
-              <strong className="text-foreground">Nicho/Categoria:</strong> 
-              <span className="text-right max-w-[60%]">{supplier.productFocus}</span>
-            </div>
-            
-            {/* 2. Modalidade de Venda & Quantidade Mínima (Combined Row) */}
-            {/* Usando grid para alinhar Modalidade (esquerda) e Quantidade Mínima (direita) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-2 sm:gap-x-4 border-t border-border/50 pt-2">
-                {/* Left Column: Modalidade */}
-                <div className="flex flex-col items-start">
-                    <strong className="text-foreground">Modalidade de Venda:</strong>
-                    <span className="text-muted-foreground text-xs sm:text-sm">
-                        {/* Logic to list Varejo, Atacado, Dropshipping separated by commas */}
-                        {supplier.focus === 'Ambos' && 'Varejo, Atacado, Dropshipping (Verificar no contato)'}
-                        {supplier.focus === 'Varejo' && 'Varejo, Dropshipping (Verificar no contato)'}
-                        {supplier.focus === 'Atacado' && 'Atacado, Dropshipping (Verificar no contato)'}
-                    </span>
-                </div>
-                
-                {/* Right Column: Quantidade Mínima (Only shows if Atacado/Ambos and minOrder > 0) */}
-                {(supplier.focus === 'Atacado' || supplier.focus === 'Ambos') && supplier.minOrder > 0 && (
-                    <div className="flex flex-col items-start sm:items-end sm:text-right">
-                        <strong className="text-foreground">Quantidade Mínima de Pedidos:</strong> 
-                        <span className="text-accent font-semibold text-xs sm:text-sm">
-                            {formatCurrency(supplier.minOrder)}
-                        </span>
-                    </div>
-                )}
-            </div>
-
-            {/* 3. Contato (Site | Email) */}
-            <div className="flex justify-between items-start pt-2 border-t border-border/50">
-              <strong className="text-foreground flex items-center gap-2 mb-1">
-                <Mail className="h-4 w-4 text-accent shrink-0" /> Contato:
-              </strong>
-              {/* Contato formatado (Site | Email) no lado direito */}
-              <span className="text-right max-w-[60%] text-sm">
-                {formatContact(supplier.contact)}
+      {suppliers.map((supplier, index) => {
+        
+        // 1. Constrói a string de Modalidade de Venda
+        const modalities = [];
+        if (supplier.focus === 'Varejo' || supplier.focus === 'Ambos') {
+          modalities.push('Varejo');
+        }
+        if (supplier.focus === 'Atacado' || supplier.focus === 'Ambos') {
+          const minOrderText = supplier.minOrder > 0 
+            ? `(Quantidade Mínima de Pedidos: ${formatCurrency(supplier.minOrder)})` 
+            : '';
+          modalities.push(`Atacado ${minOrderText}`);
+        }
+        modalities.push('Dropshipping (Verificar no contato)');
+        const modalityString = modalities.join(', ');
+        
+        return (
+          <Card key={index} className="p-4 bg-background border-accent/30 shadow-inner space-y-3">
+            <div className="flex items-center justify-between border-b border-border/50 pb-2">
+              <h4 className="text-lg font-bold text-foreground">
+                {supplier.name}
+              </h4>
+              <span className={cn(
+                "text-sm font-semibold px-3 py-1 rounded-full",
+                supplier.type === 'Nacional' ? "bg-blue-500/20 text-blue-400" : "bg-green-500/20 text-green-400"
+              )}>
+                {supplier.type}
               </span>
             </div>
-          </div>
-        </Card>
-      ))}
+            
+            <div className="space-y-3 pt-2 text-sm text-muted-foreground">
+              
+              {/* 1. Nicho/Categoria (Alinhado à direita) */}
+              <div className="flex justify-between items-start">
+                <strong className="text-foreground shrink-0 pr-4">Nicho/Categoria:</strong> 
+                <span className="text-right max-w-[60%]">{supplier.productFocus}</span>
+              </div>
+              
+              {/* 2. Modalidade de Venda (Alinhado à direita, combinado com Quantidade Mínima) */}
+              <div className="flex justify-between items-start pt-2 border-t border-border/50">
+                <strong className="text-foreground shrink-0 pr-4">Modalidade de Venda:</strong> 
+                <span className="text-right max-w-[60%] text-sm">
+                  {modalityString}
+                </span>
+              </div>
+
+              {/* 3. Contato (Site | Email) (Alinhado à direita) */}
+              <div className="flex justify-between items-start pt-2 border-t border-border/50">
+                <strong className="text-foreground flex items-center gap-2 mb-1 shrink-0 pr-4">
+                  <Mail className="h-4 w-4 text-accent shrink-0" /> Contato:
+                </strong>
+                {/* Contato formatado (Site | Email) no lado direito */}
+                <span className="text-right max-w-[60%] text-sm">
+                  {formatContact(supplier.contact)}
+                </span>
+              </div>
+            </div>
+          </Card>
+        );
+      })}
     </div>
   );
 
