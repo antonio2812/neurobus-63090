@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
-import FloatingParticles from "./hero/FloatingParticles";
 import HeroCarousel from "./hero/HeroCarousel";
 import { Link } from "react-router-dom"; // Importando Link
 
@@ -23,7 +22,6 @@ const Hero = () => {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-24 md:py-32"> {/* Alterado h-screen para min-h-screen e adicionado padding vertical */}
       <HeroCarousel />
-      <FloatingParticles />
       
       <div className={`container mx-auto px-8 z-20 text-center max-w-7xl transition-all duration-1000 ${
         isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'

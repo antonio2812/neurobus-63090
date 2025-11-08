@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils"; // Importando cn
 
 const desktopImages = [
-  "/lovable-uploads/hero-01.webp",
-  "/lovable-uploads/hero-02.webp",
-  "/lovable-uploads/hero-03.jpg",
-  "/lovable-uploads/hero-04.jpeg",
-  "/lovable-uploads/hero-05.webp",
-  "/lovable-uploads/hero-06.webp",
+  "/lovable-uploads/01 - Desktop.webp",
+  "/lovable-uploads/02 - Desktop.webp",
+  "/lovable-uploads/03 - Desktop.jpg",
+  "/lovable-uploads/04 - Desktop.jpeg",
+  "/lovable-uploads/05 - Desktop.webp",
+  "/lovable-uploads/06 - Desktop.webp",
 ];
 
 const mobileImages = [
@@ -24,6 +24,7 @@ const HeroCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   
   // Seleciona o array de imagens baseado no tamanho da tela
+  // isSmallScreen é true se <= 1630px
   const images = isSmallScreen ? mobileImages : desktopImages;
 
   useEffect(() => {
