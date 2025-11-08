@@ -73,12 +73,12 @@ const KitGeneratorChat = ({ onBack }: KitGeneratorChatProps) => {
       
       {kits.map((kit, index) => (
         <Card key={index} className="p-4 bg-background border-accent/30 shadow-inner space-y-3">
-          <div className="flex items-center justify-between border-b border-border/50 pb-2">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-border/50 pb-2">
             <h4 className="text-lg font-bold text-foreground">
               {kit.kitName}
             </h4>
-            <span className="text-xl font-extrabold text-accent flex items-center gap-1">
-              {/* REMOVIDO: <DollarSign className="h-5 w-5" /> */}
+            {/* Preço: Fica abaixo no mobile (flex-col) e à direita no desktop (sm:flex-row) */}
+            <span className="text-xl font-extrabold text-accent mt-1 sm:mt-0 sm:text-right">
               {formatCurrency(kit.suggestedPrice)}
             </span>
           </div>
