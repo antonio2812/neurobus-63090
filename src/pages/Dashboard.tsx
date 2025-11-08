@@ -92,16 +92,16 @@ const Dashboard = () => {
 
   const renderFeatureCard = (feature: typeof features[0], index: number) => {
     
-    // Define a classe de borda padrão (Removendo a lógica de borda branca)
-    const borderClass = "border-border";
+    // A classe de borda padrão agora é transparente
+    const borderClass = "border-transparent";
     
     const CardContent = (
       <Card 
         // O card inteiro é o grupo de hover
         className={cn(
           "p-6 bg-card transition-all duration-300 hover-lift cursor-pointer text-center flex flex-col group",
-          borderClass, // Aplica a classe de borda padrão
-          "hover:border-accent/50" // Mantém o hover para o amarelo
+          borderClass, // Aplica a classe de borda transparente
+          "hover:border-accent/50" // Aplica a borda amarela no hover
         )}
         // Removendo onClick aqui para que o DialogTrigger funcione
       >
