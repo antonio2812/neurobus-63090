@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { Loader2 } from 'lucide-react'; // Mantemos o import, mas não o usamos no loader principal
+import { Loader2 } from 'lucide-react'; 
 
 interface SessionContextType {
   session: Session | null;
@@ -29,35 +29,39 @@ const SessionContextProvider = ({ children }: SessionContextProviderProps) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchSession = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
+    // 1. Busca a sessão inicial
+    const fetchInitialSession = async () => {
+      const { data: { session: initialSession }, error } = await supabase.auth.getSession();
       
       if (error) {
-        console.error("Error fetching session:", error);
+        console.error("Error fetching initial session:", error);
       }
       
-      setSession(session);
-      setUser(session?.user || null);
+      setSession(initialSession);
+      setUser(initialSession?.user || null);
       setIsLoading(false);
     };
 
-    fetchSession();
+    fetchInitialSession();
 
+    // 2. Configura o listener para mudanças de estado
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user || null);
-      setIsLoading(false);
+      // Se o estado mudar (login, logout), garantimos que isLoading seja false
+      setIsLoading(false); 
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  // Exibe o texto "Carregando..." enquanto a sessão inicial está sendo carregada
+  // Exibe o loader enquanto a sessão inicial está sendo carregada
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-accent mr-2" />
         <p className="text-xl font-bold text-foreground">
-          Carregando...
+          Carregando Autenticação...
         </p>
       </div>
     );
