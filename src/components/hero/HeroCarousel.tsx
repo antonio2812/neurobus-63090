@@ -56,7 +56,7 @@ const HeroCarousel = () => {
           }`}
         >
           <div 
-            // Ajustado brightness para 0.5 (mais claro)
+            // Mantido brightness-[0.5]
             className={cn(
               "absolute inset-0 bg-no-repeat bg-center brightness-[0.5] blur-sm",
               "bg-cover" // Garante que a imagem preencha o contêiner sem vazar
@@ -65,8 +65,8 @@ const HeroCarousel = () => {
           />
         </div>
       ))}
-      {/* Ajustado o overlay para bg-black/20 (menos escuro) */}
-      <div className="absolute inset-0 bg-black/20" />
+      {/* Ajustado o overlay para bg-black/40 (40% de opacidade) */}
+      <div className="absolute inset-0 bg-black/40" />
     </div>
   );
 };
