@@ -47,7 +47,7 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
     const handleDownload = () => {
       const link = document.createElement('a');
       link.href = imageUrl;
-      link.download = 'lucraai_image.jpg';
+      link.download = 'lucraai_image.png'; // Alterado para PNG
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -104,10 +104,24 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
     );
   };
 
-  // Removendo as mensagens iniciais e dicas
+  // Mensagem inicial
+  const initialMessage: ChatMessage = {
+    id: 0,
+    sender: 'ai',
+    content: `Olá! Sou o **Gerador de Imagens com IA** da LucraAI. Descreva a imagem que você deseja criar para o seu anúncio.`,
+  };
+  
+  const tipMessage: ChatMessage = {
+    id: 0.1,
+    sender: 'ai',
+    content: `<span class="text-foreground font-bold">Dica:</span> Seja detalhado! Inclua o produto, o estilo (ex: ultra realista, 3D), e o fundo (ex: fundo branco, estúdio fotográfico).`,
+  };
+
   useEffect(() => {
-    // O chat começa vazio, esperando o prompt do usuário
-  }, []);
+    if (messages.length === 0) {
+      setMessages([initialMessage, tipMessage]);
+    }
+  }, [messages.length]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -131,7 +145,6 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
     ]);
 
     try {
-      // A Edge Function 'image-generator' está configurada para retornar um erro 503
       const { data, error } = await supabase.functions.invoke('image-generator', {
         body: { prompt },
       });
@@ -142,7 +155,6 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
         throw new Error(data?.error || 'Erro ao processar a geração de imagem.');
       }
       
-      // Se, por algum milagre, a função funcionar, o código abaixo seria executado
       const generatedImage: GeneratedImage = data.generatedImage;
       
       setMessages((prev) => {
@@ -163,7 +175,7 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
     } catch (e) {
       console.error("Erro ao gerar imagem:", e);
       
-      let errorMessage = "O Gerador de Imagens com IA está temporariamente indisponível. Estamos atualizando a integração com uma nova API.";
+      let errorMessage = "Erro desconhecido na comunicação com a IA.";
       
       const errorObject = e as any; 
       
@@ -175,6 +187,16 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
               }
           } catch (parseError) {
               console.error("Failed to parse error body:", parseError);
+          }
+      }
+      
+      // Se for um erro de Edge Function, usa a mensagem de erro retornada
+      if (e instanceof Error) {
+          errorMessage = errorMessage.includes("Erro desconhecido") ? e.message : errorMessage;
+          
+          // Se o erro for o genérico de status, simplifica a mensagem para o usuário
+          if (errorMessage.includes("Edge Function returned a non-2xx status code")) {
+              errorMessage = "Ocorreu um erro interno no servidor da IA. Por favor, verifique se a chave OPENAI_API_KEY ou OPENROUTER_API_KEY está configurada corretamente.";
           }
       }
       
@@ -232,7 +254,7 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
   const handleNewSearch = () => {
     setStep('prompt');
     setInput("");
-    setMessages([]); // Começa vazio
+    setMessages([initialMessage, tipMessage]); // Reinicia com as mensagens iniciais
   };
   
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
