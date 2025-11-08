@@ -17,6 +17,7 @@ const BackgroundEffects = () => {
   ];
 
   useEffect(() => {
+    // Usando 1630px como o limite superior para o ajuste fino, mas mantendo 640px para o mobile
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 640);
     };
@@ -64,8 +65,11 @@ const BackgroundEffects = () => {
 
   // Determine dynamic styles based on mobile state
   const baseBackgroundStyle = (index: number) => {
-    // No mobile, usamos transform: none e background-size: cover, background-position: center
-    const parallaxTransform = isMobile 
+    // Aplicando o scale e parallax apenas em telas maiores que 1630px (ou um valor grande)
+    // Para telas menores, mantemos o scale em 1 para evitar overflow.
+    const isLargeScreen = window.innerWidth > 1630;
+    
+    const parallaxTransform = isMobile || !isLargeScreen
       ? 'translateY(0px) scale(1)' 
       : `translateY(${scrollOffset * 0.5}px) scale(1.05)`;
     
