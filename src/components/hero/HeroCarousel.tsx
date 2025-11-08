@@ -65,8 +65,8 @@ const HeroCarousel = () => {
           />
         </div>
       ))}
-      {/* Ajustado o overlay para bg-black/40 (40% de opacidade) */}
-      <div className="absolute inset-0 bg-black/40" />
+      {/* Ajustado o overlay para bg-black/50 (50% de opacidade) */}
+      <div className="absolute inset-0 bg-black/50" />
     </div>
   );
 };
