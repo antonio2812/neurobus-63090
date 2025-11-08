@@ -1,4 +1,3 @@
-NOVEMBRO -> DEZEMBRO) em vez da proximidade cronológica, para garantir a sequência solicitada.">
 import { format, isToday, isFuture, parseISO, getYear, getMonth, getDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
