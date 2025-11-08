@@ -81,7 +81,8 @@ const callAI = async (prompt: string, isJson: boolean = false) => {
 
 // Função para gerar o prompt principal
 const generatePrompt = (productName: string, count: number): string => {
-  const titleFormat = "Gere um título de EXATAMENTE 100 CARACTERES, focado em SEO para Google e Marketplaces (Mercado Livre, Shopee, Amazon), usando palavras-chave de alto valor (ex: Original, Melhor Preço, Envio Rápido, Lançamento). Formato: [PRODUTO] | [BENEFÍCIO 1] | [KEYWORD].";
+  // ALTERADO: De EXATAMENTE 100 CARACTERES para NO MÁXIMO 100 CARACTERES
+  const titleFormat = "Gere um título de NO MÁXIMO 100 CARACTERES, focado em SEO para Google e Marketplaces (Mercado Livre, Shopee, Amazon), usando palavras-chave de alto valor (ex: Original, Melhor Preço, Envio Rápido, Lançamento). Formato: [PRODUTO] | [BENEFÍCIO 1] | [KEYWORD].";
   
   return `
     Você é um especialista em SEO e Copywriting para e-commerce e marketplaces (Mercado Livre, Shopee, Amazon).
@@ -92,7 +93,7 @@ const generatePrompt = (productName: string, count: number): string => {
     
     **INSTRUÇÕES CRÍTICAS PARA TÍTULOS:**
     1. Pesquise e estude o produto "${productName}" na internet para identificar as melhores palavras-chave de alto volume de busca e os principais benefícios.
-    2. Gere ${count} TÍTULOS. Cada título deve ter EXATAMENTE 100 CARACTERES.
+    2. Gere ${count} TÍTULOS. Cada título deve ter NO MÁXIMO 100 CARACTERES.
     3. Cada título deve ser ÚNICO e usar um conjunto de PALAVRAS-CHAVE DIFERENTES dos outros títulos para maximizar a cobertura de busca.
     4. Siga o formato de SEO: ${titleFormat}.
     
