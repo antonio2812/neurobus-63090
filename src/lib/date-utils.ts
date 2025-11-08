@@ -1,3 +1,4 @@
+NOVEMBRO -> DEZEMBRO) em vez da proximidade cronológica, para garantir a sequência solicitada.">
 import { format, isToday, isFuture, parseISO, getYear, getMonth, getDate } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -105,7 +106,7 @@ export const getUpcomingDates = (): SpecialDate[] => {
   const currentYear = getYear(now);
   const nextYear = currentYear + 1;
   
-  // 1. Coleta todas as datas para o ano atual e próximo (agora todas são fixas)
+  // 1. Coleta todas as datas para o ano atual e próximo
   const datesCurrent = getAllDates(currentYear);
   const datesNext = getAllDates(nextYear);
   
@@ -131,7 +132,24 @@ export const getUpcomingDates = (): SpecialDate[] => {
     
   const finalDates = Array.from(finalDatesMap.values());
 
-  // 4. Agrupa por mês para exibição
+  // 4. Ordenação customizada: Prioriza a ordem do mês (1 a 12) e depois o dia, ignorando o ano.
+  // Isso garante que OUTUBRO venha antes de NOVEMBRO, mesmo que o OUTUBRO seja do próximo ano.
+  finalDates.sort((a, b) => {
+      const dateA = parseISO(a.date);
+      const dateB = parseISO(b.date);
+      
+      // Compara pelo mês (0=Jan, 11=Dez)
+      const monthComparison = getMonth(dateA) - getMonth(dateB);
+      if (monthComparison !== 0) {
+          return monthComparison;
+      }
+      
+      // Compara pelo dia
+      return getDate(dateA) - getDate(dateB);
+  });
+
+
+  // 5. Agrupa por mês para exibição
   const groupedDates: SpecialDate[] = [];
   let currentMonth = '';
   
