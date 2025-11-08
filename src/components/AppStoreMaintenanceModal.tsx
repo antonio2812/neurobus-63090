@@ -23,7 +23,7 @@ const AppStoreMaintenanceModal = ({ children }: AppStoreMaintenanceModalProps) =
             {/* Ícone Wrench removido */}
           </div>
           <DialogTitle className="text-2xl font-bold text-foreground font-space-mono text-center">
-            🚧 App em Manutenção - App Store 🚧
+            🚧 APP EM MANUTENÇÃO - App Store 🚧
           </DialogTitle>
         </DialogHeader>
 
