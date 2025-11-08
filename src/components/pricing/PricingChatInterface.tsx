@@ -115,7 +115,7 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
           id: 1,
           sender: 'ai',
           content: "Para começar, qual é a **Categoria do Produto** que você deseja precificar?",
-          options: categories.map(c => ({ label: c, value: c }))
+          // REMOVIDO: options: categories.map(c => ({ label: c, value: c }))
         }
       ]);
     }, 500);
@@ -379,7 +379,6 @@ const PricingChatInterface = ({ marketplace, onBack }: PricingChatInterfaceProps
           id: Date.now() + 4,
           sender: 'ai',
           content: "Para começar, qual é a **Categoria do Produto** que você deseja precificar?",
-          options: categories.map(c => ({ label: c, value: c }))
         }
       ]);
     }, 100);
