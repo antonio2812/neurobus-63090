@@ -78,7 +78,8 @@ const KitGeneratorChat = ({ onBack }: KitGeneratorChatProps) => {
               {kit.kitName}
             </h4>
             <span className="text-xl font-extrabold text-accent flex items-center gap-1">
-              <DollarSign className="h-5 w-5" /> {formatCurrency(kit.suggestedPrice)}
+              {/* REMOVIDO: <DollarSign className="h-5 w-5" /> */}
+              {formatCurrency(kit.suggestedPrice)}
             </span>
           </div>
           
