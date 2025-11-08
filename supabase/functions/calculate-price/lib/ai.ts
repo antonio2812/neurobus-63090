@@ -60,7 +60,7 @@ export const callAI = async (prompt: string, isJson: boolean = false) => {
         const data = await response.json();
         return data.candidates?.[0]?.content?.parts?.[0]?.text || "A IA não gerou conteúdo.";
     } else {
-        throw new new Error('Nenhuma chave de API (OpenRouter ou Gemini) configurada.');
+        throw new Error('Nenhuma chave de API (OpenRouter ou Gemini) configurada.');
     }
 }
 

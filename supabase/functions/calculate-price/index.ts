@@ -1,4 +1,3 @@
-import "https://deno.land/x/xhr@0.190.0/mod.ts";
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { calculatePrice } from "./lib/pricing.ts";
 import { generateExplanation } from "./lib/ai.ts";
