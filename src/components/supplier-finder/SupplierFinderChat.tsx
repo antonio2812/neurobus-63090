@@ -159,27 +159,31 @@ const SupplierFinderChat = ({ onBack }: SupplierFinderChatProps) => {
         
         return (
           <Card key={index} className="p-4 bg-background border-accent/30 shadow-inner space-y-3">
-            <div className="flex items-center justify-between border-b border-border/50 pb-2">
-              <h4 className="text-lg font-bold text-foreground">
-                {supplier.name}
-              </h4>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-border/50 pb-2">
+              
+              {/* Badge (Tipo) - Ordem 1 no mobile, Ordem 2 no desktop */}
               <span className={cn(
-                "text-sm font-semibold px-3 py-1 rounded-full",
+                "text-sm font-semibold px-3 py-1 rounded-full mb-2 sm:mb-0 sm:order-2", // Adicionado mb-2 para mobile
                 supplier.type === 'Nacional' ? "bg-blue-500/20 text-blue-400" : "bg-green-500/20 text-green-400"
               )}>
                 {supplier.type}
               </span>
+              
+              {/* Nome do Fornecedor - Ordem 2 no mobile, Ordem 1 no desktop */}
+              <h4 className="text-lg font-bold text-foreground sm:order-1">
+                {supplier.name}
+              </h4>
             </div>
             
             <div className="space-y-3 pt-2 text-sm text-muted-foreground">
               
-              {/* 1. Nicho/Categoria */}
+              {/* 1. Nicho/Categoria (Empilhado no mobile, lado a lado no desktop) */}
               <div className="flex flex-col md:flex-row md:justify-between md:items-start">
                 <strong className="text-foreground shrink-0 pr-4">Nicho/Categoria:</strong> 
                 <span className="text-left md:text-right mt-1 md:mt-0 md:max-w-[70%]">{supplier.productFocus}</span>
               </div>
               
-              {/* 2. Modalidade de Venda */}
+              {/* 2. Modalidade de Venda (Empilhado no mobile, lado a lado no desktop) */}
               <div className="flex flex-col md:flex-row md:justify-between md:items-start pt-2 border-t border-border/50">
                 <strong className="text-foreground shrink-0 pr-4">Modalidade de Venda:</strong> 
                 <span className="text-left md:text-right mt-1 md:mt-0 md:max-w-[70%] text-sm">
@@ -187,7 +191,7 @@ const SupplierFinderChat = ({ onBack }: SupplierFinderChatProps) => {
                 </span>
               </div>
 
-              {/* 3. Contato */}
+              {/* 3. Contato (Empilhado no mobile, lado a lado no desktop) */}
               <div className="flex flex-col md:flex-row md:justify-between md:items-start pt-2 border-t border-border/50">
                 <strong className="text-foreground flex items-center gap-2 mb-1 shrink-0 pr-4">
                   <Mail className="h-4 w-4 text-accent shrink-0" /> Contato:
