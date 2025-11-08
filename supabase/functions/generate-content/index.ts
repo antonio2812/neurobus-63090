@@ -20,6 +20,7 @@ interface GeneratedContent {
 
 // Função para chamar a IA (OpenRouter ou Gemini)
 const callAI = async (prompt: string, isJson: boolean = false) => {
+    // Prioriza OpenRouter se a chave estiver presente
     if (OPENROUTER_API_KEY) {
         const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
         const MODEL = 'openai/gpt-3.5-turbo'; 
@@ -42,7 +43,7 @@ const callAI = async (prompt: string, isJson: boolean = false) => {
         if (!response.ok) {
             const errorText = await response.text();
             console.error("OpenRouter API error:", response.status, errorText);
-            throw new Error(`Erro da API do OpenRouter: ${response.status}`);
+            throw new Error(`Erro da API do OpenRouter: ${response.status}. Resposta: ${errorText}`);
         }
 
         const data = await response.json();
@@ -66,7 +67,7 @@ const callAI = async (prompt: string, isJson: boolean = false) => {
         if (!response.ok) {
             const errorText = await response.text();
             console.error("Google Gemini API error:", response.status, errorText);
-            throw new Error(`Erro da API do Google Gemini: ${response.status}`);
+            throw new Error(`Erro da API do Google Gemini: ${response.status}. Resposta: ${errorText}`);
         }
 
         const data = await response.json();
@@ -277,14 +278,17 @@ serve(async (req) => {
     if (error instanceof Error) {
         errorMessage = error.message;
         
+        // Mensagens de erro mais claras para o usuário
         if (errorMessage.includes("API key") || errorMessage.includes("401") || errorMessage.includes("OpenRouter")) {
-            errorMessage = "Chave API inválida ou erro de comunicação com a IA. Por favor, verifique a configuração da chave OPENROUTER_API_KEY ou GOOGLE_GEMINI_API_KEY.";
+            errorMessage = "Chave API inválida ou erro de autenticação. Por favor, verifique a configuração da chave OPENROUTER_API_KEY ou GOOGLE_GEMINI_API_KEY no painel de segredos do Supabase.";
         } else if (errorMessage.includes("quota") || errorMessage.includes("429")) {
             errorMessage = "Limite de taxa excedido. Tente novamente em breve.";
         } else if (errorMessage.includes("Erro de formato da IA")) {
             // Mantém a mensagem de erro de formato
         } else if (errorMessage.includes("Erro da API do Google Gemini")) {
-            // Mantém a mensagem de erro da API
+            errorMessage = "Erro na comunicação com a API do Google Gemini. Verifique se a chave GOOGLE_GEMINI_API_KEY está correta.";
+        } else if (errorMessage.includes("Erro da API do OpenRouter")) {
+            errorMessage = "Erro na comunicação com a API do OpenRouter. Verifique se a chave OPENROUTER_API_KEY está correta.";
         } else {
             errorMessage = "Falha na comunicação com a IA. Verifique sua conexão ou tente novamente.";
         }
