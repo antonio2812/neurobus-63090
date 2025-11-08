@@ -47,6 +47,9 @@ const DateMinerChat = ({ onBack }: DateMinerChatProps) => {
     const dates = getUpcomingDates();
     setUpcomingDates(dates);
     
+    // LOG DE DEBBUG
+    console.log("Upcoming Dates (Ordered):", dates.map(d => ({ name: d.name, date: d.date || 'SEPARATOR' })));
+    
     if (messages.length === 0) {
       setMessages([
         initialMessage,

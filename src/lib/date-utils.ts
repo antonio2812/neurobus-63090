@@ -119,9 +119,10 @@ export const getUpcomingDates = (): SpecialDate[] => {
   // 3. Remove duplicatas (mantendo a ocorrência mais próxima/futura)
   const finalDatesMap = new Map<string, SpecialDate>();
   
-  filteredDates
-    .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime()) // Ordena cronologicamente
-    .forEach(d => {
+  // Ordena cronologicamente antes de remover duplicatas
+  const sortedFilteredDates = filteredDates.sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime()); 
+  
+  sortedFilteredDates.forEach(d => {
         // Usa o nome da data como chave para evitar duplicatas (ex: Carnaval do ano atual vs próximo)
         if (!finalDatesMap.has(d.name)) {
             finalDatesMap.set(d.name, { name: d.name, date: d.date, month: d.month, isVariable: d.isVariable });
@@ -136,6 +137,7 @@ export const getUpcomingDates = (): SpecialDate[] => {
   
   finalDates.forEach(d => {
       const dateObj = parseISO(d.date);
+      // Garante que o nome do mês seja extraído da data real, e não do campo 'month' fixo
       const monthName = format(dateObj, 'MMMM', { locale: ptBR }).toUpperCase();
       
       if (monthName !== currentMonth) {
