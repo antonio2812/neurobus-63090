@@ -16,7 +16,7 @@ const StrategyCard = () => {
 
   useEffect(() => {
     const fadeDuration = 500; // 0.5s fade in/out
-    const displayDuration = 10000; // 10 segundos para visualização (300000 ms = 5 minutos)
+    const displayDuration = 300000; // 5 minutos para visualização (300000 ms)
 
     const interval = setInterval(() => {
       // 1. Inicia o fade-out

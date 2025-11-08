@@ -158,52 +158,40 @@ const SupplierFinderChat = ({ onBack }: SupplierFinderChatProps) => {
           <div className="space-y-2 pt-2 text-sm text-muted-foreground">
             
             {/* 1. Nicho/Categoria */}
-            <p>
-              <strong className="text-foreground">Nicho/Categoria:</strong> {supplier.productFocus}
-            </p>
+            <div className="flex justify-between items-start">
+              <strong className="text-foreground">Nicho/Categoria:</strong> 
+              <span className="text-right max-w-[60%]">{supplier.productFocus}</span>
+            </div>
             
             {/* 2. Modalidade de Venda (Lado a Lado) */}
-            <p className="flex flex-col space-y-1">
+            <div className="flex justify-between items-start">
               <strong className="text-foreground">Modalidade de Venda:</strong> 
-              <span className="flex flex-wrap gap-x-4 gap-y-1 ml-4">
-                
-                {/* Varejo */}
-                {(supplier.focus === 'Varejo' || supplier.focus === 'Ambos') && (
-                  <span className="text-foreground font-semibold">Varejo</span>
-                )}
-                
-                {/* Atacado */}
-                {(supplier.focus === 'Atacado' || supplier.focus === 'Ambos') && (
-                  <span className="text-foreground font-semibold">Atacado</span>
-                )}
-                
-                {/* Dropshipping */}
-                {(supplier.focus === 'Varejo' || supplier.focus === 'Ambos') && (
-                  <span className="text-foreground font-semibold">
-                    Dropshipping
-                    <span className="text-foreground text-xs ml-1">(Verificar no contato)</span>
-                  </span>
-                )}
+              <span className="text-right max-w-[60%]">
+                {/* Lista de modalidades separadas por vírgula */}
+                {supplier.focus === 'Ambos' && 'Varejo, Atacado, '}
+                {supplier.focus === 'Varejo' && 'Varejo, '}
+                {supplier.focus === 'Atacado' && 'Atacado, '}
+                Dropshipping (Verificar no contato)
               </span>
-            </p>
+            </div>
             
-            {/* 2.1. Quantidade Mínima de Pedidos (Abaixo das Modalidades) */}
+            {/* 2.1. Quantidade Mínima de Pedidos (Lado a Lado com Atacado) */}
             {(supplier.focus === 'Atacado' || supplier.focus === 'Ambos') && supplier.minOrder > 0 && (
-              <p className="flex items-center gap-2">
+              <div className="flex justify-between items-start">
                 <strong className="text-foreground">Quantidade Mínima de Pedidos:</strong> 
-                <span className="text-foreground font-semibold">{formatCurrency(supplier.minOrder)}</span>
-              </p>
+                <span className="text-foreground font-semibold text-right">{formatCurrency(supplier.minOrder)}</span>
+              </div>
             )}
             
             {/* 3. Contato (Site | Email) */}
-            <p className="flex flex-col pt-2">
+            <div className="flex justify-between items-start pt-2">
               <strong className="text-foreground flex items-center gap-2 mb-1">
                 <Mail className="h-4 w-4 text-accent shrink-0" /> Contato:
               </strong>
-              <span className="ml-6 text-sm text-muted-foreground">
+              <span className="text-right max-w-[60%]">
                 {formatContact(supplier.contact)}
               </span>
-            </p>
+            </div>
           </div>
         </Card>
       ))}
