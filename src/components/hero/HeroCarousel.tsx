@@ -56,18 +56,17 @@ const HeroCarousel = () => {
           }`}
         >
           <div 
-            // Usando bg-cover e bg-center para garantir que a imagem preencha a altura e mantenha a proporção,
-            // centralizando o foco visual.
+            // Ajustado brightness para 0.5 (mais claro)
             className={cn(
-              "absolute inset-0 bg-no-repeat bg-center brightness-[0.3] blur-sm",
+              "absolute inset-0 bg-no-repeat bg-center brightness-[0.5] blur-sm",
               "bg-cover" // Garante que a imagem preencha o contêiner sem vazar
             )}
-            // CORREÇÃO: Usando encodeURI para lidar com espaços nos nomes dos arquivos
             style={{ backgroundImage: `url(${encodeURI(image)})` }}
           />
         </div>
       ))}
-      <div className="absolute inset-0 bg-black/40" />
+      {/* Ajustado o overlay para bg-black/20 (menos escuro) */}
+      <div className="absolute inset-0 bg-black/20" />
     </div>
   );
 };
