@@ -40,7 +40,7 @@ const ForbiddenWordsChat = ({ onBack }: ForbiddenWordsChatProps) => {
   const initialMessage: ChatMessage = {
     id: 0,
     sender: 'ai',
-    content: `Olá! Sou o **Detector de Palavras Proibidas** da LucraAI. Para evitar bloqueios e reprovações, por favor, digite o **nome do produto** que você deseja anunciar.`,
+    content: `Olá! Sou o **Detector de Palavras Proibidas** da LucraAI. Para evitar **bloqueios de contas e reprovações de anúncios**, por favor, digite o **nome do produto** que você deseja anunciar.`,
   };
   
   const tipMessage: ChatMessage = {
