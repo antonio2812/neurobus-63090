@@ -69,9 +69,18 @@ const Auth = () => {
     setIsLoading(false);
 
     if (error) {
+      console.error("Erro de Login Supabase:", error);
+      
+      let description = error.message;
+      if (error.message.includes("Invalid login credentials")) {
+        description = "Credenciais inválidas. Verifique seu email e senha.";
+      } else if (error.message.includes("Email not confirmed")) {
+        description = "Email não confirmado. Verifique sua caixa de entrada.";
+      }
+      
       toast({
         title: "Erro ao fazer login",
-        description: error.message,
+        description: description,
         variant: "destructive",
       });
       return;
@@ -103,9 +112,16 @@ const Auth = () => {
     setIsLoading(false);
 
     if (error) {
+      console.error("Erro de Cadastro Supabase:", error);
+      
+      let description = error.message;
+      if (error.message.includes("User already registered")) {
+        description = "Este email já está cadastrado. Tente fazer login.";
+      }
+      
       toast({
         title: "Erro ao criar conta",
-        description: error.message,
+        description: description,
         variant: "destructive",
       });
       return;
