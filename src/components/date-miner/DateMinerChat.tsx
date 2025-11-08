@@ -40,7 +40,7 @@ const DateMinerChat = ({ onBack }: DateMinerChatProps) => {
   const initialMessage: ChatMessage = {
     id: 0,
     sender: 'ai',
-    content: `Olá! Sou o **Alerta Sazonal** da LucraAI. Estou monitorando as próximas datas comemorativas para você vender muito!`,
+    content: `Olá! Sou o **Alerta de Datas** da LucraAI. Estou monitorando as próximas datas comemorativas para você vender muito!`,
   };
 
   useEffect(() => {
