@@ -194,9 +194,15 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
       if (e instanceof Error) {
           errorMessage = errorMessage.includes("Erro desconhecido") ? e.message : errorMessage;
           
-          // Se o erro for o genérico de status, simplifica a mensagem para o usuário
-          if (errorMessage.includes("Edge Function returned a non-2xx status code")) {
-              errorMessage = "Ocorreu um erro interno no servidor da IA. Por favor, verifique se a chave OPENAI_API_KEY ou OPENROUTER_API_KEY está configurada corretamente.";
+          // Simplifica a mensagem de erro para o usuário final
+          if (errorMessage.includes("API key") || errorMessage.includes("401") || errorMessage.includes("Edge Function returned a non-2xx status code")) {
+              errorMessage = "Ocorreu um erro de autenticação com a API de Imagens. Por favor, verifique se a chave OPENAI_API_KEY ou OPENROUTER_API_KEY está configurada corretamente no painel de segredos do Supabase.";
+          } else if (errorMessage.includes("quota") || errorMessage.includes("429")) {
+              errorMessage = "Limite de uso excedido. Tente novamente em breve.";
+          } else if (errorMessage.includes("A API não retornou dados de imagem")) {
+              errorMessage = "A IA não conseguiu gerar a imagem com o prompt fornecido. Tente ser mais específico.";
+          } else {
+              errorMessage = "Falha na comunicação com a IA. Verifique sua conexão ou tente novamente.";
           }
       }
       
