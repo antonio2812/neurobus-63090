@@ -24,11 +24,7 @@ const ResourceModal = ({ title, description, images, children }: ResourceModalPr
         className="sm:max-w-[900px] p-6 md:p-8 bg-card border-border shadow-elevated max-h-[85vh] overflow-hidden"
       >
         <DialogHeader>
-          {/* Título principal agora usa text-foreground (cor padrão) */}
-          <DialogTitle className="text-2xl font-bold text-foreground">
-            {title}
-          </DialogTitle>
-          {/* Descrição removida conforme solicitado */}
+          {/* Título principal removido */}
         </DialogHeader>
         
         {/* Exibição da Imagem Grande e Responsiva */}
