@@ -107,6 +107,24 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
   // REMOVIDO: useEffect para adicionar mensagens iniciais
 
   useEffect(() => {
+    // Garante que o chat seja reiniciado corretamente ao abrir
+    if (messages.length === 0 || messages[0].id !== 0) {
+      setMessages([
+        {
+          id: 0,
+          sender: 'ai',
+          content: `Olá! Sou o **Gerador de Imagens com IA** da LucraAI. Para criar fotos de alta conversão, por favor, digite o **prompt** (descrição) da imagem que você deseja gerar.`,
+        },
+        {
+          id: 0.1,
+          sender: 'ai',
+          content: `<span class="text-foreground font-bold">Dica:</span> Seja o mais detalhado possível! Ex: "Um tênis esportivo vermelho e preto, ultra realista, em um fundo branco, com iluminação de estúdio."`,
+        }
+      ]);
+    }
+  }, [messages.length]);
+
+  useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
@@ -189,6 +207,13 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
           }
       }
       
+      // Adiciona uma mensagem de erro mais clara sobre a chave de API se for o caso
+      if (errorMessage.includes("OPENAI_API_KEY") || errorMessage.includes("OPENROUTER_API_KEY")) {
+          errorMessage = `❌ Erro de Configuração: ${errorMessage}. Por favor, verifique se a chave de API está definida corretamente nos segredos do Supabase.`;
+      } else {
+          errorMessage = `❌ Erro: Não foi possível gerar a imagem. ${errorMessage}`;
+      }
+      
       // Remove a mensagem de carregamento e adiciona uma mensagem de erro
       setMessages((prev) => {
         const newMessages = prev.filter(msg => msg.id !== loadingMessageId);
@@ -197,7 +222,7 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
           {
             id: Date.now() + 3,
             sender: 'ai',
-            content: `❌ Erro: Não foi possível gerar a imagem. ${errorMessage}`,
+            content: errorMessage,
           },
         ];
       });
