@@ -11,7 +11,8 @@ const corsHeaders = {
 
 // Inicializa as chaves de API
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
-const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY');
+// ALTERADO: Usando a nova chave
+const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY_'); 
 
 // Função para gerar a imagem
 const generateImage = async (prompt: string) => {
@@ -30,7 +31,7 @@ const generateImage = async (prompt: string) => {
         };
         // O modelo DALL-E 3 é o mesmo em ambos
     } else if (!OPENAI_API_KEY) {
-        throw new Error('Nenhuma chave de API (OPENAI_API_KEY ou OPENROUTER_API_KEY) configurada para geração de imagens.');
+        throw new Error('Nenhuma chave de API (OPENAI_API_KEY ou OPENROUTER_API_KEY_) configurada para geração de imagens.');
     }
 
     const openai = new OpenAI({
@@ -74,13 +75,11 @@ serve(async (req) => {
   }
   
   console.log("Edge Function 'image-generator' started execution.");
-  console.log(`OPENAI_API_KEY is present: ${!!OPENAI_API_KEY}`);
-  console.log(`OPENROUTER_API_KEY is present: ${!!OPENROUTER_API_KEY}`);
 
   // Verificação explícita das chaves
   if (!OPENAI_API_KEY && !OPENROUTER_API_KEY) {
     return new Response(
-      JSON.stringify({ error: 'Erro de Configuração: Nenhuma chave de API (OPENAI_API_KEY ou OPENROUTER_API_KEY) está definida nos segredos do Supabase.' }),
+      JSON.stringify({ error: 'Erro de Configuração: Nenhuma chave de API (OPENAI_API_KEY ou OPENROUTER_API_KEY_) está definida nos segredos do Supabase.' }),
       { status: 500, headers: corsHeaders }
     );
   }
@@ -114,13 +113,13 @@ serve(async (req) => {
         errorMessage = error.message;
         
         if (errorMessage.includes("API key") || errorMessage.includes("401")) {
-            errorMessage = "Chave API inválida ou erro de autenticação. Verifique se a chave OPENAI_API_KEY ou OPENROUTER_API_KEY está configurada corretamente.";
+            errorMessage = "Chave API inválida ou erro de autenticação. Verifique se a chave OPENAI_API_KEY ou OPENROUTER_API_KEY_ está configurada corretamente.";
         } else if (errorMessage.includes("quota") || errorMessage.includes("429")) {
             errorMessage = "Limite de taxa excedido. Tente novamente em breve.";
         } else if (errorMessage.includes("A API não retornou dados de imagem")) {
             errorMessage = "A IA não conseguiu gerar a imagem com o prompt fornecido. Tente ser mais específico.";
         } else if (errorMessage.includes("Nenhuma chave de API")) {
-            errorMessage = "Erro de Configuração: Nenhuma chave de API (OPENAI_API_KEY ou OPENROUTER_API_KEY) está definida nos segredos do Supabase.";
+            errorMessage = "Erro de Configuração: Nenhuma chave de API (OPENAI_API_KEY ou OPENROUTER_API_KEY_) está definida nos segredos do Supabase.";
         } else {
             errorMessage = "Falha na comunicação com a IA. Verifique sua conexão ou tente novamente.";
         }

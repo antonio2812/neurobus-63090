@@ -10,7 +10,8 @@ const corsHeaders = {
 
 // Inicializa as chaves de API
 const GOOGLE_GEMINI_API_KEY = Deno.env.get('GOOGLE_GEMINI_API_KEY');
-const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY');
+// ALTERADO: Usando a nova chave
+const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY_');
 
 // Formato de saída JSON esperado pela função
 interface CompetitorInsight {
@@ -108,7 +109,7 @@ serve(async (req) => {
 
   if (!GOOGLE_GEMINI_API_KEY && !OPENROUTER_API_KEY) {
     return new Response(
-      JSON.stringify({ error: 'Erro de Configuração: Nenhuma chave de API (OpenRouter ou Gemini) está definida.' }),
+      JSON.stringify({ error: 'Erro de Configuração: Nenhuma chave de API (OPENROUTER_API_KEY_ ou Gemini) está definida.' }),
       { status: 500, headers: corsHeaders }
     );
   }
@@ -163,7 +164,7 @@ serve(async (req) => {
     if (error instanceof Error) {
         errorMessage = error.message;
         if (errorMessage.includes("API key") || errorMessage.includes("401") || errorMessage.includes("OpenRouter")) {
-            errorMessage = "Chave API inválida ou erro de comunicação com a IA. Por favor, verifique a configuração da chave OPENROUTER_API_KEY ou GOOGLE_GEMINI_API_KEY.";
+            errorMessage = "Chave API inválida ou erro de comunicação com a IA. Por favor, verifique a configuração da chave OPENROUTER_API_KEY_ ou GOOGLE_GEMINI_API_KEY.";
         } else if (errorMessage.includes("quota") || errorMessage.includes("429")) {
             errorMessage = "Limite de taxa excedido. Tente novamente em breve.";
         } else if (errorMessage.includes("Erro de formato da IA")) {

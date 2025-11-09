@@ -2,7 +2,8 @@ import { CalculationResult } from "./types.ts";
 
 // Inicializa as chaves de API (Acessadas via Deno.env.get no contexto da Edge Function)
 const GOOGLE_GEMINI_API_KEY = Deno.env.get('GOOGLE_GEMINI_API_KEY');
-const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY');
+// ALTERADO: Usando a nova chave
+const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY_');
 
 // Função para chamar a IA (OpenRouter ou Gemini)
 export const callAI = async (prompt: string, isJson: boolean = false) => {
@@ -60,7 +61,7 @@ export const callAI = async (prompt: string, isJson: boolean = false) => {
         const data = await response.json();
         return data.candidates?.[0]?.content?.parts?.[0]?.text || "A IA não gerou conteúdo.";
     } else {
-        throw new Error('Nenhuma chave de API (OpenRouter ou Gemini) configurada.');
+        throw new Error('Nenhuma chave de API (OPENROUTER_API_KEY_ ou Gemini) configurada.');
     }
 }
 

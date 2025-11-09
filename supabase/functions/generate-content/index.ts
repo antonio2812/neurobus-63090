@@ -10,7 +10,8 @@ const corsHeaders = {
 
 // Inicializa as chaves de API
 const GOOGLE_GEMINI_API_KEY = Deno.env.get('GOOGLE_GEMINI_API_KEY');
-const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY');
+// ALTERADO: Usando a nova chave
+const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY_');
 
 // Formato de saída JSON esperado pela função
 interface GeneratedContent {
@@ -200,7 +201,7 @@ serve(async (req) => {
   if (!GOOGLE_GEMINI_API_KEY && !OPENROUTER_API_KEY) {
     console.error("Execution failed: API key is missing.");
     return new Response(
-      JSON.stringify({ error: 'Erro de Configuração: Nenhuma chave de API (OpenRouter ou Gemini) está definida.' }),
+      JSON.stringify({ error: 'Erro de Configuração: Nenhuma chave de API (OPENROUTER_API_KEY_ ou Gemini) está definida.' }),
       { status: 500, headers: corsHeaders }
     );
   }
@@ -282,7 +283,7 @@ serve(async (req) => {
         
         // Mensagens de erro mais claras para o usuário
         if (errorMessage.includes("API key") || errorMessage.includes("401") || errorMessage.includes("OpenRouter")) {
-            errorMessage = "Chave API inválida ou erro de autenticação. Por favor, verifique a configuração da chave OPENROUTER_API_KEY ou GOOGLE_GEMINI_API_KEY no painel de segredos do Supabase.";
+            errorMessage = "Chave API inválida ou erro de autenticação. Por favor, verifique a configuração da chave OPENROUTER_API_KEY_ ou GOOGLE_GEMINI_API_KEY no painel de segredos do Supabase.";
         } else if (errorMessage.includes("quota") || errorMessage.includes("429")) {
             errorMessage = "Limite de taxa excedido. Tente novamente em breve.";
         } else if (errorMessage.includes("Erro de formato da IA")) {
@@ -290,7 +291,7 @@ serve(async (req) => {
         } else if (errorMessage.includes("Erro da API do Google Gemini")) {
             errorMessage = "Erro na comunicação com a API do Google Gemini. Verifique se a chave GOOGLE_GEMINI_API_KEY está correta.";
         } else if (errorMessage.includes("Erro da API do OpenRouter")) {
-            errorMessage = "Erro na comunicação com a API do OpenRouter. Verifique se a chave OPENROUTER_API_KEY está correta.";
+            errorMessage = "Erro na comunicação com a API do OpenRouter. Verifique se a chave OPENROUTER_API_KEY_ está correta.";
         } else {
             errorMessage = "Falha na comunicação com a IA. Verifique sua conexão ou tente novamente.";
         }
