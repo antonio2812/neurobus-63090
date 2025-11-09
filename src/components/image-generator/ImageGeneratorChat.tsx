@@ -197,7 +197,8 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
           
           // Simplifica a mensagem de erro para o usuário final
           if (errorMessage.includes("API key") || errorMessage.includes("401") || errorMessage.includes("Edge Function returned a non-2xx status code")) {
-              errorMessage = "Ocorreu um erro de autenticação com a API de Imagens. Por favor, verifique se a chave OPENAI_API_KEY ou OPENROUTER_API_KEY está configurada corretamente no painel de segredos do Supabase.";
+              // MENSAGEM ATUALIZADA: Foca apenas na chave correta
+              errorMessage = "Ocorreu um erro de autenticação com a API de Imagens. Por favor, verifique se a chave OPENROUTER_API_KEY_ está configurada corretamente no painel de segredos do Supabase.";
           } else if (errorMessage.includes("quota") || errorMessage.includes("429")) {
               errorMessage = "Limite de uso excedido. Tente novamente em breve.";
           } else if (errorMessage.includes("A API não retornou dados de imagem")) {
@@ -208,14 +209,14 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
       }
       
       // Adiciona uma mensagem de erro mais clara sobre a chave de API se for o caso
-      if (errorMessage.includes("OPENAI_API_KEY") || errorMessage.includes("OPENROUTER_API_KEY")) {
-          errorMessage = `❌ Erro de Configuração: ${errorMessage}. Por favor, verifique se a chave de API está definida corretamente nos segredos do Supabase.`;
+      if (errorMessage.includes("OPENROUTER_API_KEY_")) {
+          errorMessage = `❌ Erro de Configuração: ${errorMessage}`;
       } else {
           errorMessage = `❌ Erro: Não foi possível gerar a imagem. ${errorMessage}`;
       }
       
-      // Adiciona um link de recurso para o usuário verificar os segredos
-      const resourceLink = `<br/><br/>**Ação Necessária:** Por favor, verifique a chave <span class="text-accent font-bold">OPENAI_API_KEY</span> ou <span class="text-accent font-bold">OPENROUTER_API_KEY</span> no painel de segredos do Supabase. <resource-link href="https://supabase.com/dashboard/project/urbbngcarxdqesenfvsb/functions/secrets">Gerenciar Segredos</resource-link>`;
+      // Adiciona um link de recurso para o usuário verificar os segredos (CORRIGINDO O NOME DA CHAVE NO LINK)
+      const resourceLink = `<br/><br/>**Ação Necessária:** Por favor, verifique a chave <span class="text-accent font-bold">OPENROUTER_API_KEY_</span> no painel de segredos do Supabase. <resource-link href="https://supabase.com/dashboard/project/urbbngcarxdqesenfvsb/functions/secrets">Gerenciar Segredos</resource-link>`;
       
       // Remove a mensagem de carregamento e adiciona uma mensagem de erro
       setMessages((prev) => {
