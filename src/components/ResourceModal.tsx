@@ -29,7 +29,7 @@ const ResourceModal = ({ title, description, images, children }: ResourceModalPr
         
         {/* Exibição da Imagem Grande e Responsiva */}
         {mainImageSrc && (
-          <div className="mt-4 mx-auto flex justify-center items-center w-full h-full"> {/* Adicionado mx-auto, flex, justify-center, items-center e h-full */}
+          <div className="mt-4 mx-auto"> {/* Removido flex, justify-center, items-center, w-full e h-full */}
             <img 
               src={mainImageSrc} 
               alt={`Visualização da funcionalidade ${title}`} 
