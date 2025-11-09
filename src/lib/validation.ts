@@ -4,7 +4,6 @@ import { z } from "zod";
 const passwordMinLengthMessage = (min: number) => ({
   message: (ctx: z.RefinementCtx) => {
     const currentLength = String(ctx.data).length;
-    // Formato solicitado: Só isso? Capricha mais! Use pelo menos 8 caracteres. Você usou(X)
     return `Só isso? Capricha mais! Use pelo menos ${min} caracteres. Você usou(${currentLength})`;
   },
 });
@@ -35,5 +34,5 @@ export const updatePasswordSchema = z.object({
   confirmPassword: z.string().min(8, passwordMinLengthMessage(8)),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Ops! As senhas não estão batendo.",
-  path: ["confirmPassword"],
+  path: ["confirmNewPassword"],
 });
