@@ -14,14 +14,22 @@ const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY_');
 
 // Função para gerar a imagem
 const generateImage = async (prompt: string) => {
-    const apiKey = OPENROUTER_API_KEY;
-    const baseURL = 'https://openrouter.ai/api/v1'; 
-    const headers = {
-        'HTTP-Referer': 'https://urbbngcarxdqesenfvsb.supabase.co',
-    };
-    const model = "dall-e-3"; 
+    let apiKey = OPENROUTER_API_KEY;
+    // CORRIGIDO: Usar o baseURL padrão da OpenAI para geração de imagens,
+    // pois a biblioteca OpenAI espera este endpoint, e o OpenRouter
+    // intercepta a requisição via API Key.
+    let baseURL = 'https://api.openai.com/v1'; 
+    let headers = {};
+    let model = "dall-e-3"; // DALL-E 3 é o padrão para geração de imagens
 
-    if (!apiKey) {
+    if (OPENROUTER_API_KEY) {
+        // Se estiver usando OpenRouter, a chave é a do OpenRouter,
+        // mas o baseURL é o da OpenAI, e adicionamos o header de referer.
+        apiKey = OPENROUTER_API_KEY;
+        headers = {
+            'HTTP-Referer': 'https://urbbngcarxdqesenfvsb.supabase.co',
+        };
+    } else {
         throw new Error('Nenhuma chave de API (OPENROUTER_API_KEY_) configurada para geração de imagens.');
     }
 
@@ -111,6 +119,8 @@ serve(async (req) => {
             errorMessage = "A IA não conseguiu gerar a imagem com o prompt fornecido. Tente ser mais específico.";
         } else if (errorMessage.includes("Nenhuma chave de API")) {
             errorMessage = "Erro de Configuração: Nenhuma chave de API (OPENROUTER_API_KEY_) está definida nos segredos do Supabase.";
+        } else if (errorMessage.includes("405 status code")) {
+            errorMessage = "Erro de método HTTP (405). O endpoint da API de Imagens pode estar incorreto. Tente novamente.";
         } else {
             errorMessage = "Falha na comunicação com a IA. Verifique sua conexão ou tente novamente.";
         }
