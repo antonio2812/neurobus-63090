@@ -76,6 +76,7 @@ const SecuritySettingsModal = ({ children }: SecuritySettingsModalProps) => {
       let description = error.message;
       // Simulação de erro de senha atual inválida (se a sessão for válida, mas o update falhar)
       if (error.message.includes("Invalid login credentials") || error.message.includes("New password should be diferente from the old password")) {
+          // MENSAGEM ATUALIZADA: Ponto 4.2
           description = "A senha atual está inválida.";
       }
       

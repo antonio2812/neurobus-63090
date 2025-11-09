@@ -4,13 +4,16 @@ import { z } from "zod";
 const passwordMinLengthMessage = (min: number) => ({
   message: (ctx: z.RefinementCtx) => {
     const currentLength = String(ctx.data).length;
+    // Formato solicitado: Só isso? Capricha mais! Use pelo menos 8 caracteres. Você usou(X)
     return `Só isso? Capricha mais! Use pelo menos ${min} caracteres. Você usou(${currentLength})`;
   },
 });
 
+// Esquema de Login (Sem validação de min length na senha, conforme solicitado no ponto 2.1)
 export const loginSchema = z.object({
   email: z.string().email({ message: "Esse email não é válido. Use o formato nome@dominio.com" }),
-  password: z.string().min(8, passwordMinLengthMessage(8)),
+  // A validação de senha mínima é removida aqui, o erro virá do Supabase se for inválida.
+  password: z.string(), 
 });
 
 export const signupSchema = z.object({
