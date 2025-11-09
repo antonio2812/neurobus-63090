@@ -19,9 +19,9 @@ const ResourceModal = ({ title, description, images, children }: ResourceModalPr
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      {/* Alterado para w-full em mobile e sm:max-w-[900px] em desktop. */}
+      {/* Aumentando a largura máxima para 900px no desktop e preenchendo a tela no mobile */}
       <DialogContent 
-        className="w-full sm:max-w-[900px] p-6 md:p-8 bg-card border-border shadow-elevated max-h-[95vh] overflow-y-auto"
+        className="max-w-[95vw] sm:max-w-[900px] p-6 md:p-8 bg-card border-border shadow-elevated max-h-[95vh] overflow-y-auto"
       >
         <DialogHeader>
           {/* Título principal removido */}
