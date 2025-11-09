@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { calculatePrice } from "./lib/pricing.ts";
-import { generateExplanation } from "./lib/ai.ts";
+import { calculatePrice } from "./pricing.ts";
+import { generateExplanation } from "./ai.ts";
 
 // Configuração de CORS
 const corsHeaders = {
