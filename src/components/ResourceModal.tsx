@@ -31,14 +31,14 @@ const ResourceModal = ({ title, description, images, children }: ResourceModalPr
           {/* Descrição removida conforme solicitado */}
         </DialogHeader>
         
-        {/* Exibição da Imagem Grande e Responsiva */}
+        {/* Exibição da Imagem Grande e Responsiva - Adicionando flex justify-center e mx-auto */}
         {mainImageSrc && (
-          <div className="mt-4">
+          <div className="mt-4 flex justify-center mx-auto w-full h-full">
             <img 
               src={mainImageSrc} 
               alt={`Visualização da funcionalidade ${title}`} 
               className={cn(
-                "w-full h-auto object-contain",
+                "w-full h-auto object-contain max-h-[70vh]", // Adicionando max-h para evitar que a imagem estoure a altura do modal
                 "rounded-xl border border-border/50" // Borda arredondada e borda sutil
               )}
             />
