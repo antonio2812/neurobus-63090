@@ -79,8 +79,10 @@ const ToastClose = React.forwardRef<
   <ToastPrimitives.Close
     ref={ref}
     className={cn(
-      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-accent group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",
-      // NOVO ESTILO: Garante que o hover use a cor accent (#ffc800)
+      "absolute right-2 top-2 rounded-md p-1 text-foreground/50 opacity-0 transition-opacity hover:text-accent group-hover:opacity-100 focus:opacity-100 focus:outline-none",
+      // Removendo focus:ring-2 e adicionando focus:ring-0 focus:ring-offset-0 para remover o anel de foco
+      "focus:ring-0 focus:ring-offset-0", 
+      "group-[.destructive]:text-red-300 group-[.destructive]:hover:text-red-50 group-[.destructive]:focus:ring-red-400 group-[.destructive]:focus:ring-offset-red-600",
       "hover:text-accent",
       className
     )}
