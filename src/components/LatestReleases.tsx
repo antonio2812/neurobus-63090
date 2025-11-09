@@ -7,19 +7,19 @@ const LatestReleases = () => {
     {
       title: "Gerador Inteligente de Kits",
       description: "Crie combinações automáticas de produtos que aumentam o ticket médio.",
-      image: "/lovable-uploads/Home.png", // Placeholder
+      image: "/lovable-uploads/Funcionalidade - Gerador Inteligente de Kits.png", // CAMINHO ATUALIZADO
       order: 1,
     },
     {
       title: "Gerador de Imagens com IA", // NOVO CARD
       description: "Crie fotos de alta qualidade e conversão para os seus produtos em segundos.",
-      image: "/lovable-uploads/Home.png", // Placeholder
+      image: "/lovable-uploads/Funcionalidade - Gerador de Imagens com IA.png", // CAMINHO ATUALIZADO
       order: 2,
     },
     {
       title: "Buscador dos Melhores Fornecedores Nacionais e Importadoras",
       description: "Encontre Parceiros Comerciais com facilidade, confiáveis e com os melhores preços.",
-      image: "/lovable-uploads/Home.png", // Placeholder
+      image: "/lovable-uploads/Funcionalidade - Buscador de Fornecedores Nacionais e Importadoras.png", // CAMINHO ATUALIZADO
       order: 3,
     },
   ];
