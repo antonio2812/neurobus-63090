@@ -1,6 +1,5 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import OpenAI from 'https://esm.sh/openai@4.52.7';
 
 // Configuração de CORS
 const corsHeaders = {
@@ -9,52 +8,54 @@ const corsHeaders = {
   'Content-Type': 'application/json',
 };
 
-// Inicializa a chave de API correta
-const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY_'); 
+// Inicializa a chave de API correta para Imagens
+const GEMINI_IMAGE_API_KEY = Deno.env.get('GOOGLE_GEMINI_IMAGE_API_KEY'); 
 
-// Função para gerar a imagem
+// Função para gerar a imagem usando a API do Google Gemini
 const generateImage = async (prompt: string) => {
-    const apiKey = OPENROUTER_API_KEY;
-    // CORRIGIDO: Usando o baseURL do OpenRouter para garantir que a chave seja processada corretamente.
-    const baseURL = 'https://openrouter.ai/api/v1'; 
-    const headers = {
-        // Header necessário para o OpenRouter identificar a origem
-        'HTTP-Referer': 'https://urbbngcarxdqesenfvsb.supabase.co',
-    };
-    // O modelo DALL-E 3 é o padrão para geração de imagens
-    const model = "dall-e-3"; 
-
+    const apiKey = GEMINI_IMAGE_API_KEY;
+    // Endpoint da API de Geração de Imagens do Google Gemini (DALL-E 3 é da OpenAI)
+    // Usaremos o modelo Imagen 2 (ou similar) via API do Google.
+    const GEMINI_IMAGE_URL = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:generateImages?key=${apiKey}`;
+    
     if (!apiKey) {
-        throw new Error('Nenhuma chave de API (OPENROUTER_API_KEY_) configurada para geração de imagens.');
+        throw new Error('Nenhuma chave de API (GOOGLE_GEMINI_IMAGE_API_KEY) configurada para geração de imagens.');
     }
-
-    const openai = new OpenAI({
-        apiKey: apiKey,
-        baseURL: baseURL,
-        defaultHeaders: headers,
-    });
 
     // Prompt de engenharia para garantir qualidade e estilo de marketplace
     const finalPrompt = `Crie uma imagem de alta qualidade, ultra realista, com iluminação profissional e fundo limpo (branco ou gradiente sutil) para um anúncio de marketplace. O produto é: "${prompt}". Foco em detalhes e conversão.`;
 
     try {
-        const response = await openai.images.generate({
-            model: model,
-            prompt: finalPrompt,
-            n: 1,
-            size: "1024x1024",
-            response_format: "b64_json", // Solicita a imagem em base64
+        const response = await fetch(GEMINI_IMAGE_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                prompt: finalPrompt,
+                config: {
+                    numberOfImages: 1,
+                    outputMimeType: "image/png",
+                    aspectRatio: "1:1",
+                }
+            })
         });
 
-        if (!response.data || response.data.length === 0) {
-            throw new Error("A API não retornou dados de imagem.");
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Google Imagen API error:", response.status, errorText);
+            throw new Error(`Erro da API do Google Imagen: ${response.status}. Resposta: ${errorText}`);
         }
 
-        const image = response.data[0];
+        const data = await response.json();
+        
+        if (!data.generatedImages || data.generatedImages.length === 0) {
+            throw new Error("A API do Google Imagen não retornou dados de imagem.");
+        }
+
+        const image = data.generatedImages[0];
         
         return {
-            base64Image: image.b64_json,
-            mimeType: 'image/png', // DALL-E 3 geralmente retorna PNG
+            base64Image: image.image.imageBytes, // O Gemini retorna a imagem em imageBytes
+            mimeType: image.image.mimeType,
         };
     } catch (e) {
         console.error("Erro ao chamar a API de Imagem:", e);
@@ -70,9 +71,9 @@ serve(async (req) => {
   console.log("Edge Function 'image-generator' started execution.");
 
   // Verificação explícita da chave correta
-  if (!OPENROUTER_API_KEY) {
+  if (!GEMINI_IMAGE_API_KEY) {
     return new Response(
-      JSON.stringify({ error: 'Erro de Configuração: Nenhuma chave de API (OPENROUTER_API_KEY_) está definida nos segredos do Supabase.' }),
+      JSON.stringify({ error: 'Erro de Configuração: Nenhuma chave de API (GOOGLE_GEMINI_IMAGE_API_KEY) está definida nos segredos do Supabase.' }),
       { status: 500, headers: corsHeaders }
     );
   }
@@ -106,15 +107,13 @@ serve(async (req) => {
         errorMessage = error.message;
         
         if (errorMessage.includes("API key") || errorMessage.includes("401")) {
-            errorMessage = "Chave API inválida ou erro de autenticação. Verifique se a chave OPENROUTER_API_KEY_ está configurada corretamente.";
+            errorMessage = "Chave API inválida ou erro de autenticação. Verifique se a chave GOOGLE_GEMINI_IMAGE_API_KEY está configurada corretamente.";
         } else if (errorMessage.includes("quota") || errorMessage.includes("429")) {
             errorMessage = "Limite de taxa excedido. Tente novamente em breve.";
-        } else if (errorMessage.includes("A API não retornou dados de imagem")) {
+        } else if (errorMessage.includes("A API do Google Imagen não retornou dados de imagem")) {
             errorMessage = "A IA não conseguiu gerar a imagem com o prompt fornecido. Tente ser mais específico.";
         } else if (errorMessage.includes("Nenhuma chave de API")) {
-            errorMessage = "Erro de Configuração: Nenhuma chave de API (OPENROUTER_API_KEY_) está definida nos segredos do Supabase.";
-        } else if (errorMessage.includes("405 status code")) {
-            errorMessage = "Erro de método HTTP (405). O endpoint da API de Imagens pode estar incorreto. Tente novamente.";
+            errorMessage = "Erro de Configuração: Nenhuma chave de API (GOOGLE_GEMINI_IMAGE_API_KEY) está definida nos segredos do Supabase.";
         } else {
             errorMessage = "Falha na comunicação com a IA. Verifique sua conexão ou tente novamente.";
         }
