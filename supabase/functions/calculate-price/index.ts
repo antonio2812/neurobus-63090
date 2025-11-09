@@ -22,7 +22,7 @@ export interface CalculationResult {
     weight: number | null; // Em KG
     rawWeightValue: number | null; // Valor numérico digitado pelo usuário
     weightUnit: 'g' | 'kg'; // Unidade original
-    rawWeightInputString: string | null; // NOVO: String bruta digitada
+    rawWeightInputString: string | null; // String bruta digitada
   };
 }
 
@@ -34,8 +34,11 @@ export interface MarketplaceCalculation {
     commissionLimit: boolean;
 }
 
-// --- 2. PRICING LOGIC ---
+// --- 2. BUSINESS LOGIC (Pricing Calculation) ---
 
+/**
+ * Resolve a equação de preço de venda ideal: Preço = (Custo + Taxas Fixas) / (1 - Taxa de Comissão - Margem Desejada)
+ */
 const solveForPrice = (
   productCost: number, 
   fixedFee: number, 
@@ -46,6 +49,7 @@ const solveForPrice = (
   const denominator = 1 - commissionRate - desiredMarginRate;
   
   if (denominator <= 0.0001) { 
+    // Se o denominador for zero ou negativo, calcula o preço para lucro zero
     const priceForZeroProfit = (productCost + fixedFee + freightFee) / (1 - commissionRate);
     return { idealSalePrice: priceForZeroProfit, commissionLimit: true };
   }
@@ -141,7 +145,7 @@ const calculateAmazonPrice = (productCost: number, desiredMarginRate: number): M
         finalIdealSalePrice = price2;
         fixedFee = currentFixedFee;
       } else {
-        // TIER 3: Preço > R$79.00 (Placeholder para custo fixo baseado no peso)
+        // 3. TIER 3: Preço > R$79.00 (Placeholder para custo fixo baseado no peso)
         currentFixedFee = 15.00; 
         let { idealSalePrice: price3 } = solveForPrice(productCost, currentFixedFee, freightFee, commissionRate, desiredMarginRate);
         
@@ -229,7 +233,9 @@ const calculateFallbackPrice = (productCost: number, desiredMarginRate: number):
 };
 
 
-// Função principal de cálculo (Dispatcher)
+/**
+ * Função principal de cálculo (Dispatcher)
+ */
 const calculatePrice = (
   marketplace: string, 
   cost: number, 
@@ -240,7 +246,7 @@ const calculatePrice = (
   weight: number | null, // Em KG
   weightUnit: 'g' | 'kg', // Unidade original
   rawWeightValue: number | null, // Valor numérico digitado
-  rawWeightInputString: string | null // NOVO: String bruta digitada
+  rawWeightInputString: string | null // String bruta digitada
 ): CalculationResult => {
   const desiredMarginRate = margin / 100;
   const productCost = cost + additionalCost;
@@ -304,20 +310,22 @@ const calculatePrice = (
       category,
       weight,
       weightUnit,
-      rawWeightValue, // INCLUINDO O NOVO VALOR
-      rawWeightInputString, // INCLUINDO O NOVO VALOR
+      rawWeightValue,
+      rawWeightInputString,
     }
   };
 };
 
 
-// --- 3. AI LOGIC ---
+// --- 3. AI LOGIC (Explanation Generation) ---
 
 // Inicializa as chaves de API (Acessadas via Deno.env.get no contexto da Edge Function)
 const GOOGLE_GEMINI_API_KEY = Deno.env.get('GOOGLE_GEMINI_API_KEY');
-const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY_'); // USANDO A CHAVE CORRETA
+const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY_'); 
 
-// Função para chamar a IA (OpenRouter ou Gemini)
+/**
+ * Função para chamar a IA (OpenRouter ou Gemini)
+ */
 const callAI = async (prompt: string, isJson: boolean = false) => {
     // Prioriza OpenRouter se a chave estiver presente
     if (OPENROUTER_API_KEY) {
@@ -349,7 +357,7 @@ const callAI = async (prompt: string, isJson: boolean = false) => {
         return data.choices?.[0]?.message?.content || "A IA não gerou conteúdo.";
 
     } else if (GOOGLE_GEMINI_API_KEY) {
-        // ATUALIZADO: Usando gemini-2.5-flash
+        // Usando gemini-2.5-flash
         const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GOOGLE_GEMINI_API_KEY}`;
 
         const response = await fetch(GEMINI_URL, {
@@ -377,17 +385,17 @@ const callAI = async (prompt: string, isJson: boolean = false) => {
     }
 }
 
-// Função para gerar a explicação da IA (usando callAI)
+/**
+ * Função para gerar a explicação da IA
+ */
 const generateExplanation = async (calculation: CalculationResult) => {
     const { idealSalePrice, netProfit, netMargin, details } = calculation;
     
     // Formatação do peso para a explicação (usando rawWeightInputString)
     let weightDisplay = 'N/A';
     if (details.rawWeightInputString) {
-        // Usa a string bruta digitada pelo usuário
         weightDisplay = details.rawWeightInputString;
     } else if (details.rawWeightValue !== null) {
-        // Fallback para o valor numérico formatado com a unidade original
         weightDisplay = `${details.rawWeightValue.toFixed(details.weightUnit === 'g' ? 0 : 2).replace('.', ',')} ${details.weightUnit}`;
     }
     
@@ -427,7 +435,6 @@ const generateExplanation = async (calculation: CalculationResult) => {
     
     let sheinNote = '';
     if (details.marketplace === 'Shein') {
-        // Aqui usamos o peso em KG para o cálculo da taxa, mas exibimos o peso digitado
         sheinNote = ` (Regra Shein: A comissão de 16% foi aplicada. O custo de frete de R$${details.freightFee.toFixed(2)} foi baseado no peso de ${weightDisplay}).`;
     }
     
