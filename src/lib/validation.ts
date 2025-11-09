@@ -35,5 +35,5 @@ export const updatePasswordSchema = z.object({
   confirmPassword: z.string().min(8, passwordMinLengthMessage(8)),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Ops! As senhas não estão batendo.",
-  path: ["confirmNewPassword"],
+  path: ["confirmPassword"],
 });
