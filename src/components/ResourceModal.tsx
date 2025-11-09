@@ -19,9 +19,9 @@ const ResourceModal = ({ title, description, images, children }: ResourceModalPr
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      {/* Removendo [&>button]:hidden para reativar o botão 'X' padrão. */}
+      {/* Aumentando a largura máxima para 900px, mantendo a altura e removendo overflow-y-auto. */}
       <DialogContent 
-        className="sm:max-w-[800px] p-6 md:p-8 bg-card border-border shadow-elevated max-h-[85vh] overflow-hidden"
+        className="sm:max-w-[900px] p-6 md:p-8 bg-card border-border shadow-elevated max-h-[85vh] overflow-hidden"
       >
         <DialogHeader>
           {/* Título principal com a cor #ffc800 */}
@@ -46,7 +46,7 @@ const ResourceModal = ({ title, description, images, children }: ResourceModalPr
         )}
         
         {/* Removendo o botão 'Fechar' manual */}
-        {/* <div className="pt-4 flex justify-end">
+        {/* <div className="pt-4 flex justify-end>
           <DialogPrimitive.Close asChild>
             <Button variant="outline">
               Fechar
