@@ -11,7 +11,7 @@ const corsHeaders = {
 
 // Inicializa as chaves de API
 const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
-// ALTERADO: Usando a nova chave
+// USANDO A CHAVE CORRETA: OPENROUTER_API_KEY_
 const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY_'); 
 
 // Função para gerar a imagem
