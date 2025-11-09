@@ -214,6 +214,9 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
           errorMessage = `❌ Erro: Não foi possível gerar a imagem. ${errorMessage}`;
       }
       
+      // Adiciona um link de recurso para o usuário verificar os segredos
+      const resourceLink = `<br/><br/>**Ação Necessária:** Por favor, verifique a chave <span class="text-accent font-bold">OPENAI_API_KEY</span> ou <span class="text-accent font-bold">OPENROUTER_API_KEY</span> no painel de segredos do Supabase. <resource-link href="https://supabase.com/dashboard/project/urbbngcarxdqesenfvsb/functions/secrets">Gerenciar Segredos</resource-link>`;
+      
       // Remove a mensagem de carregamento e adiciona uma mensagem de erro
       setMessages((prev) => {
         const newMessages = prev.filter(msg => msg.id !== loadingMessageId);
@@ -222,7 +225,7 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
           {
             id: Date.now() + 3,
             sender: 'ai',
-            content: errorMessage,
+            content: errorMessage + resourceLink,
           },
         ];
       });
@@ -231,7 +234,7 @@ const ImageGeneratorChat = ({ onBack }: ImageGeneratorChatProps) => {
       
       toast({
         title: "Erro de Geração de Imagem",
-        description: errorMessage,
+        description: "Falha na autenticação da API. Verifique a chave nos segredos do Supabase.",
         variant: "destructive",
       });
       
