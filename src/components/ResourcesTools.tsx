@@ -19,37 +19,37 @@ const ResourcesTools = () => {
       icon: Sparkles,
       title: "Gerador de Títulos e Descrições", // Alterado
       description: "Conquiste mais cliques com textos prontos, persuasivos e otimizados para marketplaces.",
-      modalImages: [],
-      modalDescription: "Funcionalidade de visualização de exemplos em desenvolvimento.",
+      modalImages: ["/lovable-uploads/Funcionalidade - Gerador de Títulos e Descrições.png"], // NOVO CAMINHO
+      modalDescription: "Gere títulos e descrições de alta conversão e otimizados para SEO em segundos.",
     },
     {
       icon: Eye, // ÍCONE ATUALIZADO: Eye
       title: "Espião de Tendências de Produtos",
       description: "Descubra o que vai bombar antes dos seus concorrentes.",
-      modalImages: [],
-      modalDescription: "Funcionalidade de visualização de exemplos em desenvolvimento.",
+      modalImages: ["/lovable-uploads/Funcionalidade - Espião de Tendências de Produtos.png"], // NOVO CAMINHO
+      modalDescription: "Identifique produtos em alta com baixa concorrência para investir no momento certo.",
     },
     {
       icon: UserSearch, // ÍCONE ATUALIZADO: UserSearch
       title: "Espião de Concorrência", // Alterado
       description: "Monitore produtos, preços e estratégias dos concorrentes em tempo real.",
-      modalImages: [],
-      modalDescription: "Funcionalidade de visualização de exemplos em desenvolvimento.",
+      modalImages: ["/lovable-uploads/Funcionalidade - Espião de Concorrência.png"], // NOVO CAMINHO
+      modalDescription: "Analise a estratégia de preços e anúncios dos seus concorrentes para se manter à frente.",
     },
     // NOVO CARD: Detector de Palavras Proibidas
     {
       icon: AlertTriangle, // Ícone de Alerta Profissional
       title: "Detector de Palavras Proibidas", 
       description: "Evite bloqueios e reprovações de anúncios antes que prejudiquem suas vendas.", // TEXTO ALTERADO
-      modalImages: [],
-      modalDescription: "Funcionalidade de visualização de exemplos em desenvolvimento.",
+      modalImages: ["/lovable-uploads/Funcionalidade - Detextor de Palavras Proóbidas.png"], // NOVO CAMINHO
+      modalDescription: "Verifique títulos e descrições para garantir que não violam as políticas dos marketplaces.",
     },
     {
       icon: Bell, // Ícone de sino de alerta
       title: "Datas Especiais + Produtos Minerados", // Alterado
       description: "Receba alertas inteligentes sobre oportunidades de produtos em datas lucrativas para vender mais.",
-      modalImages: [],
-      modalDescription: "Funcionalidade de visualização de exemplos em desenvolvimento.",
+      modalImages: ["/lovable-uploads/Funcionalidades - Datas Espeeciais + Produtos Minerados.png"], // NOVO CAMINHO
+      modalDescription: "Planeje seu estoque e campanhas com base em datas comemorativas e produtos sazonais.",
     },
     // O card "Relatórios Mensais de Lucro" foi removido.
   ];
