@@ -50,12 +50,12 @@ const LatestReleases = () => {
         </div>
 
         {/* Layout 1 coluna (empilhado) - Aumentando max-w para 5xl */}
-        <div className="grid grid-cols-1 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 gap-12 max-w-5xl mx-auto">
           {releases.map((release, index) => (
             <Card 
               key={index}
               className={cn(
-                "p-6 bg-card border-border hover:border-accent/50 transition-all duration-700 hover-lift group cursor-pointer flex flex-col",
+                "p-8 bg-card border-border hover:border-accent/50 transition-all duration-700 hover-lift group cursor-pointer flex flex-col",
                 isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               )}
               style={{ transitionDelay: isInView ? `${0.1 + index * 0.15}s` : '0s' }}
