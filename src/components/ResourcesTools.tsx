@@ -3,14 +3,8 @@ import { Card } from "@/components/ui/card";
 import ResourceModal from "./ResourceModal";
 
 const ResourcesTools = () => {
-  // Imagens de exemplo para o modal (usando logos de marketplace como exemplo de integração)
-  const marketplaceImages = [
-    "/lovable-uploads/Logo Mercado Livre.png",
-    "/lovable-uploads/Logo Shopee.jpeg",
-    "/lovable-uploads/Logo Amazon.jpg",
-    "/lovable-uploads/Logo Magalu.jpg",
-    "/lovable-uploads/Logo Shein.jpg",
-  ];
+  // Caminho da nova imagem para Precificação de Produtos
+  const pricingImage = "/lovable-uploads/Funcionalidade - Precificação de Produtos com IA.png";
 
   // 6 Cards de funcionalidades, reorganizados e com novos ícones/descrições
   const features = [
@@ -18,7 +12,7 @@ const ResourcesTools = () => {
       icon: Brain,
       title: "Precificação de Produtos", // Alterado
       description: "Descubra o preço ideal automaticamente e maximize seus ganhos com base em custos, taxas e margem desejada.",
-      modalImages: marketplaceImages,
+      modalImages: [pricingImage], // Passando a nova imagem
       modalDescription: "A LucraAI se integra com os principais marketplaces para otimizar seus preços em tempo real.",
     },
     {

@@ -1,23 +1,27 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import * as DialogPrimitive from "@radix-ui/react-dialog"; // Importando o primitivo para usar o Close
+import { cn } from "@/lib/utils";
 
 interface ResourceModalProps {
   title: string;
   description: string;
-  images: string[];
+  images: string[]; // Agora esperamos apenas 1 imagem para exibição principal
   children: React.ReactNode;
 }
 
 const ResourceModal = ({ title, description, images, children }: ResourceModalProps) => {
+  // Pega a primeira imagem para exibição principal
+  const mainImageSrc = images.length > 0 ? images[0] : null;
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      {/* Adicionando a classe para ocultar o botão 'X' padrão e reintroduzindo o botão 'Fechar' */}
+      {/* Aumentando o tamanho máximo para 900px para acomodar a imagem grande */}
       <DialogContent 
-        className="sm:max-w-[800px] p-6 md:p-8 bg-card border-border shadow-elevated max-h-[90vh] overflow-y-auto [&>button]:hidden"
+        className="sm:max-w-[900px] p-6 md:p-8 bg-card border-border shadow-elevated max-h-[95vh] overflow-y-auto [&>button]:hidden"
       >
         <DialogHeader>
           {/* Título principal com a cor #ffc800 */}
@@ -27,17 +31,19 @@ const ResourceModal = ({ title, description, images, children }: ResourceModalPr
           {/* Descrição removida conforme solicitado */}
         </DialogHeader>
         
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
-          {images.map((src, index) => (
-            <div key={index} className="bg-muted/20 p-4 rounded-lg flex items-center justify-center h-32">
-              <img 
-                src={src} 
-                alt={`Funcionalidade ${index + 1}`} 
-                className="max-h-full max-w-full object-contain"
-              />
-            </div>
-          ))}
-        </div>
+        {/* Exibição da Imagem Grande e Responsiva */}
+        {mainImageSrc && (
+          <div className="mt-4">
+            <img 
+              src={mainImageSrc} 
+              alt={`Visualização da funcionalidade ${title}`} 
+              className={cn(
+                "w-full h-auto object-contain",
+                "rounded-xl border border-border/50" // Borda arredondada e borda sutil
+              )}
+            />
+          </div>
+        )}
         
         {/* Reintroduzindo o botão 'Fechar' na parte inferior */}
         <div className="pt-4 flex justify-end">
