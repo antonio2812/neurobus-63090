@@ -24,8 +24,8 @@ const ResourceModal = ({ title, description, images, children }: ResourceModalPr
         className="sm:max-w-[900px] p-6 md:p-8 bg-card border-border shadow-elevated max-h-[85vh] overflow-hidden"
       >
         <DialogHeader>
-          {/* Título principal com a cor #ffc800 */}
-          <DialogTitle className="text-2xl font-bold" style={{ color: '#ffc800' }}>
+          {/* Título principal agora usa text-foreground (cor padrão) */}
+          <DialogTitle className="text-2xl font-bold text-foreground">
             {title}
           </DialogTitle>
           {/* Descrição removida conforme solicitado */}
