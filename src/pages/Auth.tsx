@@ -86,9 +86,10 @@ const Auth = () => {
       return;
     }
 
+    // MENSAGEM DE SUCESSO ATUALIZADA
     toast({
-      title: "Login realizado com sucesso!",
-      description: "Bem-vindo ao LucraAI",
+      title: "Sucesso",
+      description: "Seja Bem-vindo(a) a LucraAI!",
     });
     // O redirecionamento para /dashboard será acionado pelo useEffect acima
   };
@@ -127,9 +128,10 @@ const Auth = () => {
       return;
     }
 
+    // MENSAGEM DE SUCESSO ATUALIZADA
     toast({
-      title: "Conta criada com sucesso!",
-      description: "Verifique seu email para confirmar sua conta",
+      title: "Conta criada com sucesso",
+      description: "Aí sim! Só verificar seu email para confirmar e aproveitar.",
     });
   };
   

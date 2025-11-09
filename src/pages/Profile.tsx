@@ -172,6 +172,12 @@ const Profile = () => {
         name: newName || prev.email?.split('@')[0] || "Usuário",
       };
     });
+    
+    // MENSAGEM DE SUCESSO ATUALIZADA
+    toast({
+      title: "Sucesso!",
+      description: "Dados pessoais atualizados.",
+    });
   };
 
   const getGreeting = () => {

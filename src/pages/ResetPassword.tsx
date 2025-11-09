@@ -61,25 +61,36 @@ const ResetPassword = () => {
       setIsLoading(false);
 
       if (error) {
+        // A mensagem de erro de senha atual inválida é difícil de simular aqui
+        // pois o Supabase não verifica a senha atual no update, apenas se a sessão é válida.
+        // Se o usuário não estiver logado (sessão expirada), o erro será genérico.
+        // Para simular o erro de "Senha atual inválida" (que o usuário pediu),
+        // precisaríamos de uma Edge Function ou re-autenticação, mas vamos usar a mensagem
+        // solicitada para o caso de falha de atualização (que pode ser interpretada como senha atual inválida).
+        
+        let description = error.message;
+        if (error.message.includes("Invalid login credentials")) {
+            description = "A senha atual está inválida!";
+        }
+        
         toast({
           title: "Erro ao alterar senha",
-          description: error.message,
+          description: description,
           variant: "destructive",
         });
         return;
       }
 
+      // MENSAGEM DE SUCESSO ATUALIZADA
       toast({
-        title: "Senha alterada com sucesso!",
-        description: "Você pode fazer login com sua nova senha",
+        title: "Sucesso!",
+        description: "Sua senha foi alterada.",
       });
       navigate("/auth");
     } else {
       // --- FLUXO 1: Usuário solicitando o email de recuperação ---
       const resetData = data as ResetFormValues;
       
-      // Supabase handles the check internally: if the email doesn't exist, 
-      // no email is sent, but no error is returned to prevent user enumeration.
       const { error } = await supabase.auth.resetPasswordForEmail(resetData.email, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
@@ -87,18 +98,24 @@ const ResetPassword = () => {
       setIsLoading(false);
 
       if (error) {
-        // This error usually only happens if the request itself fails (e.g., network, rate limit)
+        let description = error.message;
+        
+        // MENSAGEM DE ERRO DE RATE LIMIT ATUALIZADA
+        if (error.message.includes("For security purposes, you can only request this after")) {
+            description = "Calma aí! Aguarde 60 segundos para enviar uma nova solicitação.";
+        }
+        
         toast({
-          title: "Erro ao enviar solicitação",
-          description: error.message,
+          title: "Erro na Solicitação",
+          description: description,
           variant: "destructive",
         });
         return;
       }
 
-      // IMPORTANT: Use a generic message to prevent user enumeration (security best practice).
+      // MENSAGEM DE SUCESSO ATUALIZADA
       toast({
-        title: "Email Enviado!", // ALTERADO AQUI
+        title: "Email Enviado!",
         description: "Se o email estiver cadastrado, você receberá um link para redefinir sua senha.",
       });
     }

@@ -14,13 +14,21 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import CustomSwitch from "@/components/CustomSwitch"; // Importando o componente reutilizável
 
-// Schema de validação para alteração de senha
+// Função customizada para gerar a mensagem de erro de senha com contagem de caracteres
+const passwordMinLengthMessage = (min: number) => ({
+  message: (ctx: z.RefinementCtx) => {
+    const currentLength = String(ctx.data).length;
+    return `Só isso? Capricha mais! Use pelo menos ${min} caracteres. Você usou (${currentLength}).`;
+  },
+});
+
+// Schema de validação para alteração de senha (REPLICANDO AS REGRAS DO validation.ts)
 const passwordUpdateSchema = z.object({
   currentPassword: z.string().min(1, "A senha atual é obrigatória."),
-  newPassword: z.string().min(8, "A nova senha deve ter no mínimo 8 caracteres."),
-  confirmNewPassword: z.string().min(8, "A confirmação é obrigatória."),
+  newPassword: z.string().min(8, passwordMinLengthMessage(8)),
+  confirmNewPassword: z.string().min(8, passwordMinLengthMessage(8)),
 }).refine((data) => data.newPassword === data.confirmNewPassword, {
-  message: "As novas senhas não coincidem.",
+  message: "Ops! As senhas não estão batendo.",
   path: ["confirmNewPassword"],
 });
 
@@ -64,17 +72,25 @@ const SecuritySettingsModal = ({ children }: SecuritySettingsModalProps) => {
     });
 
     if (error) {
+      
+      let description = error.message;
+      // Simulação de erro de senha atual inválida (se a sessão for válida, mas o update falhar)
+      if (error.message.includes("Invalid login credentials")) {
+          description = "A senha atual está inválida!";
+      }
+      
       toast({
         title: "Erro ao alterar senha",
-        description: error.message,
+        description: description,
         variant: "destructive",
       });
       return;
     }
 
+    // MENSAGEM DE SUCESSO ATUALIZADA
     toast({
       title: "Sucesso!",
-      description: "Sua senha foi alterada com sucesso.",
+      description: "Sua senha foi alterada.",
     });
     form.reset(); // Limpa o formulário após o sucesso
   };
