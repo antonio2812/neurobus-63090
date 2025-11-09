@@ -21,7 +21,7 @@ const ResourceModal = ({ title, description, images, children }: ResourceModalPr
       </DialogTrigger>
       {/* Aumentando a largura máxima para 900px, mantendo a altura e removendo overflow-y-auto. */}
       <DialogContent 
-        className="sm:max-w-[900px] p-6 md:p-8 bg-card border-border shadow-elevated max-h-[85vh] overflow-hidden"
+        className="sm:max-w-[900px] p-6 md:p-8 bg-card border-border shadow-elevated max-h-[95vh] overflow-y-auto"
       >
         <DialogHeader>
           {/* Título principal removido */}
