@@ -14,22 +14,18 @@ const OPENROUTER_API_KEY = Deno.env.get('OPENROUTER_API_KEY_');
 
 // Função para gerar a imagem
 const generateImage = async (prompt: string) => {
-    let apiKey = OPENROUTER_API_KEY;
-    // CORRIGIDO: Usar o baseURL padrão da OpenAI para geração de imagens,
-    // pois a biblioteca OpenAI espera este endpoint, e o OpenRouter
+    const apiKey = OPENROUTER_API_KEY;
+    // Usar o baseURL padrão da OpenAI para geração de imagens, pois o OpenRouter
     // intercepta a requisição via API Key.
-    let baseURL = 'https://api.openai.com/v1'; 
-    let headers = {};
-    let model = "dall-e-3"; // DALL-E 3 é o padrão para geração de imagens
+    const baseURL = 'https://api.openai.com/v1'; 
+    const headers = {
+        // Header necessário para o OpenRouter identificar a origem
+        'HTTP-Referer': 'https://urbbngcarxdqesenfvsb.supabase.co',
+    };
+    const model = "dall-e-3"; 
 
-    if (OPENROUTER_API_KEY) {
-        // Se estiver usando OpenRouter, a chave é a do OpenRouter,
-        // mas o baseURL é o da OpenAI, e adicionamos o header de referer.
-        apiKey = OPENROUTER_API_KEY;
-        headers = {
-            'HTTP-Referer': 'https://urbbngcarxdqesenfvsb.supabase.co',
-        };
-    } else {
+    if (!apiKey) {
+        // Esta verificação é redundante, mas garante que o erro seja lançado se a chave estiver faltando
         throw new Error('Nenhuma chave de API (OPENROUTER_API_KEY_) configurada para geração de imagens.');
     }
 
@@ -63,7 +59,6 @@ const generateImage = async (prompt: string) => {
         };
     } catch (e) {
         console.error("Erro ao chamar a API de Imagem:", e);
-        // Re-lança o erro para ser capturado pelo bloco try/catch principal
         throw e;
     }
 };
