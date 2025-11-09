@@ -18,16 +18,18 @@ const generateImage = async (prompt: string) => {
     let apiKey = OPENAI_API_KEY;
     let baseURL = 'https://api.openai.com/v1';
     let headers = {};
+    let model = "dall-e-3"; // DALL-E 3 é o padrão para geração de imagens
 
     // Prioriza OpenRouter se a chave estiver disponível
     if (OPENROUTER_API_KEY) {
         apiKey = OPENROUTER_API_KEY;
-        baseURL = 'https://openrouter.ai/api/v1';
+        // OpenRouter usa o mesmo endpoint da OpenAI para DALL-E 3, mas requer headers específicos
+        baseURL = 'https://openrouter.ai/api/v1'; 
         headers = {
             'HTTP-Referer': 'https://urbbngcarxdqesenfvsb.supabase.co',
         };
+        // O modelo DALL-E 3 é o mesmo em ambos
     } else if (!OPENAI_API_KEY) {
-        // Se nenhuma chave estiver configurada, o erro será lançado no bloco try/catch principal
         throw new Error('Nenhuma chave de API (OPENAI_API_KEY ou OPENROUTER_API_KEY) configurada para geração de imagens.');
     }
 
@@ -42,7 +44,7 @@ const generateImage = async (prompt: string) => {
 
     try {
         const response = await openai.images.generate({
-            model: "dall-e-3",
+            model: model,
             prompt: finalPrompt,
             n: 1,
             size: "1024x1024",
