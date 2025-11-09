@@ -74,6 +74,8 @@ serve(async (req) => {
   }
   
   console.log("Edge Function 'image-generator' started execution.");
+  console.log(`OPENAI_API_KEY is present: ${!!OPENAI_API_KEY}`);
+  console.log(`OPENROUTER_API_KEY is present: ${!!OPENROUTER_API_KEY}`);
 
   // Verificação explícita das chaves
   if (!OPENAI_API_KEY && !OPENROUTER_API_KEY) {
