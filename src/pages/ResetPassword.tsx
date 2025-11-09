@@ -69,6 +69,7 @@ const ResetPassword = () => {
         // solicitada para o caso de falha de atualização (que pode ser interpretada como senha atual inválida).
         
         let description = error.message;
+        // MENSAGEM DE ERRO ATUALIZADA
         if (error.message.includes("Invalid login credentials")) {
             description = "A senha atual está inválida!";
         }

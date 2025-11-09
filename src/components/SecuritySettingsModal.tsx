@@ -18,7 +18,7 @@ import CustomSwitch from "@/components/CustomSwitch"; // Importando o componente
 const passwordMinLengthMessage = (min: number) => ({
   message: (ctx: z.RefinementCtx) => {
     const currentLength = String(ctx.data).length;
-    return `Só isso? Capricha mais! Use pelo menos ${min} caracteres. Você usou (${currentLength}).`;
+    return `Só isso? Capricha mais! Use pelo menos ${min} caracteres. Você usou(${currentLength})`;
   },
 });
 
@@ -75,8 +75,8 @@ const SecuritySettingsModal = ({ children }: SecuritySettingsModalProps) => {
       
       let description = error.message;
       // Simulação de erro de senha atual inválida (se a sessão for válida, mas o update falhar)
-      if (error.message.includes("Invalid login credentials")) {
-          description = "A senha atual está inválida!";
+      if (error.message.includes("Invalid login credentials") || error.message.includes("New password should be diferente from the old password")) {
+          description = "A senha atual está inválida.";
       }
       
       toast({

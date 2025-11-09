@@ -4,7 +4,7 @@ import { z } from "zod";
 const passwordMinLengthMessage = (min: number) => ({
   message: (ctx: z.RefinementCtx) => {
     const currentLength = String(ctx.data).length;
-    return `Só isso? Capricha mais! Use pelo menos ${min} caracteres. Você usou (${currentLength}).`;
+    return `Só isso? Capricha mais! Use pelo menos ${min} caracteres. Você usou(${currentLength})`;
   },
 });
 

@@ -117,7 +117,14 @@ const Auth = () => {
       
       let description = error.message;
       if (error.message.includes("User already registered")) {
-        description = "Este email já está cadastrado. Tente fazer login.";
+        // MENSAGEM DE ERRO ATUALIZADA
+        description = "Esse Email já foi cadastrado antes.";
+        toast({
+          title: "Erro no Cadastro",
+          description: description,
+          variant: "destructive",
+        });
+        return;
       }
       
       toast({
