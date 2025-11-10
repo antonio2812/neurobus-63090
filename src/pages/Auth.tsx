@@ -117,7 +117,7 @@ const Auth = () => {
       
       let description = error.message;
       if (error.message.includes("User already registered")) {
-        // MENSAGEM DE ERRO ATUALIZADA: Ponto 1.2
+        // USANDO A STRING LITERAL EXATA SOLICITADA
         description = "Esse email já foi cadastrado antes.";
         toast({
           title: "Erro no Cadastro",
