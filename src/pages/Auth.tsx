@@ -76,7 +76,6 @@ const Auth = () => {
       if (error.message.includes("Invalid login credentials")) {
         description = "Credenciais inválidas. Verifique seu email e senha.";
       } else if (error.message.includes("Email not confirmed")) {
-        // MENSAGEM ATUALIZADA PARA CLAREZA
         description = "Email não confirmado. Por favor, verifique sua caixa de entrada e clique no link de confirmação.";
       }
       
@@ -302,7 +301,7 @@ const Auth = () => {
                     name="password"
                     render={({ field }) => (
                       <FormItem className="space-y-2">
-                        <FormLabel htmlFor="signup-password">Senha</Label>
+                        <FormLabel htmlFor="signup-password">Senha</FormLabel>
                         <div className="relative">
                           <FormControl>
                             <Input 
