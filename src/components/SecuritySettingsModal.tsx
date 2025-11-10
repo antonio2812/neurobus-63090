@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import CustomSwitch from "@/components/CustomSwitch"; // Importando o componente reutilizável
 
 // Função customizada para gerar a mensagem de erro de senha com contagem de caracteres
-const passwordMinLengthMessage = (min: number) => ({
+const passwordMinLengthMessage = () => ({
   message: () => {
     // Mensagem estática solicitada
     return `Só isso? Capricha mais! Use pelo menos 8 caracteres.`;
@@ -25,8 +25,8 @@ const passwordMinLengthMessage = (min: number) => ({
 // Schema de validação para alteração de senha (REPLICANDO AS REGRAS DO validation.ts)
 const passwordUpdateSchema = z.object({
   currentPassword: z.string().min(1, "A senha atual é obrigatória."),
-  newPassword: z.string().min(8, passwordMinLengthMessage(8)),
-  confirmNewPassword: z.string().min(8, passwordMinLengthMessage(8)),
+  newPassword: z.string().min(8, passwordMinLengthMessage()),
+  confirmNewPassword: z.string().min(8, passwordMinLengthMessage()),
 }).refine((data) => data.newPassword === data.confirmNewPassword, {
   message: "Ops! As senhas não estão batendo.",
   path: ["confirmNewPassword"],

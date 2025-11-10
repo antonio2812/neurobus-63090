@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // Função customizada para gerar a mensagem de erro de senha com contagem de caracteres
-const passwordMinLengthMessage = (min: number) => ({
+const passwordMinLengthMessage = () => ({
   message: () => {
     // Mensagem estática solicitada
     return `Só isso? Capricha mais! Use pelo menos 8 caracteres.`;
@@ -18,8 +18,8 @@ export const loginSchema = z.object({
 export const signupSchema = z.object({
   name: z.string().min(1, { message: "Não tá esquecendo nada? Preenche esse campo aí rapidinho." }),
   email: z.string().email({ message: "Esse email não é válido. Use o formato nome@dominio.com" }),
-  password: z.string().min(8, passwordMinLengthMessage(8)),
-  confirmPassword: z.string().min(8, passwordMinLengthMessage(8)),
+  password: z.string().min(8, passwordMinLengthMessage()),
+  confirmPassword: z.string().min(8, passwordMinLengthMessage()),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Ops! As senhas não estão batendo.",
   path: ["confirmPassword"],
@@ -30,8 +30,8 @@ export const resetPasswordSchema = z.object({
 });
 
 export const updatePasswordSchema = z.object({
-  password: z.string().min(8, passwordMinLengthMessage(8)),
-  confirmPassword: z.string().min(8, passwordMinLengthMessage(8)),
+  password: z.string().min(8, passwordMinLengthMessage()),
+  confirmPassword: z.string().min(8, passwordMinLengthMessage()),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Ops! As senhas não estão batendo.",
   path: ["confirmNewPassword"],
