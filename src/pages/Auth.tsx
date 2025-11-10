@@ -61,7 +61,7 @@ const Auth = () => {
   const handleLogin = async (data: LoginFormValues) => {
     setIsLoading(true);
     
-    // --- RESTAURANDO LOGIN REAL DO SUPABASE ---
+    // --- LOGIN REAL DO SUPABASE ---
     const { error } = await supabase.auth.signInWithPassword({
       email: data.email,
       password: data.password,
