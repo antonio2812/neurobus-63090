@@ -116,15 +116,14 @@ const Auth = () => {
     if (error) {
       console.error("Erro de Cadastro Supabase:", error);
       
-      // Captura o erro de email já cadastrado
-      // O Supabase usa o código 400 (Bad Request) e a mensagem "User already registered" ou "User already exists"
+      // Condição de ativação: Email já cadastrado
       if (error.message.includes("User already registered") || error.message.includes("already exists") || error.status === 400) {
         toast({
           title: "Erro no Cadastro",
           description: "Esse email já foi cadastrado antes.",
-          variant: "destructive",
+          variant: "destructive", // Alerta vermelho
         });
-        return;
+        return; // Interrompe o fluxo
       }
       
       // Erros genéricos
