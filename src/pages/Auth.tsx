@@ -61,27 +61,38 @@ const Auth = () => {
   const handleLogin = async (data: LoginFormValues) => {
     setIsLoading(true);
     
-    // --- INÍCIO DA SIMULAÇÃO DE LOGIN ---
-    // Simula um atraso de rede
-    await new Promise(resolve => setTimeout(resolve, 500)); 
-    
-    // Simula o login bem-sucedido e redireciona para o Dashboard.
-    // NOTA: Isso ignora a autenticação real do Supabase.
-    
+    // --- RESTAURANDO LOGIN REAL DO SUPABASE ---
+    const { error } = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    });
+
+    setIsLoading(false);
+
+    if (error) {
+      console.error("Erro de Login Supabase:", error);
+      
+      let description = error.message;
+      if (error.message.includes("Invalid login credentials")) {
+        description = "Credenciais inválidas. Verifique seu email e senha.";
+      } else if (error.message.includes("Email not confirmed")) {
+        description = "Email não confirmado. Verifique sua caixa de entrada.";
+      }
+      
+      toast({
+        title: "Erro ao fazer login",
+        description: description,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // MENSAGEM DE SUCESSO
     toast({
       title: "Sucesso",
       description: "Seja Bem-vindo(a) a LucraAI!",
     });
-    
-    // Redireciona para o Dashboard.
-    // Para que o Dashboard funcione corretamente, precisamos de um usuário ativo.
-    // Como estamos ignorando a autenticação, o SessionContextProvider pode não ter um usuário.
-    // Para fins de demonstração, vamos apenas redirecionar, mas o Dashboard pode falhar
-    // se depender de um usuário autenticado.
-    navigate("/dashboard");
-    
-    setIsLoading(false);
-    // --- FIM DA SIMULAÇÃO DE LOGIN ---
+    // O redirecionamento para /dashboard será acionado pelo useEffect acima
   };
 
   const handleSignup = async (data: SignupFormValues) => {
