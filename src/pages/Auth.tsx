@@ -306,7 +306,7 @@ const Auth = () => {
                     name="password"
                     render={({ field }) => (
                       <FormItem className="space-y-2">
-                        <FormLabel htmlFor="signup-password">Senha</Label>
+                        <FormLabel htmlFor="signup-password">Senha</FormLabel>
                         <div className="relative">
                           <FormControl>
                             <Input 
