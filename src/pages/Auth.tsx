@@ -117,7 +117,12 @@ const Auth = () => {
       console.error("Erro de Cadastro Supabase:", error);
       
       // Condição de ativação: Email já cadastrado
-      if (error.message.includes("User already registered") || error.message.includes("already exists") || error.status === 400) {
+      // O Supabase retorna status 400 e a mensagem "User already registered" ou "already exists"
+      const isDuplicateEmailError = error.status === 400 && 
+                                   (error.message.includes("User already registered") || 
+                                    error.message.includes("already exists"));
+
+      if (isDuplicateEmailError) {
         toast({
           title: "Erro no Cadastro",
           description: "Esse email já foi cadastrado antes.",
@@ -301,7 +306,7 @@ const Auth = () => {
                     name="password"
                     render={({ field }) => (
                       <FormItem className="space-y-2">
-                        <FormLabel htmlFor="signup-password">Senha</FormLabel>
+                        <FormLabel htmlFor="signup-password">Senha</Label>
                         <div className="relative">
                           <FormControl>
                             <Input 
