@@ -2,9 +2,9 @@ import { z } from "zod";
 
 // Função customizada para gerar a mensagem de erro de senha com contagem de caracteres
 const passwordMinLengthMessage = (min: number) => ({
-  message: (ctx: z.RefinementCtx) => {
-    // Removendo a lógica de contagem de caracteres (currentLength) da mensagem final
-    return `Só isso? Capricha mais! Use pelo menos ${min} caracteres.`;
+  message: () => {
+    // Mensagem estática solicitada
+    return `Só isso? Capricha mais! Use pelo menos 8 caracteres.`;
   },
 });
 

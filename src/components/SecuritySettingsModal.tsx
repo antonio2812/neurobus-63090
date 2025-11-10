@@ -16,9 +16,9 @@ import CustomSwitch from "@/components/CustomSwitch"; // Importando o componente
 
 // Função customizada para gerar a mensagem de erro de senha com contagem de caracteres
 const passwordMinLengthMessage = (min: number) => ({
-  message: (ctx: z.RefinementCtx) => {
-    const currentLength = String(ctx.data).length;
-    return `Só isso? Capricha mais! Use pelo menos ${min} caracteres. Você usou(${currentLength})`;
+  message: () => {
+    // Mensagem estática solicitada
+    return `Só isso? Capricha mais! Use pelo menos 8 caracteres.`;
   },
 });
 
