@@ -116,11 +116,10 @@ const Auth = () => {
     if (error) {
       console.error("Erro de Cadastro Supabase:", error);
       
-      // Condição de ativação: Email já cadastrado
-      // O Supabase retorna status 400 e a mensagem "User already registered" ou "already exists"
-      const isDuplicateEmailError = error.status === 400 && 
-                                   (error.message.includes("User already registered") || 
-                                    error.message.includes("already exists"));
+      // Lógica de detecção de email duplicado (mais robusta)
+      const errorMessageLower = error.message.toLowerCase();
+      const isDuplicateEmailError = errorMessageLower.includes("already registered") || 
+                                   errorMessageLower.includes("already exists");
 
       if (isDuplicateEmailError) {
         toast({
