@@ -115,21 +115,20 @@ const Auth = () => {
     if (error) {
       console.error("Erro de Cadastro Supabase:", error);
       
-      let description = error.message;
-      if (error.message.includes("User already registered")) {
-        // USANDO A STRING LITERAL EXATA SOLICITADA
-        description = "Esse email já foi cadastrado antes.";
+      // Captura o erro de email já cadastrado
+      if (error.message.includes("User already registered") || error.message.includes("already exists")) {
         toast({
           title: "Erro no Cadastro",
-          description: description,
+          description: "Esse email já foi cadastrado antes.",
           variant: "destructive",
         });
         return;
       }
       
+      // Erros genéricos
       toast({
         title: "Erro ao criar conta",
-        description: description,
+        description: error.message,
         variant: "destructive",
       });
       return;
