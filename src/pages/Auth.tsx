@@ -100,7 +100,8 @@ const Auth = () => {
     
     const redirectUrl = `${window.location.origin}/`;
 
-    const { error } = await supabase.auth.signUp({
+    // CAPTURANDO DATA E ERROR
+    const { data: signupData, error } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
       options: {
@@ -116,7 +117,7 @@ const Auth = () => {
     if (error) {
       console.error("Erro de Cadastro Supabase:", error);
       
-      // Lógica de detecção de email duplicado (mais robusta)
+      // Lógica de detecção de email duplicado (se Supabase retornar erro explícito)
       const errorMessageLower = error.message.toLowerCase();
       const isDuplicateEmailError = errorMessageLower.includes("already registered") || 
                                    errorMessageLower.includes("already exists");
@@ -137,6 +138,16 @@ const Auth = () => {
         variant: "destructive",
       });
       return;
+    }
+    
+    // NOVO CHECK: Se não houve erro explícito, mas o usuário não foi retornado (proteção contra enumeração)
+    if (!signupData.user) {
+        toast({
+            title: "Erro no Cadastro",
+            description: "Esse email já foi cadastrado antes.",
+            variant: "destructive",
+        });
+        return;
     }
 
     // MENSAGEM DE SUCESSO ATUALIZADA
